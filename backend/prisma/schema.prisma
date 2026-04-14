@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ENUMS ───────────────────────────────────────────────
+
+enum ListingStatus {
+  ACTIVE      // visible en marketplace
+  PAUSED      // en proceso de venta (doble confirmación pendiente)
+  SOLD        // venta finalizada
+  CANCELLED   // cancelada por el vendedor
+}
+
+enum SaleStatus {
+  PENDING              // iniciada, sin confirmaciones
+  BUYER_CONFIRMED      // comprador confirmó recepción
+  SELLER_CONFIRMED     // vendedor confirmó pago
+  COMPLETED            // ambos confirmaron
+  CANCELLED            // cancelada
+}
+
+enum CardCondition {
+  MINT          // perfecta
+  NEAR_MINT     // casi perfecta
+  EXCELLENT     // excelente
+  GOOD          // buena
+  PLAYED        // jugada
+  POOR          // dañada
+}
+
+enum CardRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  HOLO_RARE
+  ULTRA_RARE
+  SECRET_RARE
+  PROMO
+}
+
+// ─── MODELOS ─────────────────────────────────────────────
+
+model User {
+  id                String    @id @default(uuid())
+  email             String    @unique
+  username          String    @unique
+  passwordHash      String
+  emailVerified     Boolean   @default(false)
+  verificationToken String?
+  resetToken        String?
+  resetTokenExpiry  DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relaciones
+  profile           Profile?
+  listings          Listing[]
+  salesAsBuyer      Sale[]    @relation("BuyerSales")
+  salesAsSeller     Sale[]    @relation("SellerSales")
+  ratingsGiven      Rating[]  @relation("RaterRatings")
+  ratingsReceived   Rating[]  @relation("RatedRatings")
+  messagesSent      Message[]
+
+  @@index([email])
+  @@index([username])
+  @@map("users")
+}
+
+model Profile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  displayName    String?
+  bio            String?
+  avatarUrl      String?
+  location       String?  // ciudad en Chile
+  reputationScore Float   @default(0)
+  totalSales     Int      @default(0)
+  totalPurchases Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relaciones
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Listing {
+  id           String        @id @default(uuid())
+  sellerId     String
+  title        String        // ej: "Charizard Holo Base Set"
+  cardName     String
+  edition      String        // ej: "Base Set", "Jungle", "Fossil"
+  setNumber    String?       // número en el set
+  condition    CardCondition
+  rarity       CardRarity
+  priceCLP     Int           // precio en pesos chilenos
+  description  String?
+  images       String[]      // URLs de Cloudinary
+  status       ListingStatus @default(ACTIVE)
+  views        Int           @default(0)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Relaciones
+  seller       User          @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  conversation Conversation?
+  sale         Sale?
+
+  // Índices para búsqueda en marketplace
+  @@index([sellerId])
+  @@index([status])
+  @@index([cardName])
+  @@index([edition])
+  @@index([rarity])
+  @@index([condition])
+  @@index([priceCLP])
+  @@index([createdAt])
+  @@map("listings")
+}
+
+model Conversation {
+  id        String    @id @default(uuid())
+  listingId String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relaciones
+  listing   Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  senderId       String
+  content        String
+  read           Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+
+  // Relaciones
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+model Sale {
+  id               String     @id @default(uuid())
+  listingId        String     @unique
+  buyerId          String
+  sellerId         String
+  finalPriceCLP    Int
+  status           SaleStatus @default(PENDING)
+  buyerConfirmed   Boolean    @default(false)
+  sellerConfirmed  Boolean    @default(false)
+  buyerConfirmedAt DateTime?
+  sellerConfirmedAt DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  // Relaciones
+  listing          Listing    @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyer            User       @relation("BuyerSales", fields: [buyerId], references: [id])
+  seller           User       @relation("SellerSales", fields: [sellerId], references: [id])
+  ratings          Rating[]
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status])
+  @@map("sales")
+}
+
+model Rating {
+  id                 String   @id @default(uuid())
+  saleId             String
+  raterId            String   // quien califica
+  ratedId            String   // quien recibe la calificación
+  priceScore         Int      // 1-5
+  communicationScore Int      // 1-5
+  processScore       Int      // 1-5
+  averageScore       Float    // calculado automáticamente
+  comment            String?
+  createdAt          DateTime @default(now())
+
+  // Relaciones
+  sale               Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  rater              User     @relation("RaterRatings", fields: [raterId], references: [id])
+  rated              User     @relation("RatedRatings", fields: [ratedId], references: [id])
+
+  // Un usuario solo puede calificar una vez por venta
+  @@unique([saleId, raterId])
+  @@index([ratedId])
+  @@index([saleId])
+  @@map("ratings")
+}
