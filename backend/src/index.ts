@@ -14,11 +14,29 @@ async function main() {
   const server = http.createServer(app);
 
   const io = new Server(server, {
-    cors: {
-      origin: process.env.CLIENT_URL || 'http://localhost:3000',
-      credentials: true,
-    },
-  });
+  cors: {
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    credentials: true,
+  },
+  // Necesario para Render
+  transports: ['websocket', 'polling'],
+  allowEIO3: true,
+});
+
+// Keep-alive para plan gratuito de Render
+if (process.env.NODE_ENV === 'production') {
+  const BACKEND_URL = process.env.RENDER_EXTERNAL_URL;
+  if (BACKEND_URL) {
+    setInterval(async () => {
+      try {
+        await fetch(`${BACKEND_URL}/health`);
+        console.log('🔄 Keep-alive ping');
+      } catch {
+        // silencioso
+      }
+    }, 14 * 60 * 1000); // cada 14 minutos
+  }
+}
 
   // Middleware de autenticación para Socket.io
   io.use((socket, next) => {

@@ -37,18 +37,21 @@ export async function createRating(
     ((priceScore + communicationScore + processScore) / 3).toFixed(2)
   );
 
-  const rating = await prisma.rating.create({
-    data: {
-      saleId,
-      raterId,
-      ratedId,
-      priceScore,
-      communicationScore,
-      processScore,
-      averageScore,
-      comment,
-    },
-  });
+const rating = await prisma.rating.create({
+  data: {
+    saleId,
+    raterId,
+    ratedId,
+    priceScore,
+    communicationScore,
+    processScore,
+    averageScore,
+    comment,
+  },
+  include: {
+    rater: { select: { id: true, username: true } },
+  },
+});
 
   // Recalcular reputación del usuario calificado
   await recalculateReputation(ratedId);
