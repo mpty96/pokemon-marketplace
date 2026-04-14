@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: pokemon-marketplace-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run generate && npm run build
+    startCommand: npm run migrate && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
