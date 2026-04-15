@@ -70,7 +70,11 @@ export async function loginUser(email: string, password: string) {
   const user = await prisma.user.findUnique({
     where: { email },
     include: { profile: true },
+    
   });
+
+  console.log("LOGIN EMAIL:", email);
+  console.log("USER FOUND:", user);
 
   if (!user) throw new Error('INVALID_CREDENTIALS');
 
