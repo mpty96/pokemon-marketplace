@@ -7,6 +7,6 @@ services:
     startCommand: npm run migrate && npm start
     envVars:
       - key: NODE_ENV
-        value: production
+        value: development
       - key: PORT
         value: 4000

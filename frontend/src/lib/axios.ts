@@ -39,10 +39,11 @@ api.interceptors.response.use(
       } catch {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        return Promise.reject(error);
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
       }
     }
-    console.log('Auth error:', error.response?.data);
 
     return Promise.reject(error);
   }

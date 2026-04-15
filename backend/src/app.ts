@@ -18,23 +18,18 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
+    // Permitir requests sin origin (mobile, Postman, curl)
     if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    console.log("CORS BLOCKED:", origin);
-    return callback(null, false); // 👈 NO error
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS bloqueado para: ${origin}`));
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-
-app.use((req, res, next) => {
-  console.log("ORIGIN:", req.headers.origin);
-  next();
-});
+// Preflight para todas las rutas
+app.options('*', cors());
 
 app.use(json());
 
