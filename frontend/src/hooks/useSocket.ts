@@ -9,21 +9,19 @@ export function useSocket() {
   const socketRef   = useRef<Socket | null>(null);
 
   useEffect(() => {
-    if (!accessToken) return;
+  if (!accessToken) return;
 
-    if (!socketInstance) {
-      socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
-        auth: { token: accessToken },
-        transports: ['websocket'],
-      });
-    }
+  if (!socketInstance) {
+    socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
+      auth: { token: accessToken },
+      transports: ['websocket'],
+    });
+  }
 
-    socketRef.current = socketInstance;
+  socketRef.current = socketInstance;
 
-    return () => {
-      // No desconectar globalmente — reutilizar la misma conexión
-    };
-  }, [accessToken]);
+  return () => {};
+}, [accessToken]);
 
   return socketRef.current;
 }

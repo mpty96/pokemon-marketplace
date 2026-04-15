@@ -25,7 +25,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
-        const path = window.location.pathname;
+        window.location.href = '/login';
       }
     }
     return Promise.reject(error);
