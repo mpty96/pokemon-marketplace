@@ -18,6 +18,9 @@ async function main() {
       origin: process.env.CLIENT_URL || 'http://localhost:3000',
       credentials: true,
     },
+    // Necesario para Render
+    transports: ['websocket', 'polling'],
+    allowEIO3: true,
   });
 
   // Middleware de autenticación para Socket.io
