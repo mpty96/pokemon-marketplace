@@ -23,6 +23,21 @@ async function main() {
     allowEIO3: true,
   });
 
+  // Keep-alive para plan gratuito de Render
+  if (process.env.NODE_ENV === 'production') {
+    const BACKEND_URL = process.env.RENDER_EXTERNAL_URL;
+    if (BACKEND_URL) {
+      setInterval(async () => {
+        try {
+          await fetch(`${BACKEND_URL}/health`);
+          console.log('🔄 Keep-alive ping');
+        } catch {
+          // silencioso
+        }
+      }, 14 * 60 * 1000); // cada 14 minutos
+    }
+  }
+
   // Middleware de autenticación para Socket.io
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;
