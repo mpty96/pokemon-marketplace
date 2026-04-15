@@ -62,7 +62,7 @@ export default function ChatPage() {
     socket.emit('join_conversation', id);
     socket.on('new_message', (message: Message) => {
       setMessages((prev) => [...prev, message]);
-      if (message.senderId !== user?.id) {
+      if (String(message.senderId) !== String(user?.id)) {
         socket.emit('mark_read', message.conversationId);
       }
     });
@@ -211,7 +211,7 @@ export default function ChatPage() {
             </div>
           )}
           {messages.map((msg) => {
-            const isMe = msg.senderId === user?.id;
+            const isMe = String(msg.senderId) === String(user?.id);
             return (
               <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                 <div className="max-w-xs lg:max-w-md">
