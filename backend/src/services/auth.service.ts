@@ -37,7 +37,12 @@ export async function registerUser(
     include: { profile: true },
   });
 
-  await sendVerificationEmail(email, verificationToken);
+  try {
+    await sendVerificationEmail(email, verificationToken);
+  } catch (error) {
+    console.error("EMAIL ERROR:", error);
+    throw error;
+  }
 
   return {
     id: user.id,

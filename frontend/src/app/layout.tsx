@@ -3,7 +3,7 @@ import './globals.css';
 import Header from '@/components/Header';
 
 export const metadata: Metadata = {
-  title: 'PokéMarket Chile',
+  title: 'PokeMarket Chile',
   description: 'Compra y vende cartas Pokémon en Chile',
 };
 
