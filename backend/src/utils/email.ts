@@ -1,26 +1,14 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
-function createTransporter() {
-  // En producción usar SMTP real (Resend, SendGrid, etc.)
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendVerificationEmail(
   email: string,
   token: string
 ): Promise<void> {
   const verifyUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
-  const transporter = createTransporter();
 
-  await transporter.sendMail({
+  await resend.emails.send({
     from: `"PokéMarket Chile" <${process.env.EMAIL_FROM}>`,
     to: email,
     subject: 'Verifica tu cuenta en PokéMarket Chile',
@@ -55,14 +43,13 @@ export async function sendVerificationEmail(
   });
 }
 
-export async function sendPasswordResetEmail(
-  email: string,
-  token: string
-): Promise<void> {
-  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
-  const transporter = createTransporter();
+  export async function sendPasswordResetEmail(
+    email: string,
+    token: string
+  ): Promise<void> {
+    const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
-  await transporter.sendMail({
+    await resend.emails.send({
     from: `"PokéMarket Chile" <${process.env.EMAIL_FROM}>`,
     to: email,
     subject: 'Restablecer contraseña — PokéMarket Chile',
