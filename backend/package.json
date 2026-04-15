@@ -11,6 +11,7 @@
     "generate": "prisma generate",
     "studio": "dotenv -e .env -- npx prisma studio"
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",
