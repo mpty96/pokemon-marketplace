@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
+import { useUnreadCount } from '@/hooks/useUnreadCount';
 
 export default function Header() {
-  const router   = useRouter();
-  const pathname = usePathname();
+  const router      = useRouter();
+  const pathname    = usePathname();
   const { user, isAuthenticated, logout } = useAuthStore();
+  const unreadCount = useUnreadCount();
 
   function handleLogout() {
     logout();
@@ -32,17 +34,17 @@ export default function Header() {
 
         {/* Navegación central */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/"           className={linkClass('/')}>Inicio</Link>
+          <Link href="/"            className={linkClass('/')}>Inicio</Link>
           <Link href="/marketplace" className={linkClass('/marketplace')}>Marketplace</Link>
           {isAuthenticated && (
-            <>
-              <Link href="/mensajes" className={linkClass('/mensajes')}>
-                Mensajes
-              </Link>
-              <Link href="/publicar" className={linkClass('/publicar')}>
-                Publicar carta
-              </Link>
-            </>
+            <Link href="/mensajes" className={`${linkClass('/mensajes')} relative`}>
+              Mensajes
+              {unreadCount > 0 && (
+                <span className="absolute -top-1.5 -right-4 bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
+            </Link>
           )}
         </nav>
 
@@ -79,10 +81,14 @@ export default function Header() {
         <Link href="/"            className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">Inicio</Link>
         <Link href="/marketplace" className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">Marketplace</Link>
         {isAuthenticated && (
-          <>
-            <Link href="/mensajes" className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">Mensajes</Link>
-            <Link href="/publicar" className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">Publicar</Link>
-          </>
+          <Link href="/mensajes" className="relative text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">
+            Mensajes
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-3 bg-red-500 text-white text-xs font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </Link>
         )}
       </div>
     </header>

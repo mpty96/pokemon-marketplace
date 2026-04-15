@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware';
-import { getConversation, getUserConversations } from '../services/chat.service';
+import { getConversation, getUserConversations, getUnreadCount } from '../services/chat.service';
 
 export async function getChat(req: AuthRequest, res: Response): Promise<void> {
   try {
@@ -24,5 +24,14 @@ export async function getMyConversations(req: AuthRequest, res: Response): Promi
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener conversaciones' });
+  }
+}
+
+export async function unreadCount(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const count = await getUnreadCount(req.user!.userId);
+    res.json({ count });
+  } catch {
+    res.status(500).json({ error: 'Error al obtener no leídos' });
   }
 }

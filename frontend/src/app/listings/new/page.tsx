@@ -36,48 +36,59 @@ export default function NewListingPage() {
     condition: '' as CardCondition, rarity: '' as CardRarity,
     priceCLP: '', description: '',
   });
-  const [images, setImages] = useState<File[]>([]);
-  const [previews, setPreviews]   = useState<string[]>([]);
-  const [loading, setLoading]     = useState(false);
-  const [error,   setError]       = useState('');
-  const [success, setSuccess] = useState(false);
-  const [newId,   setNewId]   = useState('');
+  const [images,   setImages]   = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const [loading,  setLoading]  = useState(false);
+  const [error,    setError]    = useState('');
+  const [success,  setSuccess]  = useState(false);
+  const [newId,    setNewId]    = useState('');
 
   if (!isAuth) {
-    if (success) {
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4">
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow p-8 text-center max-w-md w-full">
-        <div className="text-5xl mb-4">🎉</div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          ¡Carta publicada!
-        </h2>
-        <p className="text-gray-500 mb-6">
-          Tu carta ya está visible en el marketplace.
-        </p>
-        <div className="flex flex-col gap-3">
-          <button
-            onClick={() => router.push(`/listings/${newId}`)}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors">
-            Ver mi publicación
-          </button>
-          <button
-            onClick={() => router.push('/marketplace')}
-            className="w-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            Ir al marketplace
-          </button>
-          <button
-            onClick={() => { setSuccess(false); setForm({ title: '', cardName: '', edition: '', setNumber: '', condition: '' as CardCondition, rarity: '' as CardRarity, priceCLP: '', description: '' }); setImages([]); setPreviews([]); }}
-            className="text-sm text-blue-600 hover:underline">
-            Publicar otra carta
-          </button>
+  router.push('/login');
+  return null;
+}
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow p-8 text-center max-w-md w-full">
+          <div className="text-5xl mb-4">🎉</div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            ¡Carta publicada!
+          </h2>
+          <p className="text-gray-500 mb-6">
+            Tu carta ya está visible en el marketplace.
+          </p>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => router.push(`/listings/${newId}`)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors">
+              Ver mi publicación
+            </button>
+            <button
+              onClick={() => router.push('/marketplace')}
+              className="w-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+              Ir al marketplace
+            </button>
+            <button
+              onClick={() => {
+                setSuccess(false);
+                setNewId('');
+                setForm({
+                  title: '', cardName: '', edition: '', setNumber: '',
+                  condition: '' as CardCondition, rarity: '' as CardRarity,
+                  priceCLP: '', description: ''
+                });
+                setImages([]);
+                setPreviews([]);
+              }}
+              className="text-sm text-blue-600 hover:underline">
+              Publicar otra carta
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
-    router.push('/login');
-    return null;
+    );
   }
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -87,28 +98,28 @@ export default function NewListingPage() {
     setPreviews(files.map((f) => URL.createObjectURL(f)));
   }
 
-async function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
-  setError('');
-  setLoading(true);
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-  try {
-    const formData = new FormData();
-    Object.entries(form).forEach(([k, v]) => { if (v) formData.append(k, v); });
-    images.forEach((img) => formData.append('images', img));
+    try {
+      const formData = new FormData();
+      Object.entries(form).forEach(([k, v]) => { if (v) formData.append(k, v); });
+      images.forEach((img) => formData.append('images', img));
 
-    const { data } = await api.post('/api/listings', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+      const { data } = await api.post('/api/listings', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-    setNewId(data.id);
-    setSuccess(true);
-  } catch (err: any) {
-    setError(err.response?.data?.error || 'Error al crear la publicación');
-  } finally {
-    setLoading(false);
+      setNewId(data.id);
+      setSuccess(true);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Error al crear la publicación');
+    } finally {
+      setLoading(false);
+    }
   }
-}
 
   const inputClass = "w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500";
 

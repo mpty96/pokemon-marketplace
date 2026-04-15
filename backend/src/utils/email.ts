@@ -9,15 +9,15 @@ export async function sendVerificationEmail(
   const verifyUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
 
   await resend.emails.send({
-    from: `"PokéMarket Chile" <${process.env.EMAIL_FROM}>`,
+    from: `"PokeMarket Chile" <${process.env.EMAIL_FROM}>`,
     to: email,
-    subject: 'Verifica tu cuenta en PokéMarket Chile',
+    subject: 'Verifica tu cuenta en PokeMarket Chile',
     html: `
       <!DOCTYPE html>
       <html>
       <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #2563eb;">🎴 PokéMarket Chile</h1>
+          <h1 style="color: #2563eb;">🎴 PokeMarket Chile</h1>
         </div>
         <h2 style="color: #1f2937;">¡Bienvenido!</h2>
         <p style="color: #4b5563;">
@@ -35,7 +35,7 @@ export async function sendVerificationEmail(
         </p>
         <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0;"/>
         <p style="color: #9ca3af; font-size: 12px; text-align: center;">
-          PokéMarket Chile — Marketplace de cartas Pokémon
+          PokeMarket Chile — Marketplace de cartas Pokémon
         </p>
       </body>
       </html>
@@ -50,14 +50,14 @@ export async function sendVerificationEmail(
     const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
     await resend.emails.send({
-    from: `"PokéMarket Chile" <${process.env.EMAIL_FROM}>`,
+    from: `"PokeMarket Chile" <${process.env.EMAIL_FROM}>`,
     to: email,
-    subject: 'Restablecer contraseña — PokéMarket Chile',
+    subject: 'Restablecer contraseña — PokeMarket Chile',
     html: `
       <!DOCTYPE html>
       <html>
       <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #2563eb;">🎴 PokéMarket Chile</h1>
+        <h1 style="color: #2563eb;">🎴 PokeMarket Chile</h1>
         <h2 style="color: #1f2937;">Restablecer contraseña</h2>
         <p style="color: #4b5563;">Haz clic en el botón para restablecer tu contraseña:</p>
         <div style="text-align: center; margin: 30px 0;">

@@ -86,19 +86,30 @@ export default function ListingDetailPage() {
                   <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                     {listing.title}
                   </h1>
+                  {listing.cardName && listing.cardName !== listing.title && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                      Carta: <span className="font-medium text-gray-700 dark:text-gray-300">{listing.cardName}</span>
+                    </p>
+                  )}
                 </div>
 
                 <div className="text-3xl font-bold text-blue-600">
                   ${listing.priceCLP.toLocaleString('es-CL')}
                 </div>
 
-                <div className="flex gap-2 flex-wrap">
-                  <span className="px-3 py-1 bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-full text-sm">
-                    {RARITY_LABELS[listing.rarity]}
-                  </span>
-                  <span className="px-3 py-1 bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300 rounded-full text-sm">
-                    {CONDITION_LABELS[listing.condition]}
-                  </span>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 w-20">Condición:</span>
+                    <span className="px-3 py-1 bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300 rounded-full text-sm font-medium">
+                      {CONDITION_LABELS[listing.condition]}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 w-20">Rareza:</span>
+                    <span className="px-3 py-1 bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-full text-sm font-medium">
+                      {RARITY_LABELS[listing.rarity]}
+                    </span>
+                  </div>
                 </div>
 
                 {listing.description && (

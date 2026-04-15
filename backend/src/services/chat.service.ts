@@ -129,3 +129,28 @@ export async function getUserConversations(userId: string) {
     updatedAt:     conv.updatedAt,
   }));
 }
+
+export async function getUnreadCount(userId: string): Promise<number> {
+  const conversations = await prisma.conversation.findMany({
+    where: {
+      OR: [
+        { listing: { sellerId: userId } },
+        { messages: { some: { senderId: userId } } },
+      ],
+    },
+    select: { id: true },
+  });
+
+  const conversationIds = conversations.map((c) => c.id);
+  if (conversationIds.length === 0) return 0;
+
+  const count = await prisma.message.count({
+    where: {
+      conversationId: { in: conversationIds },
+      senderId:       { not: userId },
+      read:           false,
+    },
+  });
+
+  return count;
+}

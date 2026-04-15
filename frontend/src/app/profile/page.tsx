@@ -96,7 +96,7 @@ export default function ProfilePage() {
         <h2 className="text-lg font-bold text-gray-900 dark:text-white">
           {tab === 'active' ? 'Mis publicaciones activas' : 'Historial completo'}
         </h2>
-        <Link href="/publicar"
+        <Link href="/listings/new"
           className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition-colors">
           + Nueva
         </Link>
