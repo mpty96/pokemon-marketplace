@@ -104,6 +104,7 @@ model Listing {
   images       String[]      // URLs de Cloudinary
   status       ListingStatus @default(ACTIVE)
   views        Int           @default(0)
+  deletedAt    DateTime?     // 👈 soft delete
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
@@ -121,6 +122,7 @@ model Listing {
   @@index([condition])
   @@index([priceCLP])
   @@index([createdAt])
+  @@index([deletedAt])
   @@map("listings")
 }
 

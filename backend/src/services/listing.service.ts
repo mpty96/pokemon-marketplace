@@ -67,7 +67,8 @@ export async function getListings(filters: ListingFilters) {
   const skip = (page - 1) * limit;
 
   const where: Prisma.ListingWhereInput = {
-    status: 'ACTIVE' as ListingStatus,
+    status:    'ACTIVE' as ListingStatus,
+    deletedAt: null, // 👈 excluir soft-deleted
   };
 
   if (search) {
@@ -170,9 +171,13 @@ export async function deleteListing(id: string, sellerId: string) {
   if (!listing)                      throw new Error('LISTING_NOT_FOUND');
   if (listing.sellerId !== sellerId) throw new Error('UNAUTHORIZED');
   if (listing.status === 'PAUSED')   throw new Error('LISTING_IN_SALE');
+  if (listing.deletedAt)             throw new Error('ALREADY_DELETED');
 
-  await Promise.all(listing.images.map((url) => deleteImage(url)));
-  await prisma.listing.delete({ where: { id } });
+  // Soft delete — no borrar físicamente
+  await prisma.listing.update({
+    where: { id },
+    data:  { deletedAt: new Date(), status: 'CANCELLED' },
+  });
 
   return { message: 'Publicación eliminada' };
 }
@@ -187,6 +192,31 @@ export async function getMyListings(sellerId: string) {
           id: true,
           username: true,
           profile: { select: { displayName: true, avatarUrl: true, reputationScore: true } },
+        },
+      },
+    },
+  });
+}
+
+export async function getListingsHistory(sellerId: string) {
+  return prisma.listing.findMany({
+    where: { sellerId }, // incluye deletedAt != null
+    orderBy: { createdAt: 'desc' },
+    include: {
+      seller: {
+        select: {
+          id: true,
+          username: true,
+          profile: { select: { displayName: true, avatarUrl: true, reputationScore: true } },
+        },
+      },
+      sale: {
+        select: {
+          id: true,
+          status: true,
+          finalPriceCLP: true,
+          completedAt: true,
+          buyer: { select: { id: true, username: true } },
         },
       },
     },

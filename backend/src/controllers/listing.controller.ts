@@ -7,6 +7,7 @@ import {
   updateListing,
   deleteListing,
   getMyListings,
+  getListingsHistory,
 } from '../services/listing.service';
 
 // Tipos locales — evita importar enums desde @prisma/client
@@ -134,5 +135,14 @@ export async function myListings(req: AuthRequest, res: Response): Promise<void>
     res.json(listings);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener tus publicaciones' });
+  }
+}
+
+export async function listingsHistory(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const listings = await getListingsHistory(req.user!.userId);
+    res.json(listings);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener historial' });
   }
 }

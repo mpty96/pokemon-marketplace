@@ -7,10 +7,10 @@ import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
 
 export default function LoginPage() {
-  const router = useRouter();
+  const router  = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
+  const [form,    setForm]    = useState({ email: '', password: '' });
+  const [error,   setError]   = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -23,7 +23,14 @@ export default function LoginPage() {
       setAuth(data.user, data.accessToken, data.refreshToken);
       router.push('/');
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Error al iniciar sesión');
+      console.error('Login error:', err);
+
+      if (!err.response) {
+        // Sin respuesta — servidor dormido o sin conexión
+        setError('No se pudo conectar al servidor. Intenta de nuevo en unos segundos.');
+      } else {
+        setError(err.response?.data?.error || 'Error al iniciar sesión');
+      }
     } finally {
       setLoading(false);
     }
@@ -74,9 +81,16 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 rounded-lg transition-colors"
-          >
-            {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 rounded-lg transition-colors">
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                </svg>
+                Iniciando sesión...
+              </span>
+            ) : 'Iniciar sesión'}
           </button>
 
           <p className="text-center text-sm text-gray-500">
