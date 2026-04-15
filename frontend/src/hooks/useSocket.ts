@@ -4,7 +4,7 @@ import { useAuthStore } from '@/store/auth.store';
 
 let socketInstance: Socket | null = null;
 
-export function useSocket() {
+export function useSocket(): Socket | null {
   const accessToken = useAuthStore((s) => s.accessToken);
   const socketRef   = useRef<Socket | null>(null);
 
@@ -29,4 +29,5 @@ export function useSocket() {
       socketRef.current = null;
     };
   }, [accessToken]);
+  return socketRef.current;
 }
