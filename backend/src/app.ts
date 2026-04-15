@@ -29,7 +29,7 @@ app.use(cors({
 }));
 
 // Preflight para todas las rutas
-app.options('*', cors());
+app.options('/*', cors());
 
 app.use(json());
 
