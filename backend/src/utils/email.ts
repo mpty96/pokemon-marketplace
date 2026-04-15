@@ -1,4 +1,7 @@
 import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 function createTransporter() {
   // En producción usar SMTP real (Resend, SendGrid, etc.)
@@ -18,9 +21,8 @@ export async function sendVerificationEmail(
   token: string
 ): Promise<void> {
   const verifyUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
-  const transporter = createTransporter();
 
-  await transporter.sendMail({
+  await resend.emails.send({
     from: `"PokéMarket Chile" <${process.env.EMAIL_FROM}>`,
     to: email,
     subject: 'Verifica tu cuenta en PokéMarket Chile',
