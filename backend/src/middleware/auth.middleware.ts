@@ -3,7 +3,10 @@ import { verifyAccessToken } from '../utils/jwt';
 import { JwtPayload } from '../types';
 
 export interface AuthRequest extends Request {
-  user?: JwtPayload;
+  user?: any;
+  body: any;
+  params: any;
+  query: any;
 }
 
 export function authenticate(
