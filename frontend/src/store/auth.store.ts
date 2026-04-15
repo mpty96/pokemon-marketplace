@@ -31,12 +31,27 @@ export const useAuthStore = create<AuthState>()(
       setAuth: (user, accessToken, refreshToken) => {
         localStorage.setItem('accessToken',  accessToken);
         localStorage.setItem('refreshToken', refreshToken);
-        set({ user, accessToken, refreshToken, isAuthenticated: true });
+
+        // 🔥 limpiar completamente antes de setear
+        set({
+          user: null,
+          accessToken: null,
+          refreshToken: null,
+          isAuthenticated: false,
+        });
+
+        set({
+          user,
+          accessToken,
+          refreshToken,
+          isAuthenticated: true,
+        });
       },
 
       logout: () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('auth-storage'); // 🔥 clave con persist
         set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false });
       },
 
