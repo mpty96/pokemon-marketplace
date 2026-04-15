@@ -25,11 +25,13 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
-        window.location.href = '/login';
+        const path = window.location.pathname;
       }
     }
     return Promise.reject(error);
   }
 );
+
+
 
 export default api;
