@@ -41,7 +41,6 @@ export async function registerUser(
     await sendVerificationEmail(email, verificationToken);
   } catch (error) {
     console.error("EMAIL ERROR:", error);
-    throw error;
   }
 
   return {
