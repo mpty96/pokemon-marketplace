@@ -46,6 +46,19 @@ export default function Header() {
               )}
             </Link>
           )}
+            {isAuthenticated && (
+            <Link href="/transacciones" className={linkClass('/transacciones')}>
+              Transacciones
+            </Link>
+          )}
+
+          // Nav móvil — agrega después de Mensajes:
+          {isAuthenticated && (
+            <Link href="/transacciones"
+              className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">
+              Transacciones
+            </Link>
+          )}
         </nav>
 
         {/* Auth */}
@@ -53,12 +66,12 @@ export default function Header() {
           {isAuthenticated ? (
             <>
               <Link href="/profile"
-                className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 font-medium">
-                {user?.username}
+                className="text-sm border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors">
+                Mi Perfil
               </Link>
               <button onClick={handleLogout}
                 className="text-sm border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors">
-                Salir
+                Cerrar sesión
               </button>
             </>
           ) : (

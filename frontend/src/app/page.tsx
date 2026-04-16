@@ -30,32 +30,66 @@ export default function HomePage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
 
       {/* Hero */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 mb-10 text-white text-center">
-        <h1 className="text-3xl md:text-4xl font-bold mb-3">
-          🎴 El marketplace de cartas Pokémon en Chile
-        </h1>
-        <p className="text-blue-100 mb-6 text-lg">
-          Compra y vende cartas con otros coleccionistas de forma segura
-        </p>
-        <div className="flex gap-3 justify-center">
-          <Link href="/marketplace"
-            className="bg-white text-blue-600 font-semibold px-6 py-2.5 rounded-lg hover:bg-blue-50 transition-colors">
-            Ver marketplace
-          </Link>
-          <Link href="/listings/new"
-            className="border border-white text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-blue-500 transition-colors">
-            Publicar carta
-          </Link>
+      <div className="relative overflow-hidden rounded-2xl mb-10">
+        {/* Fondo con gradiente */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700" />
+
+        {/* Patrón decorativo */}
+        <div className="absolute inset-0 opacity-10"
+          style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+
+        <div className="relative px-8 py-14 text-white text-center">
+          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+            🇨🇱 Solo para Chile
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">
+            Compra y vende cartas
+            <span className="block text-yellow-300">Pokémon con confianza</span>
+          </h1>
+          <p className="text-blue-100 mb-8 text-lg max-w-xl mx-auto">
+            El marketplace más seguro de Chile para coleccionistas.
+            Chat directo, doble confirmación y sistema de reputación.
+          </p>
+          <div className="flex gap-3 justify-center flex-wrap">
+            <Link href="/marketplace"
+              className="bg-white text-blue-700 font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors shadow-lg">
+              Ver marketplace
+            </Link>
+            <Link href="/publicar"
+              className="border-2 border-white/50 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-colors backdrop-blur-sm">
+              Publicar carta
+            </Link>
+          </div>
+
+          {/* Stats rápidas */}
+          <div className="flex justify-center gap-8 mt-10 pt-8 border-t border-white/20">
+            <div>
+              <p className="text-2xl font-extrabold text-yellow-300">100%</p>
+              <p className="text-xs text-blue-200">Seguro</p>
+            </div>
+            <div>
+              <p className="text-2xl font-extrabold text-yellow-300">Chat</p>
+              <p className="text-xs text-blue-200">Directo</p>
+            </div>
+            <div>
+              <p className="text-2xl font-extrabold text-yellow-300">⭐ 5.0</p>
+              <p className="text-xs text-blue-200">Reputación</p>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Publicaciones recientes */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            Publicaciones recientes
-          </h2>
-          <Link href="/marketplace" className="text-blue-600 hover:underline text-sm">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              Publicaciones recientes
+            </h2>
+            <p className="text-sm text-gray-400 mt-0.5">Las últimas cartas disponibles</p>
+          </div>
+          <Link href="/marketplace"
+            className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
             Ver todas →
           </Link>
         </div>

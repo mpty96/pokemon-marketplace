@@ -59,6 +59,7 @@ const rating = await prisma.rating.create({
   return rating;
 }
 
+
 async function recalculateReputation(userId: string) {
   const allRatings = await prisma.rating.findMany({
     where: { ratedId: userId },
@@ -67,23 +68,33 @@ async function recalculateReputation(userId: string) {
     },
   });
 
-  if (allRatings.length === 0) return;
+  if (allRatings.length === 0) {
+    await prisma.profile.update({
+      where: { userId },
+      data:  {
+        reputationScore:    0,
+        reputationAsSeller: 0,
+        reputationAsBuyer:  0,
+      },
+    });
+    return;
+  }
 
-  // Separar por rol
+  const calcAvg = (arr: { averageScore: number }[]) =>
+    arr.length === 0
+      ? 0
+      : Number((arr.reduce((s, r) => s + r.averageScore, 0) / arr.length).toFixed(2));
+
   const asSeller = allRatings.filter((r) => r.sale.sellerId === userId);
   const asBuyer  = allRatings.filter((r) => r.sale.sellerId !== userId);
 
-  const avg = (arr: typeof allRatings) =>
-    arr.length === 0 ? 0 :
-    Number((arr.reduce((s, r) => s + r.averageScore, 0) / arr.length).toFixed(2));
-
-  const reputationAsSeller = avg(asSeller);
-  const reputationAsBuyer  = avg(asBuyer);
-  const reputationScore    = avg(allRatings);
-
   await prisma.profile.update({
     where: { userId },
-    data:  { reputationScore, reputationAsSeller, reputationAsBuyer },
+    data: {
+      reputationScore:    calcAvg(allRatings),
+      reputationAsSeller: calcAvg(asSeller),
+      reputationAsBuyer:  calcAvg(asBuyer),
+    },
   });
 }
 

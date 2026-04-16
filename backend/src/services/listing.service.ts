@@ -246,16 +246,19 @@ export async function getListingsHistory(userId: string) {
 
   return {
     asseller:  sold,
-    asbuyer:   purchases.map((s) => ({
+        asbuyer: purchases.map((s) => ({
       ...s.listing,
+      role: 'buyer',
       sale: {
         id:            s.id,
         status:        s.status,
         finalPriceCLP: s.finalPriceCLP,
         completedAt:   s.completedAt,
-        buyer:         { id: userId, username: 'Tú' },
+        seller: {
+          id:       s.listing.seller.id,
+          username: s.listing.seller.username,
+        },
       },
-      role: 'buyer',
     })),
   };
 }

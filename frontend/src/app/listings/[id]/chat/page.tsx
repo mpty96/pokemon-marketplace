@@ -11,6 +11,7 @@ import RatingForm from '@/components/RatingForm';
 import { RatingCard } from '@/components/RatingCard';
 import { RatingSaleData, Rating } from '@/types';
 import Link from 'next/link';
+import { clearUnread } from '@/hooks/useUnreadCount';
 
 export default function ChatPage() {
   const { id }   = useParams<{ id: string }>();
@@ -38,6 +39,9 @@ export default function ChatPage() {
       setChatData(chatRes.data);
       setMessages(chatRes.data.conversation?.messages || []);
 
+      //Borrar notificaciones luego de abrir el chat.
+      clearUnread();
+
       // Cargar venta si existe
       if (listingRes.data.status === 'PAUSED' || listingRes.data.status === 'SOLD') {
         try {
@@ -57,6 +61,7 @@ export default function ChatPage() {
       }
     }).finally(() => setLoading(false));
   }, [id, isAuthenticated]);
+
 
   useEffect(() => {
     if (!socket || !id) return;
@@ -163,7 +168,7 @@ export default function ChatPage() {
           : listing.seller.username
         }`}
         className="text-xs text-blue-500 hover:underline">
-        {isSeller ? 'Ver perfil del comprador' : `Ver perfil de ${listing.seller.profile?.displayName || listing.seller.username}`}
+          {isSeller ? 'Ver perfil del comprador' : 'Ver perfil del vendedor'}
       </Link>
     </div>
     <span className={`text-xs px-2 py-1 rounded-full ${

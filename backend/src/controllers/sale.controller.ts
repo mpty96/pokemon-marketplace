@@ -6,6 +6,7 @@ import {
   cancelSale,
   getSaleByListing,
 } from '../services/sale.service';
+import prisma from '../lib/prisma';
 
 export async function initiate(req: AuthRequest, res: Response): Promise<void> {
   try {
@@ -84,5 +85,41 @@ export async function getSale(req: AuthRequest, res: Response): Promise<void> {
     };
     const [status, message] = map[error.message] || [500, 'Error interno'];
     res.status(status).json({ error: message });
+  }
+}
+
+export async function getMyTransactions(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const userId = req.user!.userId;
+
+    const sales = await prisma.sale.findMany({
+      where: {
+        OR: [{ buyerId: userId }, { sellerId: userId }],
+        status: 'COMPLETED',
+      },
+      orderBy: { completedAt: 'desc' },
+      include: {
+        listing: {
+          select: { id: true, title: true, images: true, priceCLP: true },
+        },
+        buyer:  { select: { id: true, username: true } },
+        seller: { select: { id: true, username: true } },
+      },
+    });
+
+    const result = sales.map((s) => ({
+      id:           s.id,
+      listingId:    s.listingId,
+      title:        s.listing.title,
+      image:        s.listing.images[0] || null,
+      priceCLP:     s.finalPriceCLP,
+      completedAt:  s.completedAt,
+      role:         s.sellerId === userId ? 'seller' : 'buyer',
+      otherUser:    s.sellerId === userId ? s.buyer : s.seller,
+    }));
+
+    res.json(result);
+  } catch {
+    res.status(500).json({ error: 'Error al obtener transacciones' });
   }
 }

@@ -186,10 +186,6 @@ export default function PublicProfilePage() {
 
       {/* Calificaciones recibidas */}
       <div>
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-          Calificaciones recibidas ({data.ratingsReceived.length})
-        </h2>
-
         {data.ratingsReceived.length === 0 ? (
           <div className="text-center py-10 text-gray-400">
             <p className="text-3xl mb-2">⭐</p>

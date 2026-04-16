@@ -110,6 +110,13 @@ export default function ListingDetailPage() {
                       {RARITY_LABELS[listing.rarity]}
                     </span>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 w-20">Edición:</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
+                      {listing.edition}
+                      {listing.setNumber && ` · #${listing.setNumber}`}
+                    </span>
+                  </div>
                 </div>
 
                 {listing.description && (
