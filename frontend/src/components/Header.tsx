@@ -4,12 +4,14 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import { useUnreadCount } from '@/hooks/useUnreadCount';
+import { useThemeStore } from '@/store/theme.store';
 
 export default function Header() {
   const router      = useRouter();
   const pathname    = usePathname();
   const { user, isAuthenticated, logout } = useAuthStore();
   const unreadCount = useUnreadCount();
+  const { dark, toggle } = useThemeStore();
 
   function handleLogout() {
     logout();
@@ -58,6 +60,11 @@ export default function Header() {
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
+              <button onClick={toggle}
+                className="text-sm border border-gray-300 dark:border-gray-600 px-2.5 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
+                title={dark ? 'Modo claro' : 'Modo oscuro'}>
+                {dark ? '🌞' : '🌙'}
+              </button>
               <Link href="/profile"
                 className="text-sm border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors">
                 Mi Perfil

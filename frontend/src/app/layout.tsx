@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import ThemeInitializer from '@/components/ThemeInitializer';
 import Header from '@/components/Header';
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="min-h-screen bg-gray-50 dark:bg-gray-950">
+        <ThemeInitializer />
         <Header />
         <main>{children}</main>
       </body>

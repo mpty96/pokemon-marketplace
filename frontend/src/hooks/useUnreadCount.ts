@@ -3,6 +3,7 @@ import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
 
 let globalCount = 0;
+let silenced    = false;
 let listeners:  ((n: number) => void)[] = [];
 
 function notifyListeners(n: number) {
@@ -10,12 +11,8 @@ function notifyListeners(n: number) {
   listeners.forEach((fn) => fn(n));
 }
 
-export function decrementUnread(amount = 1) {
-  const next = Math.max(0, globalCount - amount);
-  notifyListeners(next);
-}
-
 export function clearUnread() {
+  silenced = true;
   notifyListeners(0);
 }
 
@@ -33,7 +30,11 @@ export function useUnreadCount() {
     if (!isAuthenticated) return;
     try {
       const { data } = await api.get('/api/chat/unread');
-      notifyListeners(data.count);
+      const newCount = data.count;
+      if (silenced && newCount > globalCount) {
+        silenced = false; // nuevo mensaje real → reactivar
+      }
+      if (!silenced) notifyListeners(newCount);
     } catch { /* silencioso */ }
   }, [isAuthenticated]);
 

@@ -81,7 +81,7 @@ export default function ListingDetailPage() {
               <div className="space-y-4">
                 <div>
                   <span className="text-xs text-gray-400 uppercase tracking-wide">
-                    {listing.edition} {listing.setNumber && `· #${listing.setNumber}`}
+                    Edición: {listing.edition}{listing.setNumber && ` · #${listing.setNumber}`}
                   </span>
                   <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                     {listing.title}

@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware';
 import {
   initiateSale,
@@ -121,5 +121,32 @@ export async function getMyTransactions(req: AuthRequest, res: Response): Promis
     res.json(result);
   } catch {
     res.status(500).json({ error: 'Error al obtener transacciones' });
+  }
+}
+
+export async function getRecentTransactions(req: Request, res: Response): Promise<void> {
+  try {
+    const sales = await prisma.sale.findMany({
+      where:   { status: 'COMPLETED' },
+      orderBy: { completedAt: 'desc' },
+      take:    20,
+      include: {
+        listing: { select: { id: true, title: true, images: true, priceCLP: true } },
+        buyer:   { select: { id: true, username: true } },
+        seller:  { select: { id: true, username: true } },
+      },
+    });
+    res.json(sales.map((s) => ({
+      id:          s.id,
+      listingId:   s.listingId,
+      title:       s.listing.title,
+      image:       s.listing.images[0] || null,
+      priceCLP:    s.finalPriceCLP,
+      completedAt: s.completedAt,
+      buyer:       s.buyer,
+      seller:      s.seller,
+    })));
+  } catch {
+    res.status(500).json({ error: 'Error al obtener transacciones recientes' });
   }
 }

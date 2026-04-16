@@ -30,51 +30,36 @@ export default function HomePage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
 
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl mb-10">
-        {/* Fondo con gradiente */}
+      <div className="relative overflow-hidden rounded-2xl mb-6">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700" />
-
-        {/* Patrón decorativo */}
         <div className="absolute inset-0 opacity-10"
-          style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+          style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-        <div className="relative px-8 py-14 text-white text-center">
-          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+        <div className="relative px-6 py-8 text-white text-center">
+          <div className="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
             🇨🇱 Solo para Chile
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-2 tracking-tight">
             Compra y vende cartas
             <span className="block text-yellow-300">Pokémon con confianza</span>
           </h1>
-          <p className="text-blue-100 mb-8 text-lg max-w-xl mx-auto">
+          <p className="text-blue-100 mb-5 text-base max-w-xl mx-auto">
             El marketplace más seguro de Chile para coleccionistas.
-            Chat directo, doble confirmación y sistema de reputación.
           </p>
-          <div className="flex gap-3 justify-center flex-wrap">
+          <div className="flex gap-2 justify-center flex-wrap">
             <Link href="/marketplace"
-              className="bg-white text-blue-700 font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors shadow-lg">
+              className="bg-white text-blue-700 font-bold px-5 py-2.5 rounded-xl hover:bg-blue-50 transition-colors shadow-lg">
               Ver marketplace
             </Link>
             <Link href="/publicar"
-              className="border-2 border-white/50 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-colors backdrop-blur-sm">
+              className="border-2 border-white/50 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-white/10 transition-colors">
               Publicar carta
             </Link>
           </div>
-
-          {/* Stats rápidas */}
-          <div className="flex justify-center gap-8 mt-10 pt-8 border-t border-white/20">
-            <div>
-              <p className="text-2xl font-extrabold text-yellow-300">100%</p>
-              <p className="text-xs text-blue-200">Seguro</p>
-            </div>
-            <div>
-              <p className="text-2xl font-extrabold text-yellow-300">Chat</p>
-              <p className="text-xs text-blue-200">Directo</p>
-            </div>
-            <div>
-              <p className="text-2xl font-extrabold text-yellow-300">⭐ 5.0</p>
-              <p className="text-xs text-blue-200">Reputación</p>
-            </div>
+          <div className="flex justify-center gap-8 mt-6 pt-5 border-t border-white/20">
+            <div><p className="text-xl font-extrabold text-yellow-300">100%</p><p className="text-xs text-blue-200">Seguro</p></div>
+            <div><p className="text-xl font-extrabold text-yellow-300">Chat</p><p className="text-xs text-blue-200">Directo</p></div>
+            <div><p className="text-xl font-extrabold text-yellow-300">⭐ 5.0</p><p className="text-xs text-blue-200">Reputación</p></div>
           </div>
         </div>
       </div>
@@ -123,33 +108,53 @@ export default function HomePage() {
 
 function ListingCard({ listing }: { listing: Listing }) {
   return (
-    <Link href={`/listings/${listing.id}`}
-      className="bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 dark:border-gray-800 group">
-      <div className="aspect-square overflow-hidden bg-gray-50 dark:bg-gray-800">
-        <img
-          src={listing.images[0]}
-          alt={listing.title}
-          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
-        />
-      </div>
-      <div className="p-3">
-        <p className="text-xs text-gray-400 truncate">{listing.edition}</p>
-        <h3 className="font-semibold text-gray-900 dark:text-white truncate text-sm mt-0.5">
-          {listing.title}
-        </h3>
-        <div className="flex items-center justify-between mt-2">
-          <span className="text-blue-600 font-bold text-sm">
-            ${listing.priceCLP.toLocaleString('es-CL')}
-          </span>
-          <span className="text-xs text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
-            {CONDITION_LABELS[listing.condition]}
-          </span>
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-800 overflow-hidden">
+      {/* Card principal */}
+      <Link href={`/listings/${listing.id}`} className="block group">
+        <div className="aspect-square overflow-hidden bg-gray-50 dark:bg-gray-800">
+          <img
+            src={listing.images[0]}
+            alt={listing.title}
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
+          />
         </div>
-        <p className="text-xs text-gray-400 mt-1">
-          {listing.seller.profile?.displayName || listing.seller.username}
-          {' · '}★ {listing.seller.profile?.reputationScore.toFixed(1) || '0.0'}
-        </p>
-      </div>
-    </Link>
+        <div className="p-3">
+          <p className="text-xs text-gray-400 truncate">
+            Edición: {listing.edition}
+          </p>
+          <h3 className="font-semibold text-gray-900 dark:text-white truncate text-sm mt-0.5">
+            {listing.title}
+          </h3>
+          <div className="flex items-center justify-between mt-2">
+            <span className="text-blue-600 font-bold text-sm">
+              ${listing.priceCLP.toLocaleString('es-CL')}
+            </span>
+            <span className="text-xs text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
+              {CONDITION_LABELS[listing.condition]}
+            </span>
+          </div>
+        </div>
+      </Link>
+
+      {/* Separador */}
+      <div className="border-t border-gray-100 dark:border-gray-800" />
+
+      {/* Card secundaria — vendedor */}
+      <Link href={`/usuario/${listing.seller.username}`}
+        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+        <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-xs font-bold text-blue-600 flex-shrink-0">
+          {listing.seller.username[0].toUpperCase()}
+        </div>
+        <div className="min-w-0">
+          <p className="text-xs text-gray-400">Vendedor:</p>
+          <p className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">
+            {listing.seller.profile?.displayName || listing.seller.username}
+          </p>
+        </div>
+        <span className="ml-auto text-xs text-yellow-500 flex-shrink-0">
+          ★ {listing.seller.profile?.reputationScore.toFixed(1) || '0.0'}
+        </span>
+      </Link>
+    </div>
   );
 }
