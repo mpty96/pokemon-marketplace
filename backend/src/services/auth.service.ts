@@ -39,9 +39,15 @@ export async function registerUser(
 
   try {
     await sendVerificationEmail(email, verificationToken);
-  } catch (error) {
-    console.error("EMAIL ERROR:", error);
-  }
+  } catch (error: any) {
+  console.error("EMAIL ERROR FULL:", {
+    message: error?.message,
+    name: error?.name,
+    stack: error?.stack,
+    raw: error,
+  });
+}
+console.log("ENVIANDO EMAIL A:", email);
 
   return {
     id: user.id,
