@@ -25,7 +25,7 @@ export default function TransaccionesPage() {
 
   useEffect(() => {
     if (!isAuthenticated) { router.push('/login'); return; }
-    api.get('/api/sales/my')
+    api.get('/api/sales')
       .then(({ data }) => setTransactions(data))
       .finally(() => setLoading(false));
 
