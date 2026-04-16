@@ -82,18 +82,10 @@ export default function ListingDetailPage() {
                 <div>
                   <span className="text-xs text-gray-400 uppercase tracking-wide">
                     {listing.edition} {listing.setNumber && `· #${listing.setNumber}`}
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                      Edición: <span className="font-medium text-gray-700 dark:text-gray-300">{listing.cardName}</span>
-                    </p>
                   </span>
                   <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                     {listing.title}
                   </h1>
-                  {listing.cardName && listing.cardName !== listing.title && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                      Nombre completo: <span className="font-medium text-gray-700 dark:text-gray-300">{listing.cardName}</span>
-                    </p>
-                  )}
                 </div>
 
                 <div className="text-3xl font-bold text-blue-600">
