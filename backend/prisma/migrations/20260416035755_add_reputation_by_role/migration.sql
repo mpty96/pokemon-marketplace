@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "profiles" ADD COLUMN     "reputationAsBuyer" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "reputationAsSeller" DOUBLE PRECISION NOT NULL DEFAULT 0;
