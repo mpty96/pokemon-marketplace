@@ -4,11 +4,11 @@ import { initiate, confirm, cancel, getSale, getMyTransactions, getRecentTransac
 
 const router = Router();
 
+router.get('/my', authenticate, getMyTransactions); 
+router.get('/recent', getRecentTransactions);
 router.post('/:listingId/initiate', authenticate, initiate);
 router.post('/:listingId/confirm',  authenticate, confirm);
 router.post('/:listingId/cancel',   authenticate, cancel);
 router.get('/:listingId',           authenticate, getSale);
-router.get('/my', authenticate, getMyTransactions); 
-router.get('/recent', getRecentTransactions);
 
 export default router;
