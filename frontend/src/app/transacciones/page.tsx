@@ -13,8 +13,8 @@ interface Transaction {
   image:       string | null;
   priceCLP:    number;
   completedAt: string | null;
-  role:        'buyer' | 'seller';
-  otherUser:   { id: string; username: string };
+  buyer:       { id: string; username: string };
+  seller:      { id: string; username: string };
 }
 
 export default function TransaccionesPage() {
@@ -26,8 +26,7 @@ export default function TransaccionesPage() {
   useEffect(() => {
     if (!isAuthenticated) { router.push('/login'); return; }
     api.get('/api/sales/recent')
-      .then(({ data }) => setTransactions(data))
-      .finally(() => setLoading(false));
+      .then(({ data }) => setTransactions(data));
 
     // Actualización cada 30s
     const interval = setInterval(() => {
@@ -87,10 +86,16 @@ export default function TransaccionesPage() {
                   ${tx.priceCLP.toLocaleString('es-CL')}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">
-                  {tx.role === 'seller' ? '🏪 Vendida a ' : '🛒 Comprada de '}
-                  <Link href={`/usuario/${tx.otherUser.username}`}
+                  🏪 Vendida por: 
+                  <Link href={`/usuario/${tx.seller.username}`}
                     className="text-blue-500 hover:underline font-medium">
-                    {tx.otherUser.username}
+                    {tx.seller.username}
+                  </Link>
+                  {' → '}
+                  🛒 Comprada por:
+                  <Link href={`/usuario/${tx.buyer.username}`}
+                    className="text-blue-500 hover:underline font-medium">
+                    {tx.buyer.username}
                   </Link>
                 </p>
               </div>
