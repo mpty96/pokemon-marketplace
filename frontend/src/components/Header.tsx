@@ -46,13 +46,6 @@ export default function Header() {
               )}
             </Link>
           )}
-            {isAuthenticated && (
-            <Link href="/transacciones" className={linkClass('/transacciones')}>
-              Transacciones
-            </Link>
-          )}
-
-          // Nav móvil — agrega después de Mensajes:
           {isAuthenticated && (
             <Link href="/transacciones"
               className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">
