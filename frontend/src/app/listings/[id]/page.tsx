@@ -82,13 +82,16 @@ export default function ListingDetailPage() {
                 <div>
                   <span className="text-xs text-gray-400 uppercase tracking-wide">
                     {listing.edition} {listing.setNumber && `· #${listing.setNumber}`}
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                      Edición: <span className="font-medium text-gray-700 dark:text-gray-300">{listing.cardName}</span>
+                    </p>
                   </span>
                   <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                     {listing.title}
                   </h1>
                   {listing.cardName && listing.cardName !== listing.title && (
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                      Carta: <span className="font-medium text-gray-700 dark:text-gray-300">{listing.cardName}</span>
+                      Nombre completo: <span className="font-medium text-gray-700 dark:text-gray-300">{listing.cardName}</span>
                     </p>
                   )}
                 </div>
@@ -108,13 +111,6 @@ export default function ListingDetailPage() {
                     <span className="text-xs text-gray-500 dark:text-gray-400 w-20">Rareza:</span>
                     <span className="px-3 py-1 bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-full text-sm font-medium">
                       {RARITY_LABELS[listing.rarity]}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500 dark:text-gray-400 w-20">Edición:</span>
-                    <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
-                      {listing.edition}
-                      {listing.setNumber && ` · #${listing.setNumber}`}
                     </span>
                   </div>
                 </div>
