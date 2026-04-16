@@ -60,21 +60,33 @@ const rating = await prisma.rating.create({
 }
 
 async function recalculateReputation(userId: string) {
-  const ratings = await prisma.rating.findMany({
+  const allRatings = await prisma.rating.findMany({
     where: { ratedId: userId },
-    select: { averageScore: true },
+    include: {
+      sale: { select: { sellerId: true } },
+    },
   });
 
-  if (ratings.length === 0) return;
+  if (allRatings.length === 0) return;
 
-  const total     = ratings.reduce((sum, r) => sum + r.averageScore, 0);
-  const newScore  = Number((total / ratings.length).toFixed(2));
+  // Separar por rol
+  const asSeller = allRatings.filter((r) => r.sale.sellerId === userId);
+  const asBuyer  = allRatings.filter((r) => r.sale.sellerId !== userId);
+
+  const avg = (arr: typeof allRatings) =>
+    arr.length === 0 ? 0 :
+    Number((arr.reduce((s, r) => s + r.averageScore, 0) / arr.length).toFixed(2));
+
+  const reputationAsSeller = avg(asSeller);
+  const reputationAsBuyer  = avg(asBuyer);
+  const reputationScore    = avg(allRatings);
 
   await prisma.profile.update({
     where: { userId },
-    data:  { reputationScore: newScore },
+    data:  { reputationScore, reputationAsSeller, reputationAsBuyer },
   });
 }
+
 
 export async function getRatingsBySale(saleId: string, userId: string) {
   const sale = await prisma.sale.findUnique({ where: { id: saleId } });
@@ -95,6 +107,7 @@ export async function getRatingsBySale(saleId: string, userId: string) {
 
   return { ratings, myRating, theirRating, canRate };
 }
+
 
 export async function getRatingsByUser(username: string) {
   const user = await prisma.user.findUnique({
@@ -117,9 +130,15 @@ export async function getRatingsByUser(username: string) {
 
   if (!user) throw new Error('USER_NOT_FOUND');
 
+  // Separar calificaciones por rol
+  const asSeller = user.ratingsReceived.filter((r) => r.sale.sellerId === user.id);
+  const asBuyer  = user.ratingsReceived.filter((r) => r.sale.sellerId !== user.id);
+
   return {
-    username:       user.username,
-    profile:        user.profile,
-    ratingsReceived: user.ratingsReceived,
+    username:           user.username,
+    profile:            user.profile,
+    ratingsReceived:    user.ratingsReceived,
+    ratingsAsSeller:    asSeller,
+    ratingsAsBuyer:     asBuyer,
   };
 }

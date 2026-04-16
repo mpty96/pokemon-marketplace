@@ -10,6 +10,7 @@ import SalePanel from '@/components/SalePanel';
 import RatingForm from '@/components/RatingForm';
 import { RatingCard } from '@/components/RatingCard';
 import { RatingSaleData, Rating } from '@/types';
+import Link from 'next/link';
 
 export default function ChatPage() {
   const { id }   = useParams<{ id: string }>();
@@ -59,16 +60,41 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!socket || !id) return;
+
     socket.emit('join_conversation', id);
+
+    // Mensajes nuevos
     socket.on('new_message', (message: Message) => {
       setMessages((prev) => [...prev, message]);
-      if (String(message.sender?.id) !== String(user?.id)) {
+      if (message.senderId !== user?.id) {
         socket.emit('mark_read', message.conversationId);
       }
     });
+
+    // Polling para estado de venta y ratings (cada 5s)
+    const interval = setInterval(async () => {
+      try {
+        const listingRes = await api.get(`/api/listings/${id}`);
+        setListing(listingRes.data);
+
+        if (listingRes.data.status === 'PAUSED' || listingRes.data.status === 'SOLD') {
+          const saleRes = await api.get(`/api/sales/${id}`);
+          setSale(saleRes.data);
+
+          if (saleRes.data.status === 'COMPLETED') {
+            const ratingRes = await api.get(`/api/ratings/sale/${saleRes.data.id}`);
+            setRatingData(ratingRes.data);
+          }
+        }
+      } catch {
+        // silencioso
+      }
+    }, 5000);
+
     return () => {
       socket.emit('leave_conversation', id);
       socket.off('new_message');
+      clearInterval(interval);
     };
   }, [socket, id]);
 
@@ -120,28 +146,37 @@ export default function ChatPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 space-y-4">
 
-      {/* Header del chat */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 flex items-center gap-4">
-        <button onClick={() => router.back()} className="text-gray-400 hover:text-gray-600">←</button>
-        <img src={listing.images[0]} alt={listing.title}
-          className="w-12 h-12 object-contain rounded-lg bg-gray-50 dark:bg-gray-800" />
-        <div className="flex-1 min-w-0">
-          <h2 className="font-semibold text-gray-900 dark:text-white truncate">{listing.title}</h2>
-          <p className="text-sm text-blue-600 font-medium">
-            ${listing.priceCLP.toLocaleString('es-CL')}
-          </p>
-        </div>
-        <span className={`text-xs px-2 py-1 rounded-full ${
-          listing.status === 'ACTIVE'     ? 'bg-green-100 text-green-700' :
-          listing.status === 'PAUSED'     ? 'bg-yellow-100 text-yellow-700' :
-          listing.status === 'SOLD'       ? 'bg-gray-100 text-gray-500' :
-                                            'bg-gray-100 text-gray-400'
-        }`}>
-          {listing.status === 'ACTIVE'  ? 'Disponible' :
-           listing.status === 'PAUSED'  ? 'En proceso' :
-           listing.status === 'SOLD'    ? 'Vendida'    : 'Cancelada'}
-        </span>
-      </div>
+  {/* Header del chat */}
+  <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 flex items-center gap-4">
+    <button onClick={() => router.back()} className="text-gray-400 hover:text-gray-600">←</button>
+    <img src={listing.images[0]} alt={listing.title}
+      className="w-12 h-12 object-contain rounded-lg bg-gray-50 dark:bg-gray-800" />
+    <div className="flex-1 min-w-0">
+      <h2 className="font-semibold text-gray-900 dark:text-white truncate">{listing.title}</h2>
+      <p className="text-sm text-blue-600 font-medium">
+        ${listing.priceCLP.toLocaleString('es-CL')}
+      </p>
+      {/* Link al perfil del otro usuario */}
+      <Link
+        href={`/usuario/${isSeller
+          ? (chatData?.conversation?.messages?.find(m => m.senderId !== listing.sellerId)?.sender.username || '')
+          : listing.seller.username
+        }`}
+        className="text-xs text-blue-500 hover:underline">
+        {isSeller ? 'Ver perfil del comprador' : `Ver perfil de ${listing.seller.profile?.displayName || listing.seller.username}`}
+      </Link>
+    </div>
+    <span className={`text-xs px-2 py-1 rounded-full ${
+      listing.status === 'ACTIVE'  ? 'bg-green-100 text-green-700' :
+      listing.status === 'PAUSED'  ? 'bg-yellow-100 text-yellow-700' :
+      listing.status === 'SOLD'    ? 'bg-gray-100 text-gray-500' :
+                                    'bg-gray-100 text-gray-400'
+    }`}>
+      {listing.status === 'ACTIVE'  ? 'Disponible' :
+      listing.status === 'PAUSED'  ? 'En proceso' :
+      listing.status === 'SOLD'    ? 'Vendida'    : 'Cancelada'}
+    </span>
+  </div>
 
       {/* Panel de venta */}
       <SalePanel

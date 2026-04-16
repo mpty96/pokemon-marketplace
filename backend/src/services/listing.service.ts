@@ -184,7 +184,11 @@ export async function deleteListing(id: string, sellerId: string) {
 
 export async function getMyListings(sellerId: string) {
   return prisma.listing.findMany({
-    where: { sellerId },
+    where: {
+      sellerId,
+      deletedAt: null,
+      status: { in: ['ACTIVE', 'PAUSED'] }, // 👈 excluye SOLD y CANCELLED
+    },
     orderBy: { createdAt: 'desc' },
     include: {
       seller: {
@@ -198,27 +202,60 @@ export async function getMyListings(sellerId: string) {
   });
 }
 
-export async function getListingsHistory(sellerId: string) {
-  return prisma.listing.findMany({
-    where: { sellerId }, // incluye deletedAt != null
+export async function getListingsHistory(userId: string) {
+  // Ventas del usuario (como vendedor)
+  const sold = await prisma.listing.findMany({
+    where: { sellerId: userId },
     orderBy: { createdAt: 'desc' },
     include: {
       seller: {
         select: {
-          id: true,
-          username: true,
+          id: true, username: true,
           profile: { select: { displayName: true, avatarUrl: true, reputationScore: true } },
         },
       },
       sale: {
         select: {
-          id: true,
-          status: true,
-          finalPriceCLP: true,
-          completedAt: true,
+          id: true, status: true, finalPriceCLP: true, completedAt: true,
           buyer: { select: { id: true, username: true } },
         },
       },
     },
   });
+
+  // Compras del usuario (como comprador)
+  const purchases = await prisma.sale.findMany({
+    where: {
+      buyerId:  userId,
+      status:   'COMPLETED',
+    },
+    orderBy: { completedAt: 'desc' },
+    include: {
+      listing: {
+        include: {
+          seller: {
+            select: {
+              id: true, username: true,
+              profile: { select: { displayName: true, avatarUrl: true, reputationScore: true } },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return {
+    asseller:  sold,
+    asbuyer:   purchases.map((s) => ({
+      ...s.listing,
+      sale: {
+        id:            s.id,
+        status:        s.status,
+        finalPriceCLP: s.finalPriceCLP,
+        completedAt:   s.completedAt,
+        buyer:         { id: userId, username: 'Tú' },
+      },
+      role: 'buyer',
+    })),
+  };
 }

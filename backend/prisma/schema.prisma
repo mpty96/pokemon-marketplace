@@ -79,6 +79,8 @@ model Profile {
   avatarUrl      String?
   location       String?  // ciudad en Chile
   reputationScore Float   @default(0)
+  reputationAsSeller  Float    @default(0)  
+  reputationAsBuyer   Float    @default(0)
   totalSales     Int      @default(0)
   totalPurchases Int      @default(0)
   createdAt      DateTime @default(now())

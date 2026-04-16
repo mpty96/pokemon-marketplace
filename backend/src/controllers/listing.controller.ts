@@ -140,8 +140,8 @@ export async function myListings(req: AuthRequest, res: Response): Promise<void>
 
 export async function listingsHistory(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const listings = await getListingsHistory(req.user!.userId);
-    res.json(listings);
+    const data = await getListingsHistory(req.user!.userId);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener historial' });
   }

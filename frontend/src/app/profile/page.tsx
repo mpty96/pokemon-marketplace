@@ -19,26 +19,31 @@ const STATUS_LABEL: Record<string, { label: string; color: string }> = {
 export default function ProfilePage() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
-  const [tab,      setTab]      = useState<Tab>('active');
+  const [tab,       setTab]       = useState<'active' | 'sold' | 'bought'>('active');
   const [active,   setActive]   = useState<Listing[]>([]);
+  const [asSeller,  setAsSeller]  = useState<Listing[]>([]);
+  const [asBuyer,   setAsBuyer]   = useState<Listing[]>([]);
   const [history,  setHistory]  = useState<Listing[]>([]);
   const [loading,  setLoading]  = useState(true);
 
   useEffect(() => {
     if (!isAuthenticated) { router.push('/login'); return; }
-
     Promise.all([
       api.get('/api/listings/my'),
       api.get('/api/listings/history'),
     ]).then(([activeRes, historyRes]) => {
       setActive(activeRes.data);
-      setHistory(historyRes.data);
+      setAsSeller(historyRes.data.aseller || []);
+      setAsBuyer(historyRes.data.asbuyer  || []);
     }).finally(() => setLoading(false));
   }, [isAuthenticated]);
 
   if (!isAuthenticated) return null;
 
-  const displayed = tab === 'active' ? active : history;
+const displayed =
+  tab === 'active'  ? active :
+  tab === 'sold'    ? asSeller.filter((l: any) => l.status === 'SOLD') :
+  asBuyer;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -71,35 +76,27 @@ export default function ProfilePage() {
 
       {/* Tabs */}
       <div className="flex gap-1 mb-5 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg w-fit">
-        <button
-          onClick={() => setTab('active')}
+        <button onClick={() => setTab('active')}
           className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
             tab === 'active'
               ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
-          }`}>
+              : 'text-gray-500 hover:text-gray-700'}`}>
           Activas ({active.length})
         </button>
-        <button
-          onClick={() => setTab('history')}
+        <button onClick={() => setTab('sold')}
           className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-            tab === 'history'
+            tab === 'sold'
               ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
-          }`}>
-          Historial ({history.length})
+              : 'text-gray-500 hover:text-gray-700'}`}>
+          Vendidas ({asSeller.filter((l: any) => l.status === 'SOLD').length})
         </button>
-      </div>
-
-      {/* Header sección */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-          {tab === 'active' ? 'Mis publicaciones activas' : 'Historial completo'}
-        </h2>
-        <Link href="/listings/new"
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition-colors">
-          + Nueva
-        </Link>
+        <button onClick={() => setTab('bought')}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            tab === 'bought'
+              ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
+              : 'text-gray-500 hover:text-gray-700'}`}>
+          Compradas ({asBuyer.length})
+        </button>
       </div>
 
       {/* Lista */}

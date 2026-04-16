@@ -17,7 +17,9 @@ interface PublicProfile {
     totalSales:     number;
     totalPurchases: number;
   } | null;
-  ratingsReceived: Rating[];
+  ratingsReceived:  Rating[];
+  ratingsAsSeller:  Rating[];
+  ratingsAsBuyer:   Rating[];
 }
 
 function Stars({ score }: { score: number }) {
@@ -34,6 +36,7 @@ export default function PublicProfilePage() {
   const [data, setData]     = useState<PublicProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [ratingTab, setRatingTab] = useState<'all' | 'seller' | 'buyer'>('all');
 
   useEffect(() => {
     api.get(`/api/ratings/user/${username}`)
@@ -55,6 +58,7 @@ export default function PublicProfilePage() {
   );
 
   const profile = data.profile;
+  
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
@@ -81,27 +85,39 @@ export default function PublicProfilePage() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mt-5 pt-5 border-t border-gray-100 dark:border-gray-800">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 pt-5 border-t border-gray-100 dark:border-gray-800">
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <span className="text-yellow-500">⭐</span>
               <span className="text-xl font-bold text-gray-900 dark:text-white">
-                {profile?.reputationScore.toFixed(1) || '0.0'}
+                {profile?.reputationScore?.toFixed(1) || '0.0'}
               </span>
             </div>
-            <p className="text-xs text-gray-400">Reputación</p>
+            <p className="text-xs text-gray-400">Global</p>
+          </div>
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <span className="text-yellow-500">⭐</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
+                {(profile as any)?.reputationAsSeller?.toFixed(1) || '0.0'}
+              </span>
+            </div>
+            <p className="text-xs text-gray-400">Como vendedor</p>
+          </div>
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <span className="text-yellow-500">⭐</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
+                {(profile as any)?.reputationAsBuyer?.toFixed(1) || '0.0'}
+              </span>
+            </div>
+            <p className="text-xs text-gray-400">Como comprador</p>
           </div>
           <div className="text-center">
             <p className="text-xl font-bold text-gray-900 dark:text-white">
-              {profile?.totalSales || 0}
+              {(profile?.totalSales || 0) + (profile?.totalPurchases || 0)}
             </p>
-            <p className="text-xs text-gray-400">Ventas</p>
-          </div>
-          <div className="text-center">
-            <p className="text-xl font-bold text-gray-900 dark:text-white">
-              {profile?.totalPurchases || 0}
-            </p>
-            <p className="text-xs text-gray-400">Compras</p>
+            <p className="text-xs text-gray-400">Transacciones</p>
           </div>
         </div>
 
@@ -127,6 +143,47 @@ export default function PublicProfilePage() {
         )}
       </div>
 
+      {/* Tabs de calificaciones */}
+        {data.ratingsReceived.length > 0 && (
+          <div className="mt-6">
+            <div className="flex gap-4 border-b border-gray-100 dark:border-gray-800 mb-4">
+              <button
+                onClick={() => setRatingTab('all')}
+                className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+                  ratingTab === 'all'
+                    ? 'border-blue-600 text-blue-600'
+                    : 'border-transparent text-gray-500'}`}>
+                Todas ({data.ratingsReceived.length})
+              </button>
+              <button
+                onClick={() => setRatingTab('seller')}
+                className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+                  ratingTab === 'seller'
+                    ? 'border-blue-600 text-blue-600'
+                    : 'border-transparent text-gray-500'}`}>
+                Como vendedor ({data.ratingsAsSeller?.length || 0})
+              </button>
+              <button
+                onClick={() => setRatingTab('buyer')}
+                className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+                  ratingTab === 'buyer'
+                    ? 'border-blue-600 text-blue-600'
+                    : 'border-transparent text-gray-500'}`}>
+                Como comprador ({data.ratingsAsBuyer?.length || 0})
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {(ratingTab === 'all'    ? data.ratingsReceived :
+                ratingTab === 'seller' ? data.ratingsAsSeller :
+                data.ratingsAsBuyer
+              )?.map((rating: Rating) => (
+                <RatingCard key={rating.id} rating={rating} />
+              ))}
+            </div>
+          </div>
+        )}
+
       {/* Calificaciones recibidas */}
       <div>
         <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
@@ -146,6 +203,8 @@ export default function PublicProfilePage() {
           </div>
         )}
       </div>
+
+      
     </div>
   );
 }
