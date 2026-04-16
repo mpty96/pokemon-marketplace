@@ -29,5 +29,6 @@ export function useSocket(): Socket | null {
       socketRef.current = null;
     };
   }, [accessToken]);
+  
   return socketRef.current;
 }
