@@ -25,13 +25,13 @@ export default function TransaccionesPage() {
 
   useEffect(() => {
     if (!isAuthenticated) { router.push('/login'); return; }
-    api.get('/api/sales')
+    api.get('/api/sales/recent')
       .then(({ data }) => setTransactions(data))
       .finally(() => setLoading(false));
 
     // Actualización cada 30s
     const interval = setInterval(() => {
-      api.get('/api/sales/my').then(({ data }) => setTransactions(data));
+      api.get('/api/sales/recent').then(({ data }) => setTransactions(data));
     }, 30000);
     return () => clearInterval(interval);
   }, [isAuthenticated]);
@@ -53,7 +53,7 @@ export default function TransaccionesPage() {
       ) : transactions.length === 0 ? (
         <div className="text-center py-16 text-gray-400">
           <p className="text-4xl mb-3">📦</p>
-          <p>No tienes transacciones completadas aún</p>
+          <p>No hay transacciones completadas aún</p>
           <Link href="/marketplace"
             className="inline-block mt-4 text-blue-600 hover:underline text-sm">
             Ir al marketplace
