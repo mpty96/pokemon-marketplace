@@ -42,7 +42,7 @@ export default function ProfilePage() {
 
 const displayed =
   tab === 'active'  ? active :
-  tab === 'sold'    ? asSeller.filter((l: any) => l.status === 'SOLD') :
+  tab === 'sold'    ? asSeller.filter((l: any) => l.status === 'COMPLETED') :
   asBuyer;
 
   return (
@@ -147,7 +147,7 @@ const displayed =
                     {listing.sale?.status === 'COMPLETED' && (
                     <p className="text-xs text-green-600 mt-0.5">
                       {tab === 'bought'
-                        ? `🛒 Comprada por ${(listing.sale as any).seller?.username || listing.seller?.username || ''}`
+                        ? `🛒 Compraste a ${(listing.sale as any).seller?.username || listing.seller?.username || ''}`
                         : `✅ Vendida a ${(listing.sale as any).buyer?.username || ''}`
                       }
                       {listing.sale.completedAt &&
