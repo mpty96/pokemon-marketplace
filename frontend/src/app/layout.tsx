@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <body className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
         <ThemeInitializer />
         <Header />
         <main>{children}</main>

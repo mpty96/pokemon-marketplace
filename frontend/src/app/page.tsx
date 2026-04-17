@@ -27,39 +27,62 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 text-[var(--foreground)]">
 
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl mb-6">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700" />
-        <div className="absolute inset-0 opacity-10"
-          style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      <div className="relative overflow-hidden rounded-2xl mb-6 border border-[var(--border)] bg-[var(--surface)]">
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/15 via-transparent to-[var(--primary)]/5" />
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.18) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
 
-        <div className="relative px-6 py-8 text-white text-center">
-          <div className="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
+        <div className="relative px-6 py-8 text-center">
+          <div className="inline-flex items-center gap-2 bg-[var(--surface-2)] text-[var(--foreground)] text-xs font-semibold px-3 py-1 rounded-full mb-3 border border-[var(--border)]">
             🇨🇱 Solo para Chile
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-2 tracking-tight">
+
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-2 tracking-tight text-[var(--foreground)]">
             Compra y vende cartas
-            <span className="block text-yellow-300">Pokémon con confianza</span>
+            <span className="block text-[var(--primary)]">Pokémon con confianza</span>
           </h1>
-          <p className="text-blue-100 mb-5 text-base max-w-xl mx-auto">
+
+          <p className="text-[var(--muted)] mb-5 text-base max-w-xl mx-auto">
             El marketplace más seguro de Chile para coleccionistas.
           </p>
+
           <div className="flex gap-2 justify-center flex-wrap">
-            <Link href="/marketplace"
-              className="bg-white text-blue-700 font-bold px-5 py-2.5 rounded-xl hover:bg-blue-50 transition-colors shadow-lg">
+            <Link
+              href="/marketplace"
+              className="bg-[var(--primary)] text-[var(--primary-foreground)] font-bold px-5 py-2.5 rounded-xl hover:bg-[var(--primary-hover)] transition-colors shadow-lg"
+            >
               Ver marketplace
             </Link>
-            <Link href="/listings/new"
-              className="border-2 border-white/50 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-white/10 transition-colors">
+
+            <Link
+              href="/listings/new"
+              className="border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] font-bold px-5 py-2.5 rounded-xl hover:bg-[var(--surface-2)] transition-colors"
+            >
               Publicar carta
             </Link>
           </div>
-          <div className="flex justify-center gap-8 mt-6 pt-5 border-t border-white/20">
-            <div><p className="text-xl font-extrabold text-yellow-300">100%</p><p className="text-xs text-blue-200">Seguro</p></div>
-            <div><p className="text-xl font-extrabold text-yellow-300">Chat</p><p className="text-xs text-blue-200">Directo</p></div>
-            <div><p className="text-xl font-extrabold text-yellow-300">⭐ 5.0</p><p className="text-xs text-blue-200">Reputación</p></div>
+
+          <div className="flex justify-center gap-8 mt-6 pt-5 border-t border-[var(--border)]">
+            <div>
+              <p className="text-xl font-extrabold text-[var(--primary)]">100%</p>
+              <p className="text-xs text-[var(--muted)]">Seguro</p>
+            </div>
+            <div>
+              <p className="text-xl font-extrabold text-[var(--primary)]">Chat</p>
+              <p className="text-xs text-[var(--muted)]">Directo</p>
+            </div>
+            <div>
+              <p className="text-xl font-extrabold text-[var(--primary)]">⭐ 5.0</p>
+              <p className="text-xs text-[var(--muted)]">Reputación</p>
+            </div>
           </div>
         </div>
       </div>
@@ -108,10 +131,10 @@ export default function HomePage() {
 
 function ListingCard({ listing }: { listing: Listing }) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-800 overflow-hidden">
+    <div className="bg-[var(--surface)] rounded-xl shadow-sm hover:shadow-md transition-shadow border border-[var(--border)] overflow-hidden">
       {/* Card principal */}
       <Link href={`/listings/${listing.id}`} className="block group">
-        <div className="aspect-square overflow-hidden bg-gray-50 dark:bg-gray-800">
+        <div className="aspect-square overflow-hidden bg-[var(--surface-2)]">
           <img
             src={listing.images[0]}
             alt={listing.title}
@@ -119,17 +142,17 @@ function ListingCard({ listing }: { listing: Listing }) {
           />
         </div>
         <div className="p-3">
-          <p className="text-xs text-gray-400 truncate">
+          <p className="text-xs text-[var(--muted-2)] truncate">
             Edición: {listing.edition}
           </p>
-          <h3 className="font-semibold text-gray-900 dark:text-white truncate text-sm mt-0.5">
+          <h3 className="font-semibold text-[var(--foreground)] truncate text-sm mt-0.5">
             {listing.title}
           </h3>
           <div className="flex items-center justify-between mt-2">
             <span className="text-blue-600 font-bold text-sm">
               ${listing.priceCLP.toLocaleString('es-CL')}
             </span>
-            <span className="text-xs text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
+            <span className="text-xs text-[var(--muted)] bg-[var(--surface-2)] px-2 py-0.5 rounded-full border border-[var(--border)]">
               {CONDITION_LABELS[listing.condition]}
             </span>
           </div>
@@ -137,17 +160,17 @@ function ListingCard({ listing }: { listing: Listing }) {
       </Link>
 
       {/* Separador */}
-      <div className="border-t border-gray-100 dark:border-gray-800" />
+      <div className="border-t border-[var(--border)]" />
 
       {/* Card secundaria — vendedor */}
       <Link href={`/usuario/${listing.seller.username}`}
-        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+        className="flex items-center gap-2 px-3 py-2 hover:bg-[var(--surface-2)] transition-colors">
         <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-xs font-bold text-blue-600 flex-shrink-0">
           {listing.seller.username[0].toUpperCase()}
         </div>
         <div className="min-w-0">
-          <p className="text-xs text-gray-400">Vendedor:</p>
-          <p className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">
+          <p className="text-xs text-[var(--muted-2)]">Vendedor:</p>
+          <p className="text-xs font-medium text-[var(--foreground)] truncate">
             {listing.seller.profile?.displayName || listing.seller.username}
           </p>
         </div>

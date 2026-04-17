@@ -10,10 +10,10 @@ import { Listing } from '@/types';
 type Tab = 'active' | 'history';
 
 const STATUS_LABEL: Record<string, { label: string; color: string }> = {
-  ACTIVE:    { label: 'Activa',      color: 'bg-green-100 text-green-700' },
-  PAUSED:    { label: 'En proceso',  color: 'bg-yellow-100 text-yellow-700' },
-  SOLD:      { label: 'Vendida',     color: 'bg-blue-100 text-blue-700' },
-  CANCELLED: { label: 'Eliminada',   color: 'bg-red-100 text-red-600' },
+  ACTIVE:    { label: 'Activa',    color: 'bg-[var(--success-bg)] text-[var(--success-fg)]' },
+  PAUSED:    { label: 'En proceso', color: 'bg-[var(--warning-bg)] text-[var(--warning-fg)]' },
+  SOLD:      { label: 'Vendida',   color: 'bg-[var(--info-bg)] text-[var(--info-fg)]' },
+  CANCELLED: { label: 'Eliminada', color: 'bg-[var(--danger-bg)] text-[var(--danger-fg)]' },
 };
 
 export default function ProfilePage() {
@@ -62,25 +62,25 @@ console.log("DISPLAYED TYPE:", displayed?.[0]);
 console.log("DISPLAYED LENGTH:", displayed?.length);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8 text-[var(--foreground)]">
 
       {/* Header perfil */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 mb-6">
+      <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-6 mb-6">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-2xl font-bold text-blue-600">
             {user?.username?.[0]?.toUpperCase()}
           </div>
           <div className="flex-1">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-xl font-bold text-[var(--foreground)]">
               {user?.username}
             </h1>
-            <p className="text-gray-500 text-sm">{user?.email}</p>
+            <p className="text-[var(--muted)] text-sm">{user?.email}</p>
             <div className="flex items-center gap-1 mt-1">
               <span className="text-yellow-500 text-sm">★</span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-sm font-medium text-[var(--foreground)]">
                 {user?.reputationScore?.toFixed(1) || '0.0'}
               </span>
-              <span className="text-xs text-gray-400">reputación</span>
+              <span className="text-xs text-[var(--muted-2)]">reputación</span>
             </div>
           </div>
           <Link href={`/usuario/${user?.username}`}
@@ -91,26 +91,37 @@ console.log("DISPLAYED LENGTH:", displayed?.length);
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-5 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg w-fit">
-        <button onClick={() => setTab('active')}
+      <div className="flex gap-1 mb-5 bg-[var(--surface-2)] p-1 rounded-lg w-fit border border-[var(--border)]">
+        <button
+          onClick={() => setTab('active')}
           className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
             tab === 'active'
-              ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
-              : 'text-gray-500 hover:text-gray-700'}`}>
+              ? 'bg-[var(--surface)] text-[var(--foreground)] shadow-sm'
+              : 'text-[var(--muted)] hover:text-[var(--foreground)]'
+          }`}
+        >
           Activas ({active.length})
         </button>
-        <button onClick={() => setTab('sold')}
+
+        <button
+          onClick={() => setTab('sold')}
           className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
             tab === 'sold'
-              ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
-              : 'text-gray-500 hover:text-gray-700'}`}>
+              ? 'bg-[var(--surface)] text-[var(--foreground)] shadow-sm'
+              : 'text-[var(--muted)] hover:text-[var(--foreground)]'
+          }`}
+        >
           Vendidas ({asSeller.length})
         </button>
-        <button onClick={() => setTab('bought')}
+
+        <button
+          onClick={() => setTab('bought')}
           className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
             tab === 'bought'
-              ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
-              : 'text-gray-500 hover:text-gray-700'}`}>
+              ? 'bg-[var(--surface)] text-[var(--foreground)] shadow-sm'
+              : 'text-[var(--muted)] hover:text-[var(--foreground)]'
+          }`}
+        >
           Compradas ({asBuyer.length})
         </button>
       </div>
@@ -119,7 +130,7 @@ console.log("DISPLAYED LENGTH:", displayed?.length);
       {loading ? (
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white dark:bg-gray-900 rounded-xl h-20 animate-pulse" />
+            <div key={i} className="bg-white dark:bg-gray-900 rounded-xl h-20 animate-pulse"/>
           ))}
         </div>
       ) : displayed.length === 0 ? (
@@ -148,24 +159,26 @@ console.log("DISPLAYED LENGTH:", displayed?.length);
             console.log("LISTING RENDER:", listing);
 
             return (
-              <div key={listing.id}
-                className={`flex items-center gap-4 bg-white dark:bg-gray-900 rounded-xl p-4 border transition-shadow ${
-                  isDeleted
-                    ? 'border-gray-100 dark:border-gray-800 opacity-60'
-                    : 'border-gray-100 dark:border-gray-800 hover:shadow-sm'
-                }`}>
+              <div 
+                key={listing.id}
+                  className={`flex items-center gap-4 bg-[var(--surface)] rounded-xl p-4 border transition-shadow ${
+                    isDeleted
+                      ? 'border-[var(--border)] opacity-60'
+                      : 'border-[var(--border)] hover:shadow-sm'
+                  }`}
+                >
                 <img
                   src={listing.images?.[0] || '/placeholder.png'}
                   alt={listing.title}
-                  className="w-14 h-14 object-contain rounded-lg bg-gray-50 dark:bg-gray-800 flex-shrink-0"
+                  className="w-14 h-14 object-contain rounded-lg bg-[var(--surface-2)] flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-gray-900 dark:text-white truncate">
+                  <h3 className="font-medium text-[var(--foreground)] truncate">
                     {listing.title}
                   </h3>
-                  <p className="text-sm text-gray-400">{listing.edition}</p>
+                  <p className="text-sm text-[var(--muted-2)]">{listing.edition}</p>
                     {listing.sale?.status === 'COMPLETED' && (
-                    <p className="text-xs text-green-600 mt-0.5">
+                    <p className="text-xs text-[var(--success-fg)] mt-0.5">
                       {tab === 'bought'
                         ? `🛒 Compraste a ${(listing.sale as any).seller?.username || listing.seller?.username || ''}`
                         : `✅ Vendida a ${(listing.sale as any).buyer?.username || listing.buyer?.username || ''}`

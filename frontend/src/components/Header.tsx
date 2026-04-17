@@ -7,9 +7,9 @@ import { useUnreadCount } from '@/hooks/useUnreadCount';
 import { useThemeStore } from '@/store/theme.store';
 
 export default function Header() {
-  const router      = useRouter();
-  const pathname    = usePathname();
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { isAuthenticated, logout } = useAuthStore();
   const unreadCount = useUnreadCount();
   const { dark, toggle } = useThemeStore();
 
@@ -21,23 +21,24 @@ export default function Header() {
   const linkClass = (href: string) =>
     `text-sm font-medium transition-colors ${
       pathname === href
-        ? 'text-blue-600 dark:text-blue-400'
-        : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+        ? 'text-[var(--primary)]'
+        : 'text-[var(--muted)] hover:text-[var(--primary)]'
     }`;
 
-  return (
-    <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+  const ghostBtn =
+    'text-sm border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] px-3 py-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors';
 
-        {/* Logo */}
-        <Link href="/" className="text-xl font-bold text-blue-600 hover:text-blue-700">
+  return (
+    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--surface)]">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <Link href="/" className="text-xl font-bold text-[var(--primary)] hover:opacity-90">
           🎴 PokéMarket
         </Link>
 
-        {/* Navegación central */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/"            className={linkClass('/')}>Inicio</Link>
+          <Link href="/" className={linkClass('/')}>Inicio</Link>
           <Link href="/marketplace" className={linkClass('/marketplace')}>Marketplace</Link>
+
           {isAuthenticated && (
             <Link href="/mensajes" className={`${linkClass('/mensajes')} relative`}>
               Mensajes
@@ -48,40 +49,43 @@ export default function Header() {
               )}
             </Link>
           )}
+
           {isAuthenticated && (
-            <Link href="/transacciones"
-              className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">
+            <Link href="/transacciones" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)] transition-colors">
               Transacciones
             </Link>
           )}
         </nav>
 
-        {/* Auth */}
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
-              <button onClick={toggle}
-                className="text-sm border border-gray-300 dark:border-gray-600 px-2.5 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
-                title={dark ? 'Modo claro' : 'Modo oscuro'}>
+              <button
+                onClick={toggle}
+                className={ghostBtn}
+                title={dark ? 'Modo claro' : 'Modo oscuro'}
+              >
                 {dark ? '🌞' : '🌙'}
               </button>
-              <Link href="/profile"
-                className="text-sm border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors">
+
+              <Link href="/profile" className={ghostBtn}>
                 Mi Perfil
               </Link>
-              <button onClick={handleLogout}
-                className="text-sm border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors">
+
+              <button onClick={handleLogout} className={ghostBtn}>
                 Cerrar sesión
               </button>
             </>
           ) : (
             <>
-              <Link href="/login"
-                className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 font-medium">
+              <Link href="/login" className="text-sm text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">
                 Iniciar sesión
               </Link>
-              <Link href="/register"
-                className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition-colors">
+
+              <Link
+                href="/register"
+                className="text-sm bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] px-3 py-1.5 rounded-lg transition-colors"
+              >
                 Registrarse
               </Link>
             </>
@@ -89,12 +93,12 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Navegación móvil */}
-      <div className="md:hidden border-t border-gray-100 dark:border-gray-800 px-4 py-2 flex gap-4 overflow-x-auto">
-        <Link href="/"            className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">Inicio</Link>
-        <Link href="/marketplace" className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">Marketplace</Link>
+      <div className="md:hidden border-t border-[var(--border)] px-4 py-2 flex gap-4 overflow-x-auto bg-[var(--surface)]">
+        <Link href="/" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Inicio</Link>
+        <Link href="/marketplace" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Marketplace</Link>
+
         {isAuthenticated && (
-          <Link href="/mensajes" className="relative text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">
+          <Link href="/mensajes" className="relative text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
             Mensajes
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-3 bg-red-500 text-white text-xs font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">
