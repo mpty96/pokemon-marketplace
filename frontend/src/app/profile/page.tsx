@@ -36,6 +36,10 @@ useEffect(() => {
 
     console.log("ACTIVE:", activeRes.data);
     console.log("HISTORY RAW:", historyRes.data);
+    console.log("HISTORY RESPONSE:", historyRes);
+  console.log("HISTORY DATA:", historyRes.data);
+  console.log("AS SELLER:", historyRes.data?.asseller);
+  console.log("AS BUYER:", historyRes.data?.asbuyer);
 
     setActive(activeRes.data);
     setAsSeller(historyRes.data.aseller || []);
