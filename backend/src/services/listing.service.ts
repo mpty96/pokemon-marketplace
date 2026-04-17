@@ -204,35 +204,14 @@ export async function getMyListings(sellerId: string) {
 
 export async function getListingsHistory(userId: string) {
   // Ventas del usuario (como vendedor)
-  const soldSales = await prisma.sale.findMany({
-  where: {
-    sellerId: userId,
-    status: 'COMPLETED',
-  },
-  orderBy: { completedAt: 'desc' },
-  include: {
-    listing: {
-      include: {
-        seller: {
-          select: {
-            id: true,
-            username: true,
-            profile: {
-              select: {
-                displayName: true,
-                avatarUrl: true,
-                reputationScore: true,
-              },
-            },
-          },
-        },
-      },
-    },
-    buyer: {
-      select: { id: true, username: true },
-    },
-  },
-});
+const sold = await prisma.listing.findMany({ where: 
+  { sellerId: userId }, 
+  orderBy: { createdAt: 'desc' }, 
+  include: { seller: { select: { id: true, username: true, profile: { 
+    select: { displayName: true, avatarUrl: true, reputationScore: true } 
+  }, }, }, 
+  sale: { select: { id: true, status: true, finalPriceCLP: true, completedAt: true, buyer: {
+     select: { id: true, username: true } }, }, }, }, });
 
   // Compras del usuario (como comprador)
   const purchases = await prisma.sale.findMany({
@@ -255,36 +234,9 @@ export async function getListingsHistory(userId: string) {
     },
   });
 
-  const sold = soldSales.map((s) => ({
-  ...s.listing,
-  role: 'seller',
-  sale: {
-    id:            s.id,
-    status:        s.status,
-    finalPriceCLP: s.finalPriceCLP,
-    completedAt:   s.completedAt,
-    buyer: {
-      id:       s.buyer.id,
-      username: s.buyer.username,
-    },
-  },
-}));
-
-  return {
-    asseller:  sold,
-        asbuyer: purchases.map((s) => ({
-      ...s.listing,
-      role: 'buyer',
-      sale: {
-        id:            s.id,
-        status:        s.status,
-        finalPriceCLP: s.finalPriceCLP,
-        completedAt:   s.completedAt,
-        seller: {
-          id:       s.listing.seller.id,
-          username: s.listing.seller.username,
-        },
-      },
-    })),
-  };
-}
+  return { 
+    asseller: sold, 
+    asbuyer: purchases.map((s) => 
+      ({ ...s.listing, role: 'buyer', sale: 
+        { id: s.id, status: s.status, finalPriceCLP: s.finalPriceCLP, completedAt: s.completedAt, seller: 
+          { id: s.listing.seller.id, username: s.listing.seller.username, }, }, })), }; }
