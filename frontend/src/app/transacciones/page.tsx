@@ -25,12 +25,14 @@ export default function TransaccionesPage() {
 
   useEffect(() => {
     if (!isAuthenticated) { router.push('/login'); return; }
-    api.get('/api/sales/recent')
-      .then(({ data }) => setTransactions(data));
+      api.get(`/api/sales/recent?ts=${Date.now()}`)
+        .then(({ data }) => setTransactions(data))
+        .finally(() => setLoading(false));
 
     // Actualización cada 30s
     const interval = setInterval(() => {
-      api.get('/api/sales/recent').then(({ data }) => setTransactions(data));
+      api.get(`/api/sales/recent?ts=${Date.now()}`)
+        .then(({ data }) => setTransactions(data));
     }, 30000);
     return () => clearInterval(interval);
   }, [isAuthenticated]);
