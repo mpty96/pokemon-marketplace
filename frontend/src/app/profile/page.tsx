@@ -48,7 +48,7 @@ useEffect(() => {
 
 const displayed =
   tab === 'active'  ? active :
-  tab === 'sold'    ? asSeller.filter((l: any) => l.sale?.status === 'SOLD') :
+  tab === 'sold'    ? asSeller.filter((l: any) => l.status === 'SOLD') :
   asBuyer;
 
   return (
@@ -121,7 +121,7 @@ const displayed =
               : 'No tienes historial de publicaciones'}
           </p>
           {tab === 'active' && (
-            <Link href="/publicar"
+            <Link href="/listings"
               className="inline-block mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 text-sm">
               Publicar primera carta
             </Link>
