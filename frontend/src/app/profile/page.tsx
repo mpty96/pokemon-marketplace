@@ -42,7 +42,7 @@ useEffect(() => {
   console.log("AS BUYER:", historyRes.data?.asbuyer);
 
     setActive(activeRes.data);
-    setAsSeller(historyRes.data.aseller || []);
+    setAsSeller(historyRes.data.asseller || []);
     setAsBuyer(historyRes.data.asbuyer || []);
 
   }).finally(() => setLoading(false));
