@@ -129,8 +129,10 @@ export async function getRatingsByUser(username: string) {
         orderBy: { createdAt: 'desc' },
         include: {
           rater: { select: { id: true, username: true } },
-          sale:  {
-            include: {
+          sale: {
+            select: {
+              sellerId: true,
+              buyerId: true,
               listing: { select: { title: true, images: true } },
             },
           },
@@ -141,15 +143,18 @@ export async function getRatingsByUser(username: string) {
 
   if (!user) throw new Error('USER_NOT_FOUND');
 
-  // Separar calificaciones por rol
-  const asSeller = user.ratingsReceived.filter((r) => r.sale.sellerId === user.id);
-  const asBuyer  = user.ratingsReceived.filter((r) => r.sale.sellerId !== user.id);
+  const uniqueRatings = user.ratingsReceived.filter(
+    (r, i, arr) => arr.findIndex(x => x.id === r.id) === i
+  );
+
+  const asSeller = uniqueRatings.filter((r) => r.sale.sellerId === user.id);
+  const asBuyer  = uniqueRatings.filter((r) => r.sale.buyerId === user.id);
 
   return {
-    username:           user.username,
-    profile:            user.profile,
-    ratingsReceived:    user.ratingsReceived,
-    ratingsAsSeller:    asSeller,
-    ratingsAsBuyer:     asBuyer,
+    username:        user.username,
+    profile:         user.profile,
+    ratingsReceived: uniqueRatings,
+    ratingsAsSeller: asSeller,
+    ratingsAsBuyer:  asBuyer,
   };
 }
