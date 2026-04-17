@@ -162,24 +162,6 @@ export default function PublicProfilePage() {
             </div>
           </div>
         )}
-
-      {/* Calificaciones recibidas */}
-      <div>
-        {data.ratingsReceived.length === 0 ? (
-          <div className="text-center py-10 text-gray-400">
-            <p className="text-3xl mb-2">⭐</p>
-            <p>Aún no tiene calificaciones</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {data.ratingsReceived.map((rating) => (
-              <RatingCard key={rating.id} rating={rating} />
-            ))}
-          </div>
-        )}
-      </div>
-
-      
     </div>
   );
 }
