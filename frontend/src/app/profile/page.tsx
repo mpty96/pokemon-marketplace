@@ -100,7 +100,7 @@ const displayed =
             tab === 'sold'
               ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
               : 'text-gray-500 hover:text-gray-700'}`}>
-          Vendidas ({asSeller.filter((l: any) => l.sale?.status === 'COMPLETED').length})
+          Vendidas ({asSeller.length})
         </button>
         <button onClick={() => setTab('bought')}
           className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
