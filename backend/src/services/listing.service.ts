@@ -205,7 +205,12 @@ export async function getMyListings(sellerId: string) {
 export async function getListingsHistory(userId: string) {
   // Ventas del usuario (como vendedor)
   const sold = await prisma.listing.findMany({
-    where: { sellerId: userId },
+    where: {
+      sellerId: userId,
+      sale: {
+        status: 'COMPLETED',
+      },
+    },
     orderBy: { createdAt: 'desc' },
     include: {
       seller: {
