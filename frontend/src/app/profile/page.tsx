@@ -51,9 +51,11 @@ useEffect(() => {
   if (!isAuthenticated) return null;
 
 const displayed =
-  tab === 'active'  ? active :
-  tab === 'sold'    ? asSeller.filter((l: any) => l.status === 'COMPLETED') :
-  asBuyer;
+  tab === 'active'
+    ? active
+    : tab === 'sold'
+      ? asSeller
+      : asBuyer;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -136,6 +138,7 @@ const displayed =
           {displayed.map((listing: any) => {
             const statusInfo = STATUS_LABEL[listing.status] || STATUS_LABEL.ACTIVE;
             const isDeleted  = !!listing.deletedAt;
+            console.log("LISTING RENDER:", listing);
 
             return (
               <div key={listing.id}
@@ -154,7 +157,7 @@ const displayed =
                     {listing.title}
                   </h3>
                   <p className="text-sm text-gray-400">{listing.edition}</p>
-                    {listing.sale?.status === 'SOLD' && (
+                    {listing.sale?.status === 'COMPLETED' && (
                     <p className="text-xs text-green-600 mt-0.5">
                       {tab === 'bought'
                         ? `🛒 Compraste a ${(listing.sale as any).seller?.username || listing.seller?.username || ''}`
