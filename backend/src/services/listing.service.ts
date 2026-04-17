@@ -187,7 +187,7 @@ export async function getMyListings(sellerId: string) {
     where: {
       sellerId,
       deletedAt: null,
-      status: { in: ['ACTIVE', 'PAUSED'] }, // 👈 excluye SOLD y CANCELLED
+      status: { in: ['ACTIVE', 'PAUSED', 'SOLD'] }, // 👈 excluye SOLD y CANCELLED
     },
     orderBy: { createdAt: 'desc' },
     include: {
