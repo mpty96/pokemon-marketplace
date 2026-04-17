@@ -108,25 +108,26 @@ function ConversationCard({
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
           <h3 className="font-semibold text-[var(--foreground)] truncate text-sm">
-            {(conv.unreadCount || 0) > 0 && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] flex-shrink-0">
-                {conv.unreadCount} nuevo{conv.unreadCount > 1 ? 's' : ''}
-              </span>
-            )}
             {conv.listingTitle}
           </h3>
-          
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {(conv.unreadCount || 0) > 0 && (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)]">
+                  {conv.unreadCount} nuevo{conv.unreadCount > 1 ? 's' : ''}
+                </span>
+              )}
 
-          <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${listingBadgeClass}`}>
-            {conv.listingStatus === 'ACTIVE'
-              ? 'Activa'
-              : conv.listingStatus === 'PAUSED'
-              ? 'En proceso'
-              : conv.listingStatus === 'SOLD'
-              ? 'Vendida'
-              : 'Cancelada'}
-          </span>
-        </div>
+              <span className={`text-xs px-2 py-0.5 rounded-full ${listingBadgeClass}`}>
+                {conv.listingStatus === 'ACTIVE'
+                  ? 'Activa'
+                  : conv.listingStatus === 'PAUSED'
+                  ? 'En proceso'
+                  : conv.listingStatus === 'SOLD'
+                  ? 'Vendida'
+                  : 'Cancelada'}
+              </span>
+            </div>
+          </div>
 
         <p className="text-xs text-[var(--muted-2)] mt-0.5">
           {isSeller ? '🏪 Vendes a' : '🛒 Compras de'}: {otherPerson}

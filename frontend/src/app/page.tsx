@@ -69,21 +69,6 @@ export default function HomePage() {
               Publicar carta
             </Link>
           </div>
-
-          <div className="flex justify-center gap-8 mt-6 pt-5 border-t border-[var(--border)]">
-            <div>
-              <p className="text-xl font-extrabold text-[var(--primary)]">100%</p>
-              <p className="text-xs text-[var(--muted)]">Seguro</p>
-            </div>
-            <div>
-              <p className="text-xl font-extrabold text-[var(--primary)]">Chat</p>
-              <p className="text-xs text-[var(--muted)]">Directo</p>
-            </div>
-            <div>
-              <p className="text-xl font-extrabold text-[var(--primary)]">⭐ 5.0</p>
-              <p className="text-xs text-[var(--muted)]">Reputación</p>
-            </div>
-          </div>
         </div>
       </div>
 
