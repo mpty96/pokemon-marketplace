@@ -26,64 +26,45 @@ export async function getConversation(listingId: string, userId: string) {
     },
   });
 
+  if (conversation) {
+    await prisma.message.updateMany({
+      where: {
+        conversationId: conversation.id,
+        senderId: { not: userId },
+        read: false,
+      },
+      data: { read: true },
+    });
+  }
+
+  const refreshedConversation = conversation
+    ? await prisma.conversation.findUnique({
+        where: { id: conversation.id },
+        include: {
+          messages: {
+            orderBy: { createdAt: 'asc' },
+            include: {
+              sender: {
+                select: {
+                  id: true,
+                  username: true,
+                  profile: { select: { displayName: true, avatarUrl: true } },
+                },
+              },
+            },
+          },
+        },
+      })
+    : null;
+
   return {
-    conversation,
+    conversation: refreshedConversation,
     listingStatus: listing.status,
     isSeller: listing.sellerId === userId,
   };
 }
 
 export async function getUserConversations(userId: string) {
-  // Buscar conversaciones donde el usuario es vendedor o comprador
-  const conversations = await prisma.conversation.findMany({
-    where: {
-      listing: {
-        OR: [
-          { sellerId: userId },
-          {
-            conversation: {
-              messages: {
-                some: { senderId: userId },
-              },
-            },
-          },
-        ],
-      },
-    },
-    include: {
-      listing: {
-        include: {
-          seller: {
-            select: {
-              id: true,
-              username: true,
-              profile: { select: { displayName: true, avatarUrl: true } },
-            },
-          },
-        },
-      },
-      messages: {
-        orderBy: { createdAt: 'desc' },
-        take: 1, // Solo el último mensaje
-        include: {
-          sender: {
-            select: { id: true, username: true },
-          },
-        },
-      },
-    },
-    orderBy: { updatedAt: 'desc' },
-  });
-
-  // Filtrar solo las que el usuario realmente participó
-  const filtered = conversations.filter((conv) => {
-    const isSeller = conv.listing.sellerId === userId;
-    const isBuyer  = conv.messages.some((m) => false) ||
-      conv.listing.sellerId !== userId; // simplificado abajo
-    return true; // filtramos en la query de abajo
-  });
-
-  // Query más precisa: conversaciones donde el usuario envió mensajes O es vendedor
   const precise = await prisma.conversation.findMany({
     where: {
       OR: [
@@ -115,6 +96,26 @@ export async function getUserConversations(userId: string) {
     orderBy: { updatedAt: 'desc' },
   });
 
+  const conversationIds = precise.map((conv) => conv.id);
+
+  const unreadGrouped = conversationIds.length
+    ? await prisma.message.groupBy({
+        by: ['conversationId'],
+        where: {
+          conversationId: { in: conversationIds },
+          senderId: { not: userId },
+          read: false,
+        },
+        _count: {
+          _all: true,
+        },
+      })
+    : [];
+
+  const unreadMap = new Map(
+    unreadGrouped.map((item) => [item.conversationId, item._count._all])
+  );
+
   return precise.map((conv) => ({
     id:            conv.id,
     listingId:     conv.listing.id,
@@ -126,6 +127,7 @@ export async function getUserConversations(userId: string) {
     seller:        conv.listing.seller,
     sale:          conv.listing.sale,
     lastMessage:   conv.messages[0] || null,
+    unreadCount:   unreadMap.get(conv.id) || 0,
     updatedAt:     conv.updatedAt,
   }));
 }

@@ -91,7 +91,11 @@ function ConversationCard({
   return (
     <Link
       href={`/listings/${conv.listingId}/chat`}
-      className="flex items-center gap-4 bg-[var(--surface)] rounded-xl p-4 border border-[var(--border)] hover:shadow-sm transition-shadow"
+      className={`flex items-center gap-4 rounded-xl p-4 border hover:shadow-sm transition-shadow ${
+        (conv.unreadCount || 0) > 0
+          ? 'bg-[var(--info-bg)]/35 border-[var(--primary)]'
+          : 'bg-[var(--surface)] border-[var(--border)]'
+    }`}
     >
       <div className="w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden bg-[var(--surface-2)]">
         {conv.listingImage ? (
@@ -104,8 +108,14 @@ function ConversationCard({
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
           <h3 className="font-semibold text-[var(--foreground)] truncate text-sm">
+            {(conv.unreadCount || 0) > 0 && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] flex-shrink-0">
+                {conv.unreadCount} nuevo{conv.unreadCount > 1 ? 's' : ''}
+              </span>
+            )}
             {conv.listingTitle}
           </h3>
+          
 
           <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${listingBadgeClass}`}>
             {conv.listingStatus === 'ACTIVE'
@@ -125,7 +135,7 @@ function ConversationCard({
         </p>
 
         {conv.lastMessage && (
-          <p className="text-sm text-[var(--muted)] truncate mt-1">
+          <p className={`text-sm truncate mt-1 ${(conv.unreadCount || 0) > 0 ? 'text-[var(--foreground)] font-medium' : 'text-[var(--muted)]'}`}>
             {conv.lastMessage.senderId === currentUserId ? 'Tú: ' : ''}
             {conv.lastMessage.content}
           </p>

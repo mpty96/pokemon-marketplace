@@ -34,13 +34,6 @@ useEffect(() => {
     api.get('/api/listings/history'),
   ]).then(([activeRes, historyRes]) => {
 
-    console.log("ACTIVE:", activeRes.data);
-    console.log("HISTORY RAW:", historyRes.data);
-    console.log("HISTORY RESPONSE:", historyRes);
-  console.log("HISTORY DATA:", historyRes.data);
-  console.log("AS SELLER:", historyRes.data?.asseller);
-  console.log("AS BUYER:", historyRes.data?.asbuyer);
-
     setActive(activeRes.data);
     setAsSeller(historyRes.data.asseller || []);
     setAsBuyer(historyRes.data.asbuyer || []);
@@ -56,10 +49,6 @@ const displayed =
     : tab === 'sold'
       ? asSeller
       : asBuyer;
-
-console.log("TAB:", tab);
-console.log("DISPLAYED TYPE:", displayed?.[0]);
-console.log("DISPLAYED LENGTH:", displayed?.length);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 text-[var(--foreground)]">

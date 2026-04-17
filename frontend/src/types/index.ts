@@ -97,6 +97,7 @@ export interface ConversationPreview {
   isSeller:      boolean;
   seller:        Seller;
   sale:          Sale | null;
+  unreadCount: number;
   lastMessage:   {
     id:        string;
     content:   string;

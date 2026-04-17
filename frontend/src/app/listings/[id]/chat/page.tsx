@@ -39,7 +39,7 @@ export default function ChatPage() {
       setChatData(chatRes.data);
       setMessages(chatRes.data.conversation?.messages || []);
 
-      //Borrar notificaciones luego de abrir el chat.
+      // Sincroniza el contador local después de que el backend marque como leídos
       clearUnread();
 
       // Cargar venta si existe
