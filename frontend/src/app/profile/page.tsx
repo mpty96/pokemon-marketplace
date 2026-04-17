@@ -57,6 +57,10 @@ const displayed =
       ? asSeller
       : asBuyer;
 
+console.log("TAB:", tab);
+console.log("DISPLAYED TYPE:", displayed?.[0]);
+console.log("DISPLAYED LENGTH:", displayed?.length);
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
 
@@ -136,7 +140,10 @@ const displayed =
       ) : (
         <div className="space-y-3">
           {displayed.map((listing: any) => {
-            const statusInfo = STATUS_LABEL[listing.status] || STATUS_LABEL.ACTIVE;
+            const statusInfo =
+              listing.sale?.status === 'COMPLETED'
+                ? STATUS_LABEL.SOLD
+                : STATUS_LABEL[listing.status] || STATUS_LABEL.ACTIVE;
             const isDeleted  = !!listing.deletedAt;
             console.log("LISTING RENDER:", listing);
 
