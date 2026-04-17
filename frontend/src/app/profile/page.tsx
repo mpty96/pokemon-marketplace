@@ -26,17 +26,23 @@ export default function ProfilePage() {
   const [history,  setHistory]  = useState<Listing[]>([]);
   const [loading,  setLoading]  = useState(true);
 
-  useEffect(() => {
-    if (!isAuthenticated) { router.push('/login'); return; }
-    Promise.all([
-      api.get('/api/listings/my'),
-      api.get('/api/listings/history'),
-    ]).then(([activeRes, historyRes]) => {
-      setActive(activeRes.data);
-      setAsSeller(historyRes.data.aseller || []);
-      setAsBuyer(historyRes.data.asbuyer  || []);
-    }).finally(() => setLoading(false));
-  }, [isAuthenticated]);
+useEffect(() => {
+  if (!isAuthenticated) return;
+
+  Promise.all([
+    api.get('/api/listings/my'),
+    api.get('/api/listings/history'),
+  ]).then(([activeRes, historyRes]) => {
+
+    console.log("ACTIVE:", activeRes.data);
+    console.log("HISTORY RAW:", historyRes.data);
+
+    setActive(activeRes.data);
+    setAsSeller(historyRes.data.aseller || []);
+    setAsBuyer(historyRes.data.asbuyer || []);
+
+  }).finally(() => setLoading(false));
+}, [isAuthenticated]);
 
   if (!isAuthenticated) return null;
 
