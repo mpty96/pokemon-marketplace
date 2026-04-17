@@ -49,27 +49,31 @@ export default function ListingDetailPage() {
   const isOwner = user?.id === listing.sellerId;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-8 px-4">
+    <div className="min-h-screen bg-[var(--background)] py-8 px-4">
       <div className="max-w-5xl mx-auto">
         <button onClick={() => router.back()}
-          className="text-blue-600 hover:underline mb-6 flex items-center gap-1">
+          className="text-[var(--primary)] hover:underline mb-6 flex items-center gap-1"
+          >
           ← Volver
         </button>
 
-        <div className="bg-white dark:bg-gray-900 rounded-xl shadow overflow-hidden">
+        <div className="bg-[var(--surface)] rounded-xl shadow border border-[var(--border)] overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
 
             {/* Imágenes */}
             <div className="p-6">
-              <img src={listing.images[activeImg]} alt={listing.title}
-                className="w-full aspect-square object-contain rounded-lg bg-gray-50" />
+              <img
+                src={listing.images[activeImg]}
+                alt={listing.title}
+                className="w-full aspect-square object-contain rounded-lg bg-[var(--surface-2)]"
+              />
               {listing.images.length > 1 && (
                 <div className="flex gap-2 mt-3 flex-wrap">
                   {listing.images.map((src, i) => (
                     <button key={i} onClick={() => setActiveImg(i)}>
                       <img src={src} alt={`img-${i}`}
                         className={`w-16 h-16 object-cover rounded border-2 transition-colors
-                          ${activeImg === i ? 'border-blue-500' : 'border-gray-200'}`} />
+                          ${activeImg === i ? 'border-[var(--primary)]' : 'border-[var(--border)]'}`} />
                     </button>
                   ))}
                 </div>
@@ -102,6 +106,7 @@ export default function ListingDetailPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-[var(--muted)] w-20">Rareza:</span>
                     <span className="px-3 py-1 bg-[var(--info-bg)] text-[var(--info-fg)] rounded-full text-sm font-medium">
+                      {RARITY_LABELS[listing.rarity]}
                     </span>
                   </div>
                 </div>
