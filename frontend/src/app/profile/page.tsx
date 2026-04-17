@@ -46,10 +46,7 @@ useEffect(() => {
 
   if (!isAuthenticated) return null;
 
-const displayed =
-  tab === 'active'  ? active :
-  tab === 'sold'    ? asSeller.filter((l: any) => l.status === 'SOLD') :
-  asBuyer;
+const displayed = tab === 'active' ? active : history;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
