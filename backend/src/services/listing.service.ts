@@ -258,7 +258,9 @@ const sold = await prisma.sale.findMany({
   });
 
 return {
-  asseller: sold.map((s) => ({
+  asseller: sold
+  .filter(s => s.status === 'COMPLETED')
+  .map((s) => ({
     ...s.listing,
     sale: {
       id: s.id,
