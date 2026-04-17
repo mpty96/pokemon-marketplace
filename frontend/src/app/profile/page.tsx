@@ -141,7 +141,7 @@ console.log("DISPLAYED LENGTH:", displayed?.length);
         <div className="space-y-3">
           {displayed.map((listing: any) => {
             const statusInfo =
-              listing.sale?.status === 'COMPLETED'
+              listing.sale?.status === 'SOLD'
                 ? STATUS_LABEL.SOLD
                 : STATUS_LABEL[listing.status] || STATUS_LABEL.ACTIVE;
             const isDeleted  = !!listing.deletedAt;
