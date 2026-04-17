@@ -51,7 +51,7 @@ export default function Header() {
           )}
 
           {isAuthenticated && (
-            <Link href="/transacciones" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)] transition-colors">
+            <Link href="/transacciones" className={linkClass('/transacciones')}>
               Transacciones
             </Link>
           )}
@@ -78,7 +78,10 @@ export default function Header() {
             </>
           ) : (
             <>
-              <Link href="/login" className="text-sm text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">
+              <Link
+                href="/login"
+                className="text-sm text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors"
+              >
                 Iniciar sesión
               </Link>
 
@@ -98,14 +101,20 @@ export default function Header() {
         <Link href="/marketplace" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Marketplace</Link>
 
         {isAuthenticated && (
-          <Link href="/mensajes" className="relative text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
-            Mensajes
-            {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-3 bg-red-500 text-white text-xs font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </span>
-            )}
-          </Link>
+          <>
+            <Link href="/mensajes" className="relative text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
+              Mensajes
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-3 bg-red-500 text-white text-xs font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </Link>
+
+            <Link href="/transacciones" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
+              Transacciones
+            </Link>
+          </>
         )}
       </div>
     </header>
