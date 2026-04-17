@@ -42,7 +42,7 @@ export default function ProfilePage() {
 
 const displayed =
   tab === 'active'  ? active :
-  tab === 'sold'    ? asSeller.filter((l: any) => l.status === 'SOLD') :
+  tab === 'sold'    ? asSeller.filter((l: any) => l.status === 'COMPLETED') :
   asBuyer;
 
   return (
