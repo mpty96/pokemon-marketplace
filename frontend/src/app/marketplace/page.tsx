@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Suspense } from 'react';
 import api from '@/lib/axios';
 import { Listing, CardCondition, CardRarity, PaginatedListings } from '@/types';
 
@@ -27,25 +26,29 @@ const RARITIES: { value: CardRarity; label: string }[] = [
 ];
 
 const CONDITION_LABELS: Record<CardCondition, string> = {
-  MINT: 'Mint', NEAR_MINT: 'Near Mint', EXCELLENT: 'Excelente',
-  GOOD: 'Buena', PLAYED: 'Jugada', POOR: 'Dañada',
+  MINT: 'Mint',
+  NEAR_MINT: 'Near Mint',
+  EXCELLENT: 'Excelente',
+  GOOD: 'Buena',
+  PLAYED: 'Jugada',
+  POOR: 'Dañada',
 };
 
 function MarketplaceContent() {
-  const router       = useRouter();
+  const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [data, setData]       = useState<PaginatedListings | null>(null);
+  const [data, setData] = useState<PaginatedListings | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [filters, setFilters] = useState({
-    search:    searchParams.get('search')    || '',
-    edition:   searchParams.get('edition')   || '',
+    search: searchParams.get('search') || '',
+    edition: searchParams.get('edition') || '',
     condition: searchParams.get('condition') || '',
-    rarity:    searchParams.get('rarity')    || '',
-    minPrice:  searchParams.get('minPrice')  || '',
-    maxPrice:  searchParams.get('maxPrice')  || '',
-    page:      Number(searchParams.get('page') || 1),
+    rarity: searchParams.get('rarity') || '',
+    minPrice: searchParams.get('minPrice') || '',
+    maxPrice: searchParams.get('maxPrice') || '',
+    page: Number(searchParams.get('page') || 1),
   });
 
   const fetchListings = useCallback(async () => {
@@ -62,7 +65,9 @@ function MarketplaceContent() {
     }
   }, [filters]);
 
-  useEffect(() => { fetchListings(); }, [fetchListings]);
+  useEffect(() => {
+    fetchListings();
+  }, [fetchListings]);
 
   function handleFilterChange(key: string, value: string) {
     setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
@@ -74,38 +79,45 @@ function MarketplaceContent() {
   }
 
   function clearFilters() {
-    setFilters({ search: '', edition: '', condition: '', rarity: '', minPrice: '', maxPrice: '', page: 1 });
+    setFilters({
+      search: '',
+      edition: '',
+      condition: '',
+      rarity: '',
+      minPrice: '',
+      maxPrice: '',
+      page: 1,
+    });
   }
 
-  const selectClass = "w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500";
-  const inputClass  = selectClass;
+  const selectClass =
+    'w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]';
+  const inputClass = selectClass;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 text-[var(--foreground)]">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Marketplace</h1>
-        <Link href="/listings/new"
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+        <h1 className="text-2xl font-bold text-[var(--foreground)]">Marketplace</h1>
+        <Link
+          href="/listings/new"
+          className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+        >
           + Publicar carta
         </Link>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
-
-        {/* Sidebar filtros */}
         <aside className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-5 space-y-5">
+          <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-5 space-y-5">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-gray-900 dark:text-white">Filtros</h2>
-              <button onClick={clearFilters}
-                className="text-xs text-blue-600 hover:underline">
+              <h2 className="font-semibold text-[var(--foreground)]">Filtros</h2>
+              <button onClick={clearFilters} className="text-xs text-[var(--primary)] hover:underline">
                 Limpiar
               </button>
             </div>
 
-            {/* Búsqueda */}
             <form onSubmit={handleSearch}>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">
+              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Buscar
               </label>
               <div className="flex gap-2">
@@ -116,16 +128,17 @@ function MarketplaceContent() {
                   onChange={(e) => handleFilterChange('search', e.target.value)}
                   className={inputClass}
                 />
-                <button type="submit"
-                  className="bg-blue-600 text-white px-3 rounded-lg hover:bg-blue-700 text-sm">
+                <button
+                  type="submit"
+                  className="bg-[var(--primary)] text-[var(--primary-foreground)] px-3 rounded-lg hover:bg-[var(--primary-hover)] text-sm"
+                >
                   →
                 </button>
               </div>
             </form>
 
-            {/* Edición */}
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">
+              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Edición
               </label>
               <input
@@ -137,41 +150,44 @@ function MarketplaceContent() {
               />
             </div>
 
-            {/* Condición */}
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">
+              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Condición
               </label>
               <select
                 value={filters.condition}
                 onChange={(e) => handleFilterChange('condition', e.target.value)}
-                className={selectClass}>
+                className={selectClass}
+              >
                 <option value="">Todas</option>
                 {CONDITIONS.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
                 ))}
               </select>
             </div>
 
-            {/* Rareza */}
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">
+              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Rareza
               </label>
               <select
                 value={filters.rarity}
                 onChange={(e) => handleFilterChange('rarity', e.target.value)}
-                className={selectClass}>
+                className={selectClass}
+              >
                 <option value="">Todas</option>
                 {RARITIES.map((r) => (
-                  <option key={r.value} value={r.value}>{r.label}</option>
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
                 ))}
               </select>
             </div>
 
-            {/* Precio */}
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">
+              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Precio (CLP)
               </label>
               <div className="flex gap-2">
@@ -194,25 +210,24 @@ function MarketplaceContent() {
           </div>
         </aside>
 
-        {/* Grid de publicaciones */}
         <div className="flex-1">
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
               {[...Array(9)].map((_, i) => (
-                <div key={i} className="bg-white dark:bg-gray-900 rounded-xl h-72 animate-pulse" />
+                <div key={i} className="bg-[var(--surface)] rounded-xl h-72 animate-pulse border border-[var(--border)]" />
               ))}
             </div>
           ) : !data || data.listings.length === 0 ? (
-            <div className="text-center py-20 text-gray-400">
+            <div className="text-center py-20 text-[var(--muted-2)]">
               <p className="text-5xl mb-4">🔍</p>
               <p className="text-lg">No se encontraron publicaciones</p>
-              <button onClick={clearFilters} className="mt-4 text-blue-600 hover:underline text-sm">
+              <button onClick={clearFilters} className="mt-4 text-[var(--primary)] hover:underline text-sm">
                 Limpiar filtros
               </button>
             </div>
           ) : (
             <>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              <p className="text-sm text-[var(--muted)] mb-4">
                 {data.pagination.total} resultado{data.pagination.total !== 1 ? 's' : ''}
               </p>
 
@@ -222,22 +237,23 @@ function MarketplaceContent() {
                 ))}
               </div>
 
-              {/* Paginación */}
               {data.pagination.totalPages > 1 && (
                 <div className="flex justify-center gap-2 mt-8">
                   <button
                     disabled={filters.page <= 1}
                     onClick={() => setFilters((p) => ({ ...p, page: p.page - 1 }))}
-                    className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-800">
+                    className="px-4 py-2 border border-[var(--border)] rounded-lg text-sm disabled:opacity-40 hover:bg-[var(--surface-2)] bg-[var(--surface)] text-[var(--foreground)]"
+                  >
                     ← Anterior
                   </button>
-                  <span className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">
+                  <span className="px-4 py-2 text-sm text-[var(--muted)]">
                     {filters.page} / {data.pagination.totalPages}
                   </span>
                   <button
                     disabled={filters.page >= data.pagination.totalPages}
                     onClick={() => setFilters((p) => ({ ...p, page: p.page + 1 }))}
-                    className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-800">
+                    className="px-4 py-2 border border-[var(--border)] rounded-lg text-sm disabled:opacity-40 hover:bg-[var(--surface-2)] bg-[var(--surface)] text-[var(--foreground)]"
+                  >
                     Siguiente →
                   </button>
                 </div>
@@ -252,35 +268,41 @@ function MarketplaceContent() {
 
 function MarketplaceCard({ listing }: { listing: Listing }) {
   return (
-    <Link href={`/listings/${listing.id}`}
-      className="bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 dark:border-gray-800 group flex flex-col">
-      <div className="aspect-square overflow-hidden bg-gray-50 dark:bg-gray-800">
+    <Link
+      href={`/listings/${listing.id}`}
+      className="bg-[var(--surface)] rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-[var(--border)] group flex flex-col"
+    >
+      <div className="aspect-square overflow-hidden bg-[var(--surface-2)]">
         <img
           src={listing.images[0]}
           alt={listing.title}
           className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
         />
       </div>
+
       <div className="p-4 flex flex-col flex-1">
-        <p className="text-xs text-gray-400 truncate">{listing.edition}</p>
-        <h3 className="font-semibold text-gray-900 dark:text-white text-sm mt-0.5 truncate">
+        <p className="text-xs text-[var(--muted-2)] truncate">{listing.edition}</p>
+        <h3 className="font-semibold text-[var(--foreground)] text-sm mt-0.5 truncate">
           {listing.title}
         </h3>
+
         <div className="flex gap-1.5 mt-2 flex-wrap">
-          <span className="text-xs bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-2 py-0.5 rounded-full">
+          <span className="text-xs bg-[var(--info-bg)] text-[var(--info-fg)] px-2 py-0.5 rounded-full">
             {listing.rarity.replace('_', ' ')}
           </span>
-          <span className="text-xs bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300 px-2 py-0.5 rounded-full">
+          <span className="text-xs bg-[var(--surface-2)] text-[var(--muted)] px-2 py-0.5 rounded-full border border-[var(--border)]">
             {CONDITION_LABELS[listing.condition]}
           </span>
         </div>
+
         <div className="mt-auto pt-3 flex items-center justify-between">
-          <span className="text-blue-600 font-bold">
+          <span className="text-[var(--primary)] font-bold">
             ${listing.priceCLP.toLocaleString('es-CL')}
           </span>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-[var(--muted-2)]">
             ★ {listing.seller.profile?.reputationScore.toFixed(1) || '0.0'}
-            {' · '}{listing.seller.profile?.displayName || listing.seller.username}
+            {' · '}
+            {listing.seller.profile?.displayName || listing.seller.username}
           </span>
         </div>
       </div>
@@ -290,16 +312,18 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
 
 export default function MarketplacePage() {
   return (
-    <Suspense fallback={
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="animate-pulse h-8 bg-gray-200 rounded w-48 mb-6" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(9)].map((_, i) => (
-            <div key={i} className="bg-gray-200 dark:bg-gray-800 rounded-xl h-72" />
-          ))}
+    <Suspense
+      fallback={
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="animate-pulse h-8 bg-[var(--surface-2)] rounded w-48 mb-6" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(9)].map((_, i) => (
+              <div key={i} className="bg-[var(--surface)] rounded-xl h-72 border border-[var(--border)]" />
+            ))}
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <MarketplaceContent />
     </Suspense>
   );

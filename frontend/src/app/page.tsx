@@ -91,13 +91,17 @@ export default function HomePage() {
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-2xl font-bold text-[var(--foreground)]">
               Publicaciones recientes
             </h2>
-            <p className="text-sm text-gray-400 mt-0.5">Las últimas cartas disponibles</p>
+            <p className="text-[var(--muted)]">
+            Descubre las ultimas cartas publicadas en PokeMarket!
+            </p>
           </div>
-          <Link href="/marketplace"
-            className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
+          <Link
+            href="/marketplace"
+            className="text-sm text-[var(--primary)] hover:text-[var(--primary-hover)] font-medium flex items-center gap-1"
+          >
             Ver todas →
           </Link>
         </div>
@@ -105,15 +109,20 @@ export default function HomePage() {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-white dark:bg-gray-900 rounded-xl h-64 animate-pulse" />
+              <div
+                key={i}
+                className="bg-[var(--surface)] rounded-xl h-64 animate-pulse border border-[var(--border)]"
+              />
             ))}
           </div>
         ) : listings.length === 0 ? (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16 text-[var(--muted-2)]">
             <p className="text-4xl mb-3">📭</p>
             <p>Aún no hay publicaciones. ¡Sé el primero en publicar!</p>
-            <Link href="/listings/new"
-              className="inline-block mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+            <Link
+              href="/listings/new"
+              className="inline-block mt-4 bg-[var(--primary)] text-[var(--primary-foreground)] px-6 py-2 rounded-lg hover:bg-[var(--primary-hover)]"
+            >
               Publicar carta
             </Link>
           </div>
@@ -149,7 +158,7 @@ function ListingCard({ listing }: { listing: Listing }) {
             {listing.title}
           </h3>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-blue-600 font-bold text-sm">
+            <span className="text-[var(--primary)] font-bold text-sm">
               ${listing.priceCLP.toLocaleString('es-CL')}
             </span>
             <span className="text-xs text-[var(--muted)] bg-[var(--surface-2)] px-2 py-0.5 rounded-full border border-[var(--border)]">
@@ -165,7 +174,7 @@ function ListingCard({ listing }: { listing: Listing }) {
       {/* Card secundaria — vendedor */}
       <Link href={`/usuario/${listing.seller.username}`}
         className="flex items-center gap-2 px-3 py-2 hover:bg-[var(--surface-2)] transition-colors">
-        <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-xs font-bold text-blue-600 flex-shrink-0">
+        <div className="w-6 h-6 rounded-full bg-[var(--info-bg)] flex items-center justify-center text-xs font-bold text-[var(--info-fg)] flex-shrink-0">
           {listing.seller.username[0].toUpperCase()}
         </div>
         <div className="min-w-0">
