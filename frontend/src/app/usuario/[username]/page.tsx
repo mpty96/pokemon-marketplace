@@ -120,27 +120,6 @@ export default function PublicProfilePage() {
             <p className="text-xs text-gray-400">Transacciones</p>
           </div>
         </div>
-
-        {/* Promedio por categoría */}
-        {data.ratingsReceived.length > 0 && (
-          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 space-y-2">
-            {(['priceScore', 'communicationScore', 'processScore'] as const).map((key) => {
-              const avg = data.ratingsReceived.reduce((s, r) => s + r[key], 0) / data.ratingsReceived.length;
-              const label = key === 'priceScore' ? 'Precio' : key === 'communicationScore' ? 'Comunicación' : 'Proceso';
-              return (
-                <div key={key} className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500 dark:text-gray-400">{label}</span>
-                  <div className="flex items-center gap-2">
-                    <Stars score={avg} />
-                    <span className="text-gray-700 dark:text-gray-300 font-medium w-8 text-right">
-                      {avg.toFixed(1)}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
       </div>
 
       {/* Tabs de calificaciones */}
