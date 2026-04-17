@@ -48,7 +48,7 @@ useEffect(() => {
 
 const displayed =
   tab === 'active'  ? active :
-  tab === 'sold'    ? asSeller.filter((l: any) => l.status === 'SOLD') :
+  tab === 'sold'    ? asSeller.filter((l: any) => l.status === 'COMPLETED') :
   asBuyer;
 
   return (
@@ -94,7 +94,7 @@ const displayed =
             tab === 'sold'
               ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
               : 'text-gray-500 hover:text-gray-700'}`}>
-          Vendidas ({asSeller.filter((l: any) => l.sale?.status === 'SOLD').length})
+          Vendidas ({asSeller.filter((l: any) => l.sale?.status === 'COMPLETED').length})
         </button>
         <button onClick={() => setTab('bought')}
           className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
@@ -121,7 +121,7 @@ const displayed =
               : 'No tienes historial de publicaciones'}
           </p>
           {tab === 'active' && (
-            <Link href="/listings"
+            <Link href="/listings/new"
               className="inline-block mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 text-sm">
               Publicar primera carta
             </Link>
