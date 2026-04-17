@@ -296,11 +296,10 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
         </div>
 
         <div className="mt-auto pt-3 flex items-center justify-between">
-          <span className="text-[var(--primary)] font-bold">
-            ${listing.priceCLP.toLocaleString('es-CL')}
-          </span>
           <span className="text-xs text-[var(--muted-2)]">
-            ★ {listing.seller.profile?.reputationScore.toFixed(1) || '0.0'}
+            <span className="text-[#e0a800] font-semibold">
+              ★ {listing.seller.profile?.reputationScore.toFixed(1) || '0.0'}
+            </span>
             {' · '}
             {listing.seller.profile?.displayName || listing.seller.username}
           </span>

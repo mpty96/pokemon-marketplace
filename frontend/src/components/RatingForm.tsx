@@ -5,8 +5,8 @@ import api from '@/lib/axios';
 import { Rating } from '@/types';
 
 interface RatingFormProps {
-  saleId:       string;
-  onRated:      (rating: Rating) => void;
+  saleId: string;
+  onRated: (rating: Rating) => void;
 }
 
 function StarSelector({
@@ -14,15 +14,15 @@ function StarSelector({
   value,
   onChange,
 }: {
-  label:    string;
-  value:    number;
+  label: string;
+  value: number;
   onChange: (v: number) => void;
 }) {
   const [hover, setHover] = useState(0);
 
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
+      <span className="text-sm text-[var(--foreground)]">{label}</span>
       <div className="flex gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
@@ -31,7 +31,8 @@ function StarSelector({
             onClick={() => onChange(star)}
             onMouseEnter={() => setHover(star)}
             onMouseLeave={() => setHover(0)}
-            className="text-2xl transition-transform hover:scale-110">
+            className="text-2xl transition-transform hover:scale-110 text-[#e0a800]"
+          >
             {star <= (hover || value) ? '⭐' : '☆'}
           </button>
         ))}
@@ -42,13 +43,13 @@ function StarSelector({
 
 export default function RatingForm({ saleId, onRated }: RatingFormProps) {
   const [scores, setScores] = useState({
-    priceScore:         0,
+    priceScore: 0,
     communicationScore: 0,
-    processScore:       0,
+    processScore: 0,
   });
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState('');
+  const [error, setError] = useState('');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -93,7 +94,7 @@ export default function RatingForm({ saleId, onRated }: RatingFormProps) {
       />
 
       <div>
-        <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+        <label className="block text-sm text-[var(--foreground)] mb-1">
           Comentario (opcional)
         </label>
         <textarea
@@ -101,12 +102,12 @@ export default function RatingForm({ saleId, onRated }: RatingFormProps) {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="¿Cómo fue la experiencia?"
-          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
         />
       </div>
 
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-2">
+        <p className="text-sm text-[var(--danger-fg)] bg-[var(--danger-bg)] border border-[var(--border)] rounded-lg p-2">
           {error}
         </p>
       )}
@@ -114,7 +115,8 @@ export default function RatingForm({ saleId, onRated }: RatingFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-medium py-2 rounded-lg transition-colors">
+        className="w-full bg-[#e0a800] hover:bg-[#c89200] disabled:opacity-60 text-white font-medium py-2 rounded-lg transition-colors"
+      >
         {loading ? 'Enviando...' : '⭐ Enviar calificación'}
       </button>
     </form>

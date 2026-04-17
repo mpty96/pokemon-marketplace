@@ -25,7 +25,7 @@ interface PublicProfile {
 function Stars({ score }: { score: number }) {
   const rounded = Math.round(score);
   return (
-    <span className="text-yellow-500">
+    <span className="text-[#e0a800]">
       {'⭐'.repeat(rounded)}
       {'☆'.repeat(5 - rounded)}
     </span>
@@ -90,7 +90,7 @@ export default function PublicProfilePage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 pt-5 border-t border-[var(--border)]">
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
-              <span className="text-yellow-500">⭐</span>
+              <span className="text-[#e0a800]">⭐</span>
               <span className="text-xl font-bold text-[var(--foreground)]">
                 {profile?.reputationScore?.toFixed(1) || '0.0'}
               </span>
@@ -100,7 +100,7 @@ export default function PublicProfilePage() {
 
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
-              <span className="text-yellow-500">⭐</span>
+              <span className="text-[#e0a800]">⭐</span>
               <span className="text-xl font-bold text-[var(--foreground)]">
                 {(profile as any)?.reputationAsSeller?.toFixed(1) || '0.0'}
               </span>
@@ -110,7 +110,7 @@ export default function PublicProfilePage() {
 
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
-              <span className="text-yellow-500">⭐</span>
+              <span className="text-[#e0a800]">⭐</span>
               <span className="text-xl font-bold text-[var(--foreground)]">
                 {(profile as any)?.reputationAsBuyer?.toFixed(1) || '0.0'}
               </span>

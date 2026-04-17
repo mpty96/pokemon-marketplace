@@ -129,7 +129,7 @@ export default function ChatPage() {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
-      <p className="text-gray-400">Cargando chat...</p>
+      <p className="text-[var(--muted-2)]">Cargando chat...</p>
     </div>
   );
 
@@ -149,16 +149,16 @@ export default function ChatPage() {
 }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-4">
+    <div className="max-w-3xl mx-auto px-4 py-8 space-y-4 text-[var(--foreground)]">
 
   {/* Header del chat */}
-  <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 flex items-center gap-4">
-    <button onClick={() => router.back()} className="text-gray-400 hover:text-gray-600">←</button>
-    <img src={listing.images[0]} alt={listing.title}
-      className="w-12 h-12 object-contain rounded-lg bg-gray-50 dark:bg-gray-800" />
-    <div className="flex-1 min-w-0">
-      <h2 className="font-semibold text-gray-900 dark:text-white truncate">{listing.title}</h2>
-      <p className="text-sm text-blue-600 font-medium">
+  <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-4 flex items-center gap-4">
+  <button onClick={() => router.back()} className="text-[var(--muted-2)] hover:text-[var(--foreground)]">←</button>
+  <img src={listing.images[0]} alt={listing.title}
+    className="w-12 h-12 object-contain rounded-lg bg-[var(--surface-2)]" />
+  <div className="flex-1 min-w-0">
+    <h2 className="font-semibold text-[var(--foreground)] truncate">{listing.title}</h2>
+    <p className="text-sm text-[var(--primary)] font-medium">
         ${listing.priceCLP.toLocaleString('es-CL')}
       </p>
       {/* Link al perfil del otro usuario */}
@@ -167,16 +167,16 @@ export default function ChatPage() {
           ? (chatData?.conversation?.messages?.find(m => m.senderId !== listing.sellerId)?.sender.username || '')
           : listing.seller.username
         }`}
-        className="text-xs text-blue-500 hover:underline">
+        className="text-xs text-[var(--primary)] hover:underline">
           {isSeller ? 'Ver perfil del comprador' : 'Ver perfil del vendedor'}
       </Link>
     </div>
     <span className={`text-xs px-2 py-1 rounded-full ${
-      listing.status === 'ACTIVE'  ? 'bg-green-100 text-green-700' :
-      listing.status === 'PAUSED'  ? 'bg-yellow-100 text-yellow-700' :
-      listing.status === 'SOLD'    ? 'bg-gray-100 text-gray-500' :
-                                    'bg-gray-100 text-gray-400'
-    }`}>
+        listing.status === 'ACTIVE'  ? 'bg-[var(--success-bg)] text-[var(--success-fg)]' :
+        listing.status === 'PAUSED'  ? 'bg-[var(--warning-bg)] text-[var(--warning-fg)]' :
+        listing.status === 'SOLD'    ? 'bg-[var(--surface-2)] text-[var(--muted)]' :
+                                      'bg-[var(--danger-bg)] text-[var(--danger-fg)]'
+      }`}>
       {listing.status === 'ACTIVE'  ? 'Disponible' :
       listing.status === 'PAUSED'  ? 'En proceso' :
       listing.status === 'SOLD'    ? 'Vendida'    : 'Cancelada'}
@@ -194,8 +194,8 @@ export default function ChatPage() {
 
       {/* Panel de calificación */}
       {sale?.status === 'COMPLETED' && (
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-5 space-y-4">
-          <h3 className="font-semibold text-gray-900 dark:text-white">
+        <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-5 space-y-4">
+          <h3 className="font-semibold text-[var(--foreground)]">
             ⭐ Calificaciones
           </h3>
 
