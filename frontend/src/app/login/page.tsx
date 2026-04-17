@@ -37,21 +37,21 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
-      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow p-8">
-        <h1 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-          🎴 Iniciar sesión
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-4">
+      <div className="w-full max-w-md bg-[var(--surface)] rounded-xl shadow p-8 border border-[var(--border)]">
+        <h1 className="text-2xl font-bold text-center mb-6 text-[var(--foreground)]">
+          Iniciar sesión
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-3 text-sm">
+            <div className="bg-[var(--danger-bg)] border border-[var(--border)] text-[var(--danger-fg)] rounded-lg p-3 text-sm">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
               Email
             </label>
             <input
@@ -73,7 +73,7 @@ export default function LoginPage() {
               required
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
               placeholder="Tu contraseña"
             />
           </div>
@@ -93,9 +93,9 @@ export default function LoginPage() {
             ) : 'Iniciar sesión'}
           </button>
 
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-[var(--muted)]">
             ¿No tienes cuenta?{' '}
-            <Link href="/register" className="text-blue-600 hover:underline">
+            <Link href="/register" className="text-[var(--primary)] hover:underline">
               Regístrate
             </Link>
           </p>

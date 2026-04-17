@@ -58,16 +58,16 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={toggle}
+            className={ghostBtn}
+            title={dark ? 'Modo claro' : 'Modo oscuro'}
+          >
+            {dark ? '🌞' : '🌙'}
+          </button>
+
           {isAuthenticated ? (
             <>
-              <button
-                onClick={toggle}
-                className={ghostBtn}
-                title={dark ? 'Modo claro' : 'Modo oscuro'}
-              >
-                {dark ? '🌞' : '🌙'}
-              </button>
-
               <Link href="/profile" className={ghostBtn}>
                 Mi Perfil
               </Link>

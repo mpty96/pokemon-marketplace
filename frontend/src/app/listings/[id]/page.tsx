@@ -80,52 +80,51 @@ export default function ListingDetailPage() {
             <div className="p-6 flex flex-col justify-between">
               <div className="space-y-4">
                 <div>
-                  <span className="text-xs text-gray-400 uppercase tracking-wide">
+                  <span className="text-xs text-[var(--muted-2)] uppercase tracking-wide">
                     Edición: {listing.edition}{listing.setNumber && ` · #${listing.setNumber}`}
                   </span>
-                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                  <h1 className="text-2xl font-bold text-[var(--foreground)] mt-1">
                     {listing.title}
                   </h1>
                 </div>
 
-                <div className="text-3xl font-bold text-blue-600">
+                <div className="text-3xl font-bold text-[var(--primary)]">
                   ${listing.priceCLP.toLocaleString('es-CL')}
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500 dark:text-gray-400 w-20">Condición:</span>
-                    <span className="px-3 py-1 bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300 rounded-full text-sm font-medium">
+                    <span className="text-xs text-[var(--muted)] w-20">Condición:</span>
+                    <span className="px-3 py-1 bg-[var(--success-bg)] text-[var(--success-fg)] rounded-full text-sm font-medium">
                       {CONDITION_LABELS[listing.condition]}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500 dark:text-gray-400 w-20">Rareza:</span>
-                    <span className="px-3 py-1 bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-full text-sm font-medium">
-                      {RARITY_LABELS[listing.rarity]}
+                    <span className="text-xs text-[var(--muted)] w-20">Rareza:</span>
+                    <span className="px-3 py-1 bg-[var(--info-bg)] text-[var(--info-fg)] rounded-full text-sm font-medium">
                     </span>
                   </div>
                 </div>
 
                 {listing.description && (
-                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                  <p className="text-[var(--muted)] text-sm leading-relaxed">
                     {listing.description}
                   </p>
                 )}
 
-                <div className="border-t border-gray-100 dark:border-gray-800 pt-4">
-                  <p className="text-sm text-gray-500">Vendido por</p>
+                <div className="border-t border-[var(--border)] pt-4">
+                  <p className="text-sm text-[var(--muted)]">Vendido por</p>
                   <Link
                     href={`/usuario/${listing.seller.username}`}
-                    className="font-medium text-blue-600 hover:underline">
+                    className="font-medium text-[var(--primary)] hover:underline">
                     {listing.seller.profile?.displayName || listing.seller.username}
                   </Link>
-                  <p className="text-sm text-yellow-500">
+                  <p className="text-sm text-[#e0a800]">
                     ★ {listing.seller.profile?.reputationScore.toFixed(1) || '0.0'}
                   </p>
                 </div>
 
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-[var(--muted-2)]">
                   {listing.views} vista{listing.views !== 1 ? 's' : ''}
                 </p>
               </div>
@@ -133,18 +132,18 @@ export default function ListingDetailPage() {
               <div className="mt-6 space-y-3">
                 {isOwner ? (
                   <button onClick={handleDelete}
-                    className="w-full border border-red-300 text-red-600 hover:bg-red-50 font-medium py-2 rounded-lg transition-colors">
+                    className="w-full border border-[var(--danger-fg)] text-[var(--danger-fg)] hover:bg-[var(--danger-bg)] font-medium py-2 rounded-lg transition-colors">
                     Eliminar publicación
                   </button>
                 ) : isAuthenticated ? (
                   <button
                     onClick={() => router.push(`/listings/${id}/chat`)}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors">
+                    className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors">
                     💬 Contactar vendedor
                   </button>
                 ) : (
                   <button onClick={() => router.push('/login')}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors">
+                    className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors">
                     Inicia sesión para comprar
                   </button>
                 )}

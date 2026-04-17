@@ -243,10 +243,10 @@ export default function ChatPage() {
       )}
 
       {/* Mensajes */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
-        <div className="h-96 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-950">
+      <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] overflow-hidden">
+        <div className="h-96 overflow-y-auto p-4 space-y-3 bg-[var(--surface-2)]">
           {messages.length === 0 && (
-            <div className="text-center text-gray-400 text-sm mt-8">
+            <div className="text-center text-[var(--muted-2)] text-sm mt-8">
               <p>Inicia la conversación con el vendedor</p>
             </div>
           )}
@@ -262,8 +262,8 @@ export default function ChatPage() {
                   )}
                   <div className={`px-4 py-2 rounded-2xl text-sm ${
                     isMe
-                      ? 'bg-blue-600 text-white rounded-br-sm'
-                      : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-100 dark:border-gray-700 rounded-bl-sm'
+                      ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
+                      : 'bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)]'
                   }`}>
                     {msg.content}
                   </div>
@@ -280,7 +280,7 @@ export default function ChatPage() {
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t border-gray-100 dark:border-gray-800">
+        <div className="border-t border-[var(--border)] p-3 bg-[var(--surface)]">
           {listing.status === 'SOLD' ? (
             <p className="text-center text-sm text-gray-400">Esta publicación ya fue vendida</p>
           ) : (
@@ -290,10 +290,10 @@ export default function ChatPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Escribe un mensaje..."
-                className="flex-1 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
               />
               <button type="submit" disabled={!input.trim()}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] ...">
                 Enviar
               </button>
             </form>
