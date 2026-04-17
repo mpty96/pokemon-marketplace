@@ -64,7 +64,7 @@ async function recalculateReputation(userId: string) {
   const allRatings = await prisma.rating.findMany({
     where: { ratedId: userId },
     include: {
-      sale: { select: { sellerId: true } },
+      sale: { select: { sellerId: true, buyerId: true } }, // ✅ agregado buyerId
     },
   });
 
@@ -86,7 +86,7 @@ async function recalculateReputation(userId: string) {
       : Number((arr.reduce((s, r) => s + r.averageScore, 0) / arr.length).toFixed(2));
 
   const asSeller = allRatings.filter((r) => r.sale.sellerId === userId);
-  const asBuyer  = allRatings.filter((r) => r.sale.sellerId !== userId);
+  const asBuyer  = allRatings.filter((r) => r.sale.buyerId === userId); // ✅ FIX
 
   await prisma.profile.update({
     where: { userId },
