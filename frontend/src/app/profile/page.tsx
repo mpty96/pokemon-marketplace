@@ -142,7 +142,7 @@ console.log("DISPLAYED LENGTH:", displayed?.length);
           {displayed.map((listing: any) => {
             const statusInfo =
               listing.sale?.status === 'COMPLETED'
-                ? STATUS_LABEL.COMPLETED
+                ? STATUS_LABEL.SOLD
                 : STATUS_LABEL[listing.status] || STATUS_LABEL.ACTIVE;
             const isDeleted  = !!listing.deletedAt;
             console.log("LISTING RENDER:", listing);
