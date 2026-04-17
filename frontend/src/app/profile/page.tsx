@@ -164,7 +164,7 @@ console.log("DISPLAYED LENGTH:", displayed?.length);
                     {listing.title}
                   </h3>
                   <p className="text-sm text-gray-400">{listing.edition}</p>
-                    {listing.sale?.status === 'COMPLETED' && (
+                    {listing.sale?.status === 'SOLD' && (
                     <p className="text-xs text-green-600 mt-0.5">
                       {tab === 'bought'
                         ? `🛒 Compraste a ${(listing.sale as any).seller?.username || listing.seller?.username || ''}`
