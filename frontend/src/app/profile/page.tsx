@@ -141,8 +141,8 @@ console.log("DISPLAYED LENGTH:", displayed?.length);
         <div className="space-y-3">
           {displayed.map((listing: any) => {
             const statusInfo =
-              listing.sale?.status === 'SOLD'
-                ? STATUS_LABEL.SOLD
+              listing.sale?.status === 'COMPLETED'
+                ? STATUS_LABEL.COMPLETED
                 : STATUS_LABEL[listing.status] || STATUS_LABEL.ACTIVE;
             const isDeleted  = !!listing.deletedAt;
             console.log("LISTING RENDER:", listing);
@@ -164,7 +164,7 @@ console.log("DISPLAYED LENGTH:", displayed?.length);
                     {listing.title}
                   </h3>
                   <p className="text-sm text-gray-400">{listing.edition}</p>
-                    {listing.sale?.status === 'SOLD' && (
+                    {listing.sale?.status === 'COMPLETED' && (
                     <p className="text-xs text-green-600 mt-0.5">
                       {tab === 'bought'
                         ? `🛒 Compraste a ${(listing.sale as any).seller?.username || listing.seller?.username || ''}`
