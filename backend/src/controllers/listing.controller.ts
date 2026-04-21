@@ -14,16 +14,17 @@ import { getProfileCompletionStatus } from '../services/profile.service';
 // Tipos locales — evita importar enums desde @prisma/client
 type CardCondition = 'MINT' | 'NEAR_MINT' | 'EXCELLENT' | 'GOOD' | 'PLAYED' | 'POOR';
 type CardRarity    = 'COMMON' | 'UNCOMMON' | 'RARE' | 'HOLO_RARE' | 'ULTRA_RARE' | 'SECRET_RARE' | 'PROMO';
+type CardLanguage = 'ESPAÑOL' | 'INGLÉS' | 'PORTUGUÉS' | 'JAPONÉS' | 'COREANO' | 'CHINO' | 'OTRO';
 
 export async function create(req: AuthRequest, res: Response): Promise<void> {
   try {
     const sellerId = req.user!.userId;
     const {
       title, cardName, edition, setNumber,
-      condition, rarity, priceCLP, description,
+      condition, rarity, language, priceCLP, description,
     } = req.body;
 
-        if (!title || !cardName || !edition || !condition || !rarity || !priceCLP) {
+        if (!title || !cardName || !edition || !condition || !rarity || !language || !priceCLP) {
       res.status(400).json({ error: 'Faltan campos requeridos' });
       return;
     }
@@ -52,6 +53,7 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
       setNumber,
       condition: condition as CardCondition,
       rarity:    rarity    as CardRarity,
+      language:  language  as CardLanguage,
       priceCLP:  Number(priceCLP),
       description,
       imageFiles: files.map((f) => f.buffer),
@@ -67,7 +69,7 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
 export async function list(req: AuthRequest, res: Response): Promise<void> {
   try {
     const {
-      search, edition, condition, rarity,
+      search, edition, condition, rarity, language,
       minPrice, maxPrice, page, limit,
     } = req.query;
 
@@ -76,6 +78,7 @@ export async function list(req: AuthRequest, res: Response): Promise<void> {
       edition:   edition   as string,
       condition: condition as CardCondition,
       rarity:    rarity    as CardRarity,
+      language:  language  as CardLanguage,
       minPrice:  minPrice  ? Number(minPrice)  : undefined,
       maxPrice:  maxPrice  ? Number(maxPrice)  : undefined,
       page:      page      ? Number(page)      : 1,

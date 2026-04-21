@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
-import { CardCondition, CardRarity } from '@/types';
+import { CardCondition, CardRarity, CardLanguage } from '@/types';
 
 const CONDITIONS: CardCondition[] = ['MINT','NEAR_MINT','EXCELLENT','GOOD','PLAYED','POOR'];
 const RARITIES:   CardRarity[]    = ['COMMON','UNCOMMON','RARE','HOLO_RARE','ULTRA_RARE','SECRET_RARE','PROMO'];
@@ -28,12 +28,22 @@ const RARITY_LABELS: Record<CardRarity, string> = {
   PROMO:       'Promo',
 };
 
+const LANGUAGES: { value: CardLanguage; label: string }[] = [
+  { value: 'ESPAÑOL', label: 'Español' },
+  { value: 'INGLÉS', label: 'Inglés' },
+  { value: 'PORTUGUÉS', label: 'Coreano' },
+  { value: 'JAPONÉS', label: 'Japonés' },
+  { value: 'COREANO', label: 'Coreano' },
+  { value: 'CHINO', label: 'Chino' },
+  { value: 'OTRO', label: 'Otro' }
+];
+
 export default function NewListingPage() {
   const router    = useRouter();
   const isAuth    = useAuthStore((s) => s.isAuthenticated);
   const [form, setForm] = useState({
     title: '', cardName: '', edition: '', setNumber: '',
-    condition: '' as CardCondition, rarity: '' as CardRarity,
+    condition: '' as CardCondition, rarity: '' as CardRarity, language: '' as CardLanguage,
     priceCLP: '', description: '',
   });
 
@@ -131,7 +141,7 @@ if (success) {
                 setNewId('');
                 setForm({
                   title: '', cardName: '', edition: '', setNumber: '',
-                  condition: '' as CardCondition, rarity: '' as CardRarity,
+                  condition: '' as CardCondition, rarity: '' as CardRarity, language: '' as CardLanguage,
                   priceCLP: '', description: ''
                 });
                 setImages([]);
@@ -229,6 +239,22 @@ if (success) {
                 value={form.rarity} onChange={(e) => setForm({ ...form, rarity: e.target.value as CardRarity })}>
                 <option value="">Seleccionar...</option>
                 {RARITIES.map((r) => <option key={r} value={r}>{RARITY_LABELS[r]}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Idioma *</label>
+              <select
+                required
+                className={inputClass}
+                value={form.language}
+                onChange={(e) => setForm({ ...form, language: e.target.value as CardLanguage })}
+              >
+                <option value="">Seleccionar...</option>
+                {LANGUAGES.map((l) => (
+                  <option key={l.value} value={l.value}>
+                    {l.label}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="md:col-span-2">

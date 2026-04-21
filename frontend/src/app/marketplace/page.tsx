@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import api from '@/lib/axios';
-import { Listing, CardCondition, CardRarity, PaginatedListings } from '@/types';
+import { Listing, CardCondition, CardRarity, CardLanguage, PaginatedListings } from '@/types';
 
 const CONDITIONS: { value: CardCondition; label: string }[] = [
   { value: 'MINT',      label: 'Mint' },
@@ -23,6 +23,16 @@ const RARITIES: { value: CardRarity; label: string }[] = [
   { value: 'ULTRA_RARE',  label: 'Ultra Rara' },
   { value: 'SECRET_RARE', label: 'Secret Rara' },
   { value: 'PROMO',       label: 'Promo' },
+];
+
+const LANGUAGES: { value: CardLanguage; label: string }[] = [
+  { value: 'ESPAÑOL', label: 'Español' },
+  { value: 'INGLÉS', label: 'Inglés' },
+  { value: 'PORTUGUÉS', label: 'Coreano' },
+  { value: 'JAPONÉS', label: 'Japonés' },
+  { value: 'COREANO', label: 'Coreano' },
+  { value: 'CHINO', label: 'Chino' },
+  { value: 'OTRO', label: 'Otro' }
 ];
 
 const CONDITION_LABELS: Record<CardCondition, string> = {
@@ -46,6 +56,7 @@ function MarketplaceContent() {
     edition: searchParams.get('edition') || '',
     condition: searchParams.get('condition') || '',
     rarity: searchParams.get('rarity') || '',
+    language: searchParams.get('language') || '',
     minPrice: searchParams.get('minPrice') || '',
     maxPrice: searchParams.get('maxPrice') || '',
     page: Number(searchParams.get('page') || 1),
@@ -84,6 +95,7 @@ function MarketplaceContent() {
       edition: '',
       condition: '',
       rarity: '',
+      language: '',
       minPrice: '',
       maxPrice: '',
       page: 1,
@@ -181,6 +193,24 @@ function MarketplaceContent() {
                 {RARITIES.map((r) => (
                   <option key={r.value} value={r.value}>
                     {r.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+                Idioma
+              </label>
+              <select
+                value={filters.language}
+                onChange={(e) => handleFilterChange('language', e.target.value)}
+                className={selectClass}
+              >
+                <option value="">Todos</option>
+                {LANGUAGES.map((l) => (
+                  <option key={l.value} value={l.value}>
+                    {l.label}
                   </option>
                 ))}
               </select>

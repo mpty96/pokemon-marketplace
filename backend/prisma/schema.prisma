@@ -106,6 +106,7 @@ model Listing {
   setNumber    String?       // número en el set
   condition    CardCondition
   rarity       CardRarity
+  language     String        
   priceCLP     Int           // precio en pesos chilenos
   description  String?
   images       String[]      // URLs de Cloudinary

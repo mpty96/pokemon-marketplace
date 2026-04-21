@@ -12,6 +12,8 @@ export interface Seller {
   } | null;
 }
 
+export type CardLanguage = 'ESPAÑOL' | 'INGLÉS' | 'PORTUGUÉS' | 'JAPONÉS' | 'COREANO' | 'CHINO' | 'OTRO';
+
 export interface Listing {
   id:          string;
   sellerId:    string;
@@ -21,6 +23,7 @@ export interface Listing {
   setNumber:   string | null;
   condition:   CardCondition;
   rarity:      CardRarity;
+  language:    CardLanguage;
   priceCLP:    number;
   description: string | null;
   images:      string[];

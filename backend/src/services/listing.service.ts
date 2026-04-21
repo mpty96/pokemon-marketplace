@@ -6,6 +6,7 @@ import { Prisma } from '@prisma/client';
 type ListingStatus = 'ACTIVE' | 'PAUSED' | 'SOLD' | 'CANCELLED';
 type CardCondition = 'MINT' | 'NEAR_MINT' | 'EXCELLENT' | 'GOOD' | 'PLAYED' | 'POOR';
 type CardRarity    = 'COMMON' | 'UNCOMMON' | 'RARE' | 'HOLO_RARE' | 'ULTRA_RARE' | 'SECRET_RARE' | 'PROMO';
+type CardLanguage = 'ESPAÑOL' | 'INGLÉS' | 'PORTUGUÉS' | 'JAPONÉS' | 'COREANO' | 'CHINO' | 'OTRO';
 
 interface CreateListingInput {
   sellerId:     string;
@@ -15,6 +16,7 @@ interface CreateListingInput {
   setNumber?:   string;
   condition:    CardCondition;
   rarity:       CardRarity;
+  language:     CardLanguage;
   priceCLP:     number;
   description?: string;
   imageFiles:   Buffer[];
@@ -25,6 +27,7 @@ interface ListingFilters {
   edition?:   string;
   condition?: CardCondition;
   rarity?:    CardRarity;
+  language?:  CardLanguage;
   minPrice?:  number;
   maxPrice?:  number;
   page?:      number;
@@ -60,7 +63,7 @@ export async function createListing(input: CreateListingInput) {
 
 export async function getListings(filters: ListingFilters) {
   const {
-    search, edition, condition, rarity,
+    search, edition, condition, rarity, language,
     minPrice, maxPrice, page = 1, limit = 12,
   } = filters;
 
@@ -82,6 +85,7 @@ export async function getListings(filters: ListingFilters) {
   if (edition)   where.edition   = { contains: edition, mode: 'insensitive' };
   if (condition) where.condition = condition;
   if (rarity)    where.rarity    = rarity;
+  if (language)  where.language  = language;
   if (minPrice || maxPrice) {
     where.priceCLP = {};
     if (minPrice) where.priceCLP = { ...where.priceCLP as object, gte: minPrice };
@@ -152,6 +156,7 @@ export async function updateListing(
     setNumber: string;
     condition: CardCondition;
     rarity: CardRarity;
+    language: CardLanguage;
     priceCLP: number;
     description: string;
   }>

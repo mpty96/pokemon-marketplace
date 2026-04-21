@@ -109,6 +109,24 @@ export default function ListingDetailPage() {
                       {RARITY_LABELS[listing.rarity]}
                     </span>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-[var(--muted)] w-20">Idioma:</span>
+                    <span className="px-3 py-1 bg-[var(--surface-2)] text-[var(--foreground)] rounded-full text-sm font-medium border border-[var(--border)]">
+                      {listing.language === 'ESPAÑOL'
+                        ? 'Español'
+                        : listing.language === 'INGLÉS'
+                        ? 'Inglés'
+                        : listing.language === 'PORTUGUÉS'
+                        ? 'Portugués'
+                        : listing.language === 'JAPONÉS'
+                        ? 'Japonés'
+                        : listing.language === 'COREANO'
+                        ? 'Coreano'
+                        : listing.language === 'CHINO'
+                        ? 'Chino'
+                        : 'Otro'}
+                    </span>
+                  </div>
                 </div>
 
                 {listing.description && (

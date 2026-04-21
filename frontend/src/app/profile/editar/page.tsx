@@ -113,7 +113,7 @@ export default function EditProfilePage() {
     <div className="max-w-xl mx-auto py-8 px-4">
       <div className="bg-[var(--surface)] p-6 rounded-xl border border-[var(--border)]">
         <div className="mb-4 p-3 text-sm rounded-lg bg-[var(--warning-bg)] text-[var(--warning-fg)]">
-          ⚠️ Locación, RUT y número de contacto no se pueden modificar después.
+          ⚠️ Locación, RUT y Número de contacto no se pueden modificar después.
         </div>
 
         {error && (
