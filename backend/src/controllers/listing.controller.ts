@@ -60,10 +60,12 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
     });
 
     res.status(201).json(listing);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al crear la publicación' });
-  }
+  } catch (error: any) {
+  console.error('CREATE LISTING ERROR:', error);
+  res.status(500).json({
+    error: error?.message || 'Error al crear la publicación',
+  });
+}
 }
 
 export async function list(req: AuthRequest, res: Response): Promise<void> {
