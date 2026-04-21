@@ -151,7 +151,7 @@ export default function EditProfilePage() {
           </div>
 
             <div>
-            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
                 Nombre de usuario
             </label>
             <input
@@ -168,7 +168,7 @@ export default function EditProfilePage() {
             </div>
 
             <div>
-            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
                 Nombre visible
             </label>
             <input
@@ -180,7 +180,7 @@ export default function EditProfilePage() {
             </div>
 
             <div>
-            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
                 Locación
             </label>
             <input
@@ -192,7 +192,7 @@ export default function EditProfilePage() {
             </div>
 
             <div>
-            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
                 RUT
             </label>
             <input
@@ -204,7 +204,7 @@ export default function EditProfilePage() {
             </div>
 
             <div>
-            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
                 Número de contacto
             </label>
             <input
@@ -216,7 +216,7 @@ export default function EditProfilePage() {
             </div>
 
             <div>
-            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
                 Descripción personal
             </label>
             <textarea
@@ -228,7 +228,7 @@ export default function EditProfilePage() {
             </div>
 
             <div>
-            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+            <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
                 Redes sociales
             </label>
             <input
