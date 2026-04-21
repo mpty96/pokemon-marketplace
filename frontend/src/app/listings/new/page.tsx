@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
@@ -36,19 +36,74 @@ export default function NewListingPage() {
     condition: '' as CardCondition, rarity: '' as CardRarity,
     priceCLP: '', description: '',
   });
+
   const [images,   setImages]   = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState('');
   const [success,  setSuccess]  = useState(false);
   const [newId,    setNewId]    = useState('');
+  const [profileComplete, setProfileComplete] = useState<boolean | null>(null);
+  const [missingFields, setMissingFields] = useState<string[]>([]);
 
   if (!isAuth) {
-  router.push('/login');
-  return null;
+    router.push('/login');
+    return null;
+  }
+
+  useEffect(() => {
+    api.get('/api/profile/completion-status')
+      .then(({ data }) => {
+        setProfileComplete(data.complete);
+        setMissingFields(data.missingFields || []);
+      })
+      .catch(() => {
+        setProfileComplete(false);
+        setMissingFields([]);
+      });
+  }, []);
+
+if (profileComplete === false) {
+  const labels: Record<string, string> = {
+    location: 'Locación',
+    rut: 'RUT',
+    contactPhone: 'Número de contacto',
+  };
+
+  return (
+    <div className="min-h-screen bg-[var(--background)] flex items-center justify-center px-4">
+      <div className="bg-[var(--surface)] rounded-xl shadow p-8 text-center max-w-md w-full border border-[var(--border)]">
+        <div className="text-5xl mb-4">🔒</div>
+        <h2 className="text-2xl font-bold text-[var(--foreground)] mb-2">
+          Debes completar tu perfil
+        </h2>
+        <p className="text-[var(--muted)] mb-4">
+          Para publicar cartas necesitas completar tu perfil con la información obligatoria.
+        </p>
+
+        {missingFields.length > 0 && (
+          <div className="mb-6 text-sm text-[var(--muted)]">
+            <p className="font-medium mb-2 text-[var(--foreground)]">Te falta completar:</p>
+            <ul className="space-y-1">
+              {missingFields.map((field) => (
+                <li key={field}>• {labels[field] || field}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <button
+          onClick={() => router.push('/perfil/editar')}
+          className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors"
+        >
+          Completar perfil
+        </button>
+      </div>
+    </div>
+  );
 }
 
-  if (success) {
+if (success) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center px-4">
         <div className="bg-[var(--surface)] rounded-xl shadow p-8 text-center max-w-md w-full border border-[var(--border)]">
@@ -122,6 +177,8 @@ export default function NewListingPage() {
   }
 
   const inputClass = "w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]";
+
+  if (profileComplete === null) return null;
 
   return (
     <div className="min-h-screen bg-[var(--background)] py-8 px-4">

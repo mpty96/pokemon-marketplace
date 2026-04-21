@@ -168,7 +168,7 @@ function ListingCard({ listing }: { listing: Listing }) {
             {listing.seller.profile?.displayName || listing.seller.username}
           </p>
         </div>
-        <span className="ml-auto text-xs text-yellow-500 flex-shrink-0">
+        <span className="text-[#e0a800] font-semibold">
           ★ {listing.seller.profile?.reputationScore.toFixed(1) || '0.0'}
         </span>
       </Link>

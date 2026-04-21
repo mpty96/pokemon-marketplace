@@ -7,6 +7,7 @@ import listingRoutes from './routes/listing.routes';
 import chatRoutes    from './routes/chat.routes';
 import saleRoutes    from './routes/sale.routes';
 import ratingRoutes  from './routes/rating.routes';
+import profileRoutes from './routes/profile.routes';
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use('/api/listings', listingRoutes);
 app.use('/api/chat',     chatRoutes);
 app.use('/api/sales',    saleRoutes);
 app.use('/api/ratings',  ratingRoutes);
+app.use('/api/profile', profileRoutes);
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

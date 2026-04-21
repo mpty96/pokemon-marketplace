@@ -69,7 +69,7 @@ export default function Header() {
           {isAuthenticated ? (
             <>
               <Link href="/profile" className={ghostBtn}>
-                Mi Perfil
+                Mi perfil
               </Link>
 
               <button onClick={handleLogout} className={ghostBtn}>

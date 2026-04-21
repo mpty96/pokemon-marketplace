@@ -9,6 +9,7 @@ import {
   getMyListings,
   getListingsHistory,
 } from '../services/listing.service';
+import { getProfileCompletionStatus } from '../services/profile.service';
 
 // Tipos locales — evita importar enums desde @prisma/client
 type CardCondition = 'MINT' | 'NEAR_MINT' | 'EXCELLENT' | 'GOOD' | 'PLAYED' | 'POOR';
@@ -22,8 +23,18 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
       condition, rarity, priceCLP, description,
     } = req.body;
 
-    if (!title || !cardName || !edition || !condition || !rarity || !priceCLP) {
+        if (!title || !cardName || !edition || !condition || !rarity || !priceCLP) {
       res.status(400).json({ error: 'Faltan campos requeridos' });
+      return;
+    }
+
+    const profileStatus = await getProfileCompletionStatus(sellerId);
+
+    if (!profileStatus.complete) {
+      res.status(400).json({
+        error: 'Debes completar tu perfil antes de publicar',
+        missingFields: profileStatus.missingFields,
+      });
       return;
     }
 

@@ -72,10 +72,17 @@ const displayed =
               <span className="text-xs text-[var(--muted-2)]">reputación</span>
             </div>
           </div>
-          <Link href={`/usuario/${user?.username}`}
-            className="text-sm text-blue-600 hover:underline">
-            Ver perfil público →
-          </Link>
+          <div className="flex flex-col items-end gap-1">
+            <Link href={`/usuario/${user?.username}`}
+              className="text-sm text-blue-600 hover:underline">
+              Ver perfil público →
+            </Link>
+
+            <Link href="/perfil/editar"
+              className="text-xs text-[var(--primary)] hover:underline">
+              Editar mi perfil
+            </Link>
+          </div>
         </div>
       </div>
 

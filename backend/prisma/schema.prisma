@@ -72,23 +72,27 @@ model User {
 }
 
 model Profile {
-  id             String   @id @default(uuid())
-  userId         String   @unique
-  displayName    String?
-  bio            String?
-  avatarUrl      String?
-  location       String?  // ciudad en Chile
-  reputationScore Float   @default(0)
-  reputationAsSeller  Float    @default(0)  
-  reputationAsBuyer   Float    @default(0)
-  totalSales     Int      @default(0)
-  totalPurchases Int      @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  displayName        String?
+  bio                String?
+  avatarUrl          String?
+  location           String?  // ciudad en Chile
+  rut                String?
+  contactPhone       String?
+  socialLinks        String?
+  reputationScore    Float    @default(0)
+  reputationAsSeller Float    @default(0)
+  reputationAsBuyer  Float    @default(0)
+  totalSales         Int      @default(0)
+  totalPurchases     Int      @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   // Relaciones
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([rut])
   @@map("profiles")
 }
 
