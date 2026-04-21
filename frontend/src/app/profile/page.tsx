@@ -82,7 +82,7 @@ const displayed =
               </Link>
 
               <Link
-                href="/perfil/editar"
+                href="/profile/editar"
                 className="text-xs text-[var(--primary)] hover:underline"
               >
                 Editar mi perfil
