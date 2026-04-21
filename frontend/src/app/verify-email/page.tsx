@@ -46,7 +46,7 @@ function VerifyEmailContent() {
               href="/login"
               className="inline-block mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
             >
-              Ir al login
+              Dirigirse a iniciar sesión
             </Link>
           </>
         )}

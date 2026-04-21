@@ -14,7 +14,7 @@ import { getProfileCompletionStatus } from '../services/profile.service';
 // Tipos locales — evita importar enums desde @prisma/client
 type CardCondition = 'MINT' | 'NEAR_MINT' | 'EXCELLENT' | 'GOOD' | 'PLAYED' | 'POOR';
 type CardRarity    = 'COMMON' | 'UNCOMMON' | 'RARE' | 'HOLO_RARE' | 'ULTRA_RARE' | 'SECRET_RARE' | 'PROMO';
-type CardLanguage = 'ESPAÑOL' | 'INGLÉS' | 'PORTUGUÉS' | 'JAPONÉS' | 'COREANO' | 'CHINO' | 'OTRO';
+type CardLanguage = 'ESP' | 'ENG' | 'POR' | 'JPN' | 'KOR' | 'CHN' | 'OTHER';
 
 export async function create(req: AuthRequest, res: Response): Promise<void> {
   try {

@@ -12,7 +12,7 @@ export interface Seller {
   } | null;
 }
 
-export type CardLanguage = 'ESPAÑOL' | 'INGLÉS' | 'PORTUGUÉS' | 'JAPONÉS' | 'COREANO' | 'CHINO' | 'OTRO';
+export type CardLanguage = 'ESP' | 'ENG' | 'POR' | 'JPN' | 'KOR' | 'CHN' | 'OTHER';
 
 export interface Listing {
   id:          string;

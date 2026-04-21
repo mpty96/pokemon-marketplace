@@ -29,13 +29,13 @@ const RARITY_LABELS: Record<CardRarity, string> = {
 };
 
 const LANGUAGES: { value: CardLanguage; label: string }[] = [
-  { value: 'ESPAÑOL', label: 'Español' },
-  { value: 'INGLÉS', label: 'Inglés' },
-  { value: 'PORTUGUÉS', label: 'Coreano' },
-  { value: 'JAPONÉS', label: 'Japonés' },
-  { value: 'COREANO', label: 'Coreano' },
-  { value: 'CHINO', label: 'Chino' },
-  { value: 'OTRO', label: 'Otro' }
+  { value: 'ESP', label: 'ESPAÑOL' },
+  { value: 'ENG', label: 'INGLÉS' },
+  { value: 'POR', label: 'PORTUGUÉS' },
+  { value: 'JPN', label: 'JAPONÉS' },
+  { value: 'KOR', label: 'COREANO' },
+  { value: 'CHN', label: 'CHINO' },
+  { value: 'OTHER', label: 'OTRO' },
 ];
 
 export default function NewListingPage() {
