@@ -78,7 +78,7 @@ const displayed =
               Ver perfil público →
             </Link>
 
-            <Link href="/perfil/editar"
+            <Link href="/profile/editar"
               className="text-xs text-[var(--primary)] hover:underline">
               Editar mi perfil
             </Link>

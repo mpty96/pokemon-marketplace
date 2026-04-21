@@ -93,7 +93,7 @@ if (profileComplete === false) {
         )}
 
         <button
-          onClick={() => router.push('/perfil/editar')}
+          onClick={() => router.push('/profile/editar')}
           className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors"
         >
           Completar perfil
