@@ -13,7 +13,6 @@ export default function EditProfilePage() {
     username: '',
     displayName: '',
     bio: '',
-    avatarUrl: '',
     location: '',
     rut: '',
     contactPhone: '',
@@ -37,7 +36,6 @@ export default function EditProfilePage() {
           username: data.user?.username || '',
           displayName: data.displayName || '',
           bio: data.bio || '',
-          avatarUrl: data.avatarUrl || '',
           location: data.location || '',
           rut: data.rut || '',
           contactPhone: data.contactPhone || '',
@@ -80,7 +78,6 @@ export default function EditProfilePage() {
       data.append('username', form.username);
       data.append('displayName', form.displayName);
       data.append('bio', form.bio);
-      data.append('avatarUrl', form.avatarUrl);
       data.append('location', form.location);
       data.append('rut', form.rut);
       data.append('contactPhone', form.contactPhone);
@@ -140,7 +137,10 @@ export default function EditProfilePage() {
             <div className="flex-1">
               <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
                 Foto de perfil
-              </label>
+                </label>
+                <p className="text-xs text-[var(--muted)] mb-2">
+                Selecciona una imagen desde tu dispositivo.
+                </p>
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/jpg,image/webp"
@@ -150,67 +150,94 @@ export default function EditProfilePage() {
             </div>
           </div>
 
-          <input
-            className={input}
-            placeholder="Nombre de usuario"
-            value={form.username}
-            onChange={(e) => setForm({ ...form, username: e.target.value })}
-          />
+            <div>
+            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                Nombre de usuario
+            </label>
+            <input
+                className={input}
+                placeholder="Tu nombre de usuario"
+                value={form.username}
+                onChange={(e) => setForm({ ...form, username: e.target.value })}
+            />
+            <p className="text-xs text-[var(--muted)] mt-1">
+                {usernameDaysLeft > 0
+                ? `Tu usuario podrá volver a cambiarse en ${usernameDaysLeft} día(s).`
+                : 'Puedes cambiar tu usuario, pero luego quedará bloqueado por 30 días.'}
+            </p>
+            </div>
 
-          <p className="text-xs text-[var(--muted)]">
-            {usernameDaysLeft > 0
-              ? `Tu usuario podrá volver a cambiarse en ${usernameDaysLeft} día(s).`
-              : 'Puedes cambiar tu usuario, pero luego quedará bloqueado por 30 días.'}
-          </p>
+            <div>
+            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                Nombre visible
+            </label>
+            <input
+                className={input}
+                placeholder="Cómo quieres que te vean"
+                value={form.displayName}
+                onChange={(e) => setForm({ ...form, displayName: e.target.value })}
+            />
+            </div>
 
-          <input
-            className={input}
-            placeholder="Nombre visible"
-            value={form.displayName}
-            onChange={(e) => setForm({ ...form, displayName: e.target.value })}
-          />
+            <div>
+            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                Locación
+            </label>
+            <input
+                className={input}
+                placeholder="Ciudad o comuna"
+                value={form.location || ''}
+                onChange={(e) => setForm({ ...form, location: e.target.value })}
+            />
+            </div>
 
-          <input
-            className={input}
-            placeholder="Locación"
-            value={form.location || ''}
-            onChange={(e) => setForm({ ...form, location: e.target.value })}
-          />
+            <div>
+            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                RUT
+            </label>
+            <input
+                className={input}
+                placeholder="12.345.678-9"
+                value={form.rut || ''}
+                onChange={(e) => setForm({ ...form, rut: e.target.value })}
+            />
+            </div>
 
-          <input
-            className={input}
-            placeholder="RUT"
-            value={form.rut || ''}
-            onChange={(e) => setForm({ ...form, rut: e.target.value })}
-          />
+            <div>
+            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                Número de contacto
+            </label>
+            <input
+                className={input}
+                placeholder="+56 9 ..."
+                value={form.contactPhone || ''}
+                onChange={(e) => setForm({ ...form, contactPhone: e.target.value })}
+            />
+            </div>
 
-          <input
-            className={input}
-            placeholder="Teléfono"
-            value={form.contactPhone || ''}
-            onChange={(e) => setForm({ ...form, contactPhone: e.target.value })}
-          />
+            <div>
+            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                Descripción personal
+            </label>
+            <textarea
+                className={input}
+                placeholder="Cuéntale a otros usuarios un poco sobre ti"
+                value={form.bio || ''}
+                onChange={(e) => setForm({ ...form, bio: e.target.value })}
+            />
+            </div>
 
-          <textarea
-            className={input}
-            placeholder="Descripción"
-            value={form.bio || ''}
-            onChange={(e) => setForm({ ...form, bio: e.target.value })}
-          />
-
-          <input
-            className={input}
-            placeholder="Redes sociales"
-            value={form.socialLinks || ''}
-            onChange={(e) => setForm({ ...form, socialLinks: e.target.value })}
-          />
-
-          <input
-            className={input}
-            placeholder="URL avatar (opcional)"
-            value={form.avatarUrl || ''}
-            onChange={(e) => setForm({ ...form, avatarUrl: e.target.value })}
-          />
+            <div>
+            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                Redes sociales
+            </label>
+            <input
+                className={input}
+                placeholder="@instagram / enlace / usuario"
+                value={form.socialLinks || ''}
+                onChange={(e) => setForm({ ...form, socialLinks: e.target.value })}
+            />
+            </div>
 
           <button
             disabled={saving}
