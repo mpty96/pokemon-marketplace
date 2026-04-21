@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 type ListingStatus = 'ACTIVE' | 'PAUSED' | 'SOLD' | 'CANCELLED';
 type CardCondition = 'MINT' | 'NEAR_MINT' | 'EXCELLENT' | 'GOOD' | 'PLAYED' | 'POOR';
 type CardRarity    = 'COMMON' | 'UNCOMMON' | 'RARE' | 'HOLO_RARE' | 'ULTRA_RARE' | 'SECRET_RARE' | 'PROMO';
-type CardLanguage = 'ESPAÑOL' | 'INGLÉS' | 'PORTUGUÉS' | 'JAPONÉS' | 'COREANO' | 'CHINO' | 'OTRO';
+type CardLanguage = 'ESP' | 'ENG' | 'POR' | 'JPN' | 'KOR' | 'CHN' | 'OTRO';
 
 interface CreateListingInput {
   sellerId:     string;
