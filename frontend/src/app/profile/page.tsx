@@ -56,8 +56,12 @@ const displayed =
       {/* Header perfil */}
       <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-6 mb-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-[var(--info-bg)] flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
-            {user?.username?.[0]?.toUpperCase()}
+          <div className="w-16 h-16 rounded-full bg-[var(--info-bg)] overflow-hidden flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
+            {user?.avatarUrl ? (
+              <img src={user.avatarUrl} alt={user.username} className="w-full h-full object-cover" />
+            ) : (
+              user?.username?.[0]?.toUpperCase()
+            )}
           </div>
           <div className="flex-1">
             <h1 className="text-xl font-bold text-[var(--foreground)]">

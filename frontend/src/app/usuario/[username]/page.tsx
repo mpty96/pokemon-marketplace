@@ -68,8 +68,12 @@ export default function PublicProfilePage() {
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6 text-[var(--foreground)]">
       <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-[var(--info-bg)] flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
-            {data.username[0].toUpperCase()}
+          <div className="w-16 h-16 rounded-full bg-[var(--info-bg)] overflow-hidden flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
+            {profile?.avatarUrl ? (
+              <img src={profile.avatarUrl} alt={data.username} className="w-full h-full object-cover" />
+            ) : (
+              data.username[0].toUpperCase()
+            )}
           </div>
 
           <div className="flex-1">

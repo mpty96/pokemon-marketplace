@@ -18,7 +18,13 @@ export async function getMyProfileController(req: AuthRequest, res: Response): P
 
 export async function updateMyProfileController(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const profile = await upsertMyProfile(req.user!.userId, req.body);
+    const file = req.file as Express.Multer.File | undefined;
+
+    const profile = await upsertMyProfile(req.user!.userId, {
+      ...req.body,
+      avatarFile: file,
+    });
+
     res.json(profile);
   } catch (error: any) {
     if (typeof error.message === 'string' && error.message.startsWith('IMMUTABLE_FIELD:')) {
@@ -32,6 +38,19 @@ export async function updateMyProfileController(req: AuthRequest, res: Response)
 
       res.status(400).json({
         error: `${labels[field] || field} no se puede modificar una vez guardado`,
+      });
+      return;
+    }
+
+    if (error.message === 'USERNAME_IN_USE') {
+      res.status(409).json({ error: 'El nombre de usuario ya está en uso' });
+      return;
+    }
+
+    if (typeof error.message === 'string' && error.message.startsWith('USERNAME_CHANGE_BLOCKED:')) {
+      const daysLeft = error.message.split(':')[1];
+      res.status(400).json({
+        error: `Solo puedes cambiar tu usuario una vez cada 30 días. Te faltan ${daysLeft} día(s).`,
       });
       return;
     }

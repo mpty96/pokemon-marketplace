@@ -1,6 +1,7 @@
 import prisma from '../lib/prisma';
 
 interface UpdateProfileInput {
+  username?: string;
   displayName?: string;
   bio?: string;
   avatarUrl?: string;
@@ -8,6 +9,13 @@ interface UpdateProfileInput {
   rut?: string;
   contactPhone?: string;
   socialLinks?: string;
+  avatarFile?: Express.Multer.File;
+}
+
+function fileToDataUrl(file?: Express.Multer.File): string | null {
+  if (!file) return null;
+  const base64 = file.buffer.toString('base64');
+  return `data:${file.mimetype};base64,${base64}`;
 }
 
 export async function getMyProfile(userId: string) {
@@ -19,6 +27,7 @@ export async function getMyProfile(userId: string) {
           id: true,
           email: true,
           username: true,
+          usernameChangedAt: true,
         },
       },
     },
@@ -28,24 +37,20 @@ export async function getMyProfile(userId: string) {
 }
 
 export async function upsertMyProfile(userId: string, data: UpdateProfileInput) {
-  const existing = await prisma.profile.findUnique({
+  const existingProfile = await prisma.profile.findUnique({
     where: { userId },
   });
 
-  if (!existing) {
-    return prisma.profile.create({
-      data: {
-        userId,
-        displayName: data.displayName?.trim() || null,
-        bio: data.bio?.trim() || null,
-        avatarUrl: data.avatarUrl?.trim() || null,
-        location: data.location?.trim() || null,
-        rut: data.rut?.trim() || null,
-        contactPhone: data.contactPhone?.trim() || null,
-        socialLinks: data.socialLinks?.trim() || null,
-      },
-    });
-  }
+  const existingUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      username: true,
+      usernameChangedAt: true,
+    },
+  });
+
+  if (!existingUser) throw new Error('USER_NOT_FOUND');
 
   const immutableFields = [
     { key: 'location', label: 'Locación' },
@@ -53,27 +58,110 @@ export async function upsertMyProfile(userId: string, data: UpdateProfileInput) 
     { key: 'contactPhone', label: 'Número de contacto' },
   ] as const;
 
-  for (const field of immutableFields) {
-    const oldValue = existing[field.key];
-    const newValue = data[field.key]?.trim();
+  if (existingProfile) {
+    for (const field of immutableFields) {
+      const oldValue = existingProfile[field.key];
+      const newValue = data[field.key]?.trim();
 
-    if (oldValue && newValue && oldValue !== newValue) {
-      throw new Error(`IMMUTABLE_FIELD:${field.key}`);
+      if (oldValue && newValue && oldValue !== newValue) {
+        throw new Error(`IMMUTABLE_FIELD:${field.key}`);
+      }
     }
   }
 
-  return prisma.profile.update({
-    where: { userId },
-    data: {
-      displayName: data.displayName?.trim() || null,
-      bio: data.bio?.trim() || null,
-      avatarUrl: data.avatarUrl?.trim() || null,
-      location: existing.location || data.location?.trim() || null,
-      rut: existing.rut || data.rut?.trim() || null,
-      contactPhone: existing.contactPhone || data.contactPhone?.trim() || null,
-      socialLinks: data.socialLinks?.trim() || null,
-    },
+  const nextUsername = data.username?.trim();
+  const currentUsername = existingUser.username;
+
+  if (nextUsername && nextUsername !== currentUsername) {
+    const usernameInUse = await prisma.user.findFirst({
+      where: {
+        username: nextUsername,
+        id: { not: userId },
+      },
+      select: { id: true },
+    });
+
+    if (usernameInUse) {
+      throw new Error('USERNAME_IN_USE');
+    }
+
+    if (existingUser.usernameChangedAt) {
+      const now = new Date();
+      const nextAllowed = new Date(existingUser.usernameChangedAt);
+      nextAllowed.setDate(nextAllowed.getDate() + 30);
+
+      if (now < nextAllowed) {
+        const diffMs = nextAllowed.getTime() - now.getTime();
+        const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        throw new Error(`USERNAME_CHANGE_BLOCKED:${daysLeft}`);
+      }
+    }
+  }
+
+  const avatarFromFile = fileToDataUrl(data.avatarFile);
+  const finalAvatarUrl = avatarFromFile || data.avatarUrl?.trim() || existingProfile?.avatarUrl || null;
+
+  const result = await prisma.$transaction(async (tx) => {
+    if (nextUsername && nextUsername !== currentUsername) {
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          username: nextUsername,
+          usernameChangedAt: new Date(),
+        },
+      });
+    }
+
+    if (!existingProfile) {
+      return tx.profile.create({
+        data: {
+          userId,
+          displayName: data.displayName?.trim() || null,
+          bio: data.bio?.trim() || null,
+          avatarUrl: finalAvatarUrl,
+          location: data.location?.trim() || null,
+          rut: data.rut?.trim() || null,
+          contactPhone: data.contactPhone?.trim() || null,
+          socialLinks: data.socialLinks?.trim() || null,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+              username: true,
+              usernameChangedAt: true,
+            },
+          },
+        },
+      });
+    }
+
+    return tx.profile.update({
+      where: { userId },
+      data: {
+        displayName: data.displayName?.trim() || null,
+        bio: data.bio?.trim() || null,
+        avatarUrl: finalAvatarUrl,
+        location: existingProfile.location || data.location?.trim() || null,
+        rut: existingProfile.rut || data.rut?.trim() || null,
+        contactPhone: existingProfile.contactPhone || data.contactPhone?.trim() || null,
+        socialLinks: data.socialLinks?.trim() || null,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true,
+            usernameChangedAt: true,
+          },
+        },
+      },
+    });
   });
+
+  return result;
 }
 
 export async function getPublicProfileByUsername(username: string) {
@@ -82,23 +170,23 @@ export async function getPublicProfileByUsername(username: string) {
     select: {
       username: true,
       profile: true,
-        ratingsReceived: {
+      ratingsReceived: {
         orderBy: { createdAt: 'desc' },
         include: {
-            rater: {
+          rater: {
             select: {
-                id: true,
-                username: true,
+              id: true,
+              username: true,
             },
-            },
-            sale: {
+          },
+          sale: {
             select: {
-                sellerId: true,
-                buyerId: true,
+              sellerId: true,
+              buyerId: true,
             },
-            },
+          },
         },
-        },
+      },
       ratingsGiven: {
         orderBy: { createdAt: 'desc' },
         include: {
