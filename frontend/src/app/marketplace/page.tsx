@@ -26,13 +26,13 @@ const RARITIES: { value: CardRarity; label: string }[] = [
 ];
 
 const LANGUAGES: { value: CardLanguage; label: string }[] = [
-  { value: 'ESPAÑOL', label: 'Español' },
-  { value: 'INGLÉS', label: 'Inglés' },
-  { value: 'PORTUGUÉS', label: 'Coreano' },
-  { value: 'JAPONÉS', label: 'Japonés' },
-  { value: 'COREANO', label: 'Coreano' },
-  { value: 'CHINO', label: 'Chino' },
-  { value: 'OTRO', label: 'Otro' }
+  { value: 'ESP', label: 'Español' },
+  { value: 'ENG', label: 'Inglés' },
+  { value: 'POR', label: 'Portugués' },
+  { value: 'JPN', label: 'Japonés' },
+  { value: 'KOR', label: 'Coreano' },
+  { value: 'CHN', label: 'Chino' },
+  { value: 'OTHER', label: 'Otro' }
 ];
 
 const CONDITION_LABELS: Record<CardCondition, string> = {
