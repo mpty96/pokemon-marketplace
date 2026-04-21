@@ -112,17 +112,17 @@ export default function ListingDetailPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-[var(--muted)] w-20">Idioma:</span>
                     <span className="px-3 py-1 bg-[var(--surface-2)] text-[var(--foreground)] rounded-full text-sm font-medium border border-[var(--border)]">
-                      {listing.language === 'ESPAÑOL'
+                      {listing.language === 'ESP'
                         ? 'Español'
-                        : listing.language === 'INGLÉS'
+                        : listing.language === 'ENG'
                         ? 'Inglés'
-                        : listing.language === 'PORTUGUÉS'
+                        : listing.language === 'POR'
                         ? 'Portugués'
-                        : listing.language === 'JAPONÉS'
+                        : listing.language === 'JPN'
                         ? 'Japonés'
-                        : listing.language === 'COREANO'
+                        : listing.language === 'KOR'
                         ? 'Coreano'
-                        : listing.language === 'CHINO'
+                        : listing.language === 'CHN'
                         ? 'Chino'
                         : 'Otro'}
                     </span>
