@@ -56,7 +56,7 @@ const displayed =
       {/* Header perfil */}
       <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-6 mb-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-2xl font-bold text-blue-600">
+          <div className="w-16 h-16 rounded-full bg-[var(--info-bg)] flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
             {user?.username?.[0]?.toUpperCase()}
           </div>
           <div className="flex-1">
@@ -65,7 +65,7 @@ const displayed =
             </h1>
             <p className="text-[var(--muted)] text-sm">{user?.email}</p>
             <div className="flex items-center gap-1 mt-1">
-              <span className="text-yellow-500 text-sm">★</span>
+              <span className="text-[#e0a800] text-sm">★</span>
               <span className="text-sm font-medium text-[var(--foreground)]">
                 {user?.reputationScore?.toFixed(1) || '0.0'}
               </span>
@@ -73,15 +73,21 @@ const displayed =
             </div>
           </div>
           <div className="flex flex-col items-end gap-1">
-            <Link href={`/usuario/${user?.username}`}
-              className="text-sm text-blue-600 hover:underline">
-              Ver perfil público →
-            </Link>
+            <div className="flex flex-col items-end gap-1">
+              <Link
+                href={`/usuario/${user?.username}`}
+                className="text-sm text-[var(--primary)] hover:underline"
+              >
+                Ver perfil público →
+              </Link>
 
-            <Link href="/profile/editar"
-              className="text-xs text-[var(--primary)] hover:underline">
-              Editar mi perfil
-            </Link>
+              <Link
+                href="/perfil/editar"
+                className="text-xs text-[var(--primary)] hover:underline"
+              >
+                Editar mi perfil
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -126,11 +132,14 @@ const displayed =
       {loading ? (
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white dark:bg-gray-900 rounded-xl h-20 animate-pulse"/>
+            <div
+              key={i}
+              className="bg-[var(--surface)] rounded-xl h-20 animate-pulse border border-[var(--border)]"
+            />
           ))}
         </div>
       ) : displayed.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-[var(--muted-2)]">
           <p className="text-4xl mb-3">📭</p>
           <p>
             {tab === 'active'
@@ -139,7 +148,7 @@ const displayed =
           </p>
           {tab === 'active' && (
             <Link href="/listings/new"
-              className="inline-block mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 text-sm">
+              className="inline-block mt-4 bg-[var(--primary)] text-[var(--primary-foreground)] px-6 py-2 rounded-lg hover:bg-[var(--primary-hover)] text-sm">
               Publicar primera carta
             </Link>
           )}
@@ -186,7 +195,7 @@ const displayed =
                   )}
                 </div>
                 <div className="text-right flex-shrink-0 space-y-1">
-                  <p className="font-bold text-blue-600">
+                  <p className="font-bold text-[var(--primary)]">
                     ${listing.priceCLP.toLocaleString('es-CL')}
                   </p>
                   <span className={`text-xs px-2 py-0.5 rounded-full ${statusInfo.color}`}>
@@ -195,7 +204,7 @@ const displayed =
                   {!isDeleted && listing.status === 'ACTIVE' && (
                     <div className="mt-1">
                       <Link href={`/listings/${listing.id}`}
-                        className="text-xs text-blue-600 hover:underline">
+                        className="text-xs text-[var(--primary)] hover:underline">
                         Ver →
                       </Link>
                     </div>
