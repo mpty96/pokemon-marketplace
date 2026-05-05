@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from '@/lib/axios';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
@@ -16,12 +16,10 @@ export default function EditProfilePage() {
     location: '',
     rut: '',
     contactPhone: '',
-    socialLinks: '',
   });
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState('');
-  const [usernameChangedAt, setUsernameChangedAt] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -39,26 +37,12 @@ export default function EditProfilePage() {
           location: data.location || '',
           rut: data.rut || '',
           contactPhone: data.contactPhone || '',
-          socialLinks: data.socialLinks || '',
         });
 
         setAvatarPreview(data.avatarUrl || '');
-        setUsernameChangedAt(data.user?.usernameChangedAt || null);
       })
       .finally(() => setLoading(false));
   }, []);
-
-  const usernameDaysLeft = useMemo(() => {
-    if (!usernameChangedAt) return 0;
-    const nextAllowed = new Date(usernameChangedAt);
-    nextAllowed.setDate(nextAllowed.getDate() + 30);
-
-    const now = new Date();
-    if (now >= nextAllowed) return 0;
-
-    const diffMs = nextAllowed.getTime() - now.getTime();
-    return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-  }, [usernameChangedAt]);
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -75,13 +59,12 @@ export default function EditProfilePage() {
 
     try {
       const data = new FormData();
-      data.append('username', form.username);
+
       data.append('displayName', form.displayName);
       data.append('bio', form.bio);
       data.append('location', form.location);
       data.append('rut', form.rut);
       data.append('contactPhone', form.contactPhone);
-      data.append('socialLinks', form.socialLinks);
 
       if (avatarFile) {
         data.append('avatar', avatarFile);
@@ -92,14 +75,20 @@ export default function EditProfilePage() {
       });
 
       updateUser({
-        username: res.data.user?.username,
         displayName: res.data.displayName,
         avatarUrl: res.data.avatarUrl,
       });
 
       router.push('/profile');
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Error al guardar');
+      const code = err.response?.data?.error;
+
+      if (code === 'INVALID_RUT') setError('El RUT ingresado no es válido.');
+      else if (code === 'INVALID_PHONE') setError('El número debe ser chileno. Usa formato +56 9 XXXX XXXX.');
+      else if (code === 'RUT_IN_USE') setError('Este RUT ya está registrado por otro usuario.');
+      else if (code === 'PHONE_IN_USE') setError('Este número de contacto ya está registrado por otro usuario.');
+      else if (String(code).startsWith('IMMUTABLE_FIELD:')) setError('Locación, RUT y Número de contacto no se pueden modificar después.');
+      else setError(code || 'Error al guardar');
     } finally {
       setSaving(false);
     }
@@ -137,10 +126,10 @@ export default function EditProfilePage() {
             <div className="flex-1">
               <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
                 Foto de perfil
-                </label>
-                <p className="text-xs text-[var(--muted)] mb-2">
+              </label>
+              <p className="text-xs text-[var(--muted)] mb-2">
                 Selecciona una imagen desde tu dispositivo.
-                </p>
+              </p>
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/jpg,image/webp"
@@ -150,94 +139,79 @@ export default function EditProfilePage() {
             </div>
           </div>
 
-            <div>
+          <div>
             <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
-                Nombre de usuario
+              Nombre de usuario
             </label>
             <input
-                className={input}
-                placeholder="Tu nombre de usuario"
-                value={form.username}
-                onChange={(e) => setForm({ ...form, username: e.target.value })}
+              className={`${input} opacity-70 cursor-not-allowed`}
+              value={form.username}
+              disabled
             />
             <p className="text-xs text-[var(--muted)] mt-1">
-                {usernameDaysLeft > 0
-                ? `Tu usuario podrá volver a cambiarse en ${usernameDaysLeft} día(s).`
-                : 'Puedes cambiar tu usuario, pero luego quedará bloqueado por 30 días.'}
+              El nombre de usuario no se puede cambiar.
             </p>
-            </div>
+          </div>
 
-            <div>
+          <div>
             <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
-                Nombre visible
+              Nombre visible
             </label>
             <input
-                className={input}
-                placeholder="Cómo quieres que te vean"
-                value={form.displayName}
-                onChange={(e) => setForm({ ...form, displayName: e.target.value })}
+              className={input}
+              placeholder="Cómo quieres que te vean"
+              value={form.displayName}
+              onChange={(e) => setForm({ ...form, displayName: e.target.value })}
             />
-            </div>
+          </div>
 
-            <div>
+          <div>
             <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
-                Locación
+              Locación
             </label>
             <input
-                className={input}
-                placeholder="Ciudad o comuna"
-                value={form.location || ''}
-                onChange={(e) => setForm({ ...form, location: e.target.value })}
+              className={input}
+              placeholder="Ciudad o comuna"
+              value={form.location || ''}
+              onChange={(e) => setForm({ ...form, location: e.target.value })}
             />
-            </div>
+          </div>
 
-            <div>
+          <div>
             <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
-                RUT
+              RUT
             </label>
             <input
-                className={input}
-                placeholder="12.345.678-9"
-                value={form.rut || ''}
-                onChange={(e) => setForm({ ...form, rut: e.target.value })}
+              className={input}
+              placeholder="12.345.678-9"
+              value={form.rut || ''}
+              onChange={(e) => setForm({ ...form, rut: e.target.value })}
             />
-            </div>
+          </div>
 
-            <div>
+          <div>
             <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
-                Número de contacto
+              Número de contacto
             </label>
             <input
-                className={input}
-                placeholder="+56 9 ..."
-                value={form.contactPhone || ''}
-                onChange={(e) => setForm({ ...form, contactPhone: e.target.value })}
+              className={input}
+              placeholder="+56 9 XXXX XXXX"
+              value={form.contactPhone || ''}
+              onChange={(e) => setForm({ ...form, contactPhone: e.target.value })}
             />
-            </div>
+          </div>
 
-            <div>
+          <div>
             <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
-                Descripción personal
+              Descripción personal
             </label>
             <textarea
-                className={input}
-                placeholder="Cuéntale a otros usuarios un poco sobre ti"
-                value={form.bio || ''}
-                onChange={(e) => setForm({ ...form, bio: e.target.value })}
+              className={input}
+              placeholder="Cuéntale a otros usuarios un poco sobre ti"
+              value={form.bio || ''}
+              onChange={(e) => setForm({ ...form, bio: e.target.value })}
             />
-            </div>
-
-            <div>
-            <label className="block text-sm font-semibold text-[var(--muted)] mb-1">
-                Redes sociales
-            </label>
-            <input
-                className={input}
-                placeholder="@instagram / enlace / usuario"
-                value={form.socialLinks || ''}
-                onChange={(e) => setForm({ ...form, socialLinks: e.target.value })}
-            />
-            </div>
+          </div>
 
           <button
             disabled={saving}

@@ -1,14 +1,12 @@
 import prisma from '../lib/prisma';
 
 interface UpdateProfileInput {
-  username?: string;
   displayName?: string;
   bio?: string;
   avatarUrl?: string;
   location?: string;
   rut?: string;
   contactPhone?: string;
-  socialLinks?: string;
   avatarFile?: Express.Multer.File;
 }
 
@@ -16,6 +14,59 @@ function fileToDataUrl(file?: Express.Multer.File): string | null {
   if (!file) return null;
   const base64 = file.buffer.toString('base64');
   return `data:${file.mimetype};base64,${base64}`;
+}
+
+function normalizeRut(rut?: string): string | null {
+  if (!rut) return null;
+
+  const cleanRut = rut
+    .replace(/\./g, '')
+    .replace(/-/g, '')
+    .trim()
+    .toUpperCase();
+
+  if (!/^\d{7,8}[0-9K]$/.test(cleanRut)) {
+    throw new Error('INVALID_RUT');
+  }
+
+  const body = cleanRut.slice(0, -1);
+  const dv = cleanRut.slice(-1);
+
+  let sum = 0;
+  let multiplier = 2;
+
+  for (let i = body.length - 1; i >= 0; i--) {
+    sum += Number(body[i]) * multiplier;
+    multiplier = multiplier === 7 ? 2 : multiplier + 1;
+  }
+
+  const expectedValue = 11 - (sum % 11);
+  const expectedDv =
+    expectedValue === 11 ? '0' :
+    expectedValue === 10 ? 'K' :
+    String(expectedValue);
+
+  if (dv !== expectedDv) {
+    throw new Error('INVALID_RUT');
+  }
+
+  return `${body}-${dv}`;
+}
+
+function normalizeChileanPhone(phone?: string): string | null {
+  if (!phone) return null;
+
+  const digits = phone.replace(/\D/g, '');
+
+  if (digits.length === 9 && digits.startsWith('9')) {
+    return `+56${digits}`;
+  }
+
+  if (digits.length === 11 && digits.startsWith('569')) {
+    return `+${digits}`;
+  }
+
+  throw new Error('INVALID_PHONE');
 }
 
 export async function getMyProfile(userId: string) {
@@ -27,7 +78,6 @@ export async function getMyProfile(userId: string) {
           id: true,
           email: true,
           username: true,
-          usernameChangedAt: true,
         },
       },
     },
@@ -46,11 +96,13 @@ export async function upsertMyProfile(userId: string, data: UpdateProfileInput) 
     select: {
       id: true,
       username: true,
-      usernameChangedAt: true,
     },
   });
 
   if (!existingUser) throw new Error('USER_NOT_FOUND');
+
+  const normalizedRut = data.rut ? normalizeRut(data.rut) : null;
+  const normalizedPhone = data.contactPhone ? normalizeChileanPhone(data.contactPhone) : null;
 
   const immutableFields = [
     { key: 'location', label: 'Locación' },
@@ -61,7 +113,12 @@ export async function upsertMyProfile(userId: string, data: UpdateProfileInput) 
   if (existingProfile) {
     for (const field of immutableFields) {
       const oldValue = existingProfile[field.key];
-      const newValue = data[field.key]?.trim();
+      const newValue =
+        field.key === 'rut'
+          ? normalizedRut
+          : field.key === 'contactPhone'
+            ? normalizedPhone
+            : data[field.key]?.trim();
 
       if (oldValue && newValue && oldValue !== newValue) {
         throw new Error(`IMMUTABLE_FIELD:${field.key}`);
@@ -69,60 +126,64 @@ export async function upsertMyProfile(userId: string, data: UpdateProfileInput) 
     }
   }
 
-  const nextUsername = data.username?.trim();
-  const currentUsername = existingUser.username;
-
-  if (nextUsername && nextUsername !== currentUsername) {
-    const usernameInUse = await prisma.user.findFirst({
+  if (normalizedRut) {
+    const rutInUse = await prisma.profile.findFirst({
       where: {
-        username: nextUsername,
-        id: { not: userId },
+        rut: normalizedRut,
+        userId: { not: userId },
       },
       select: { id: true },
     });
 
-    if (usernameInUse) {
-      throw new Error('USERNAME_IN_USE');
-    }
+    if (rutInUse) throw new Error('RUT_IN_USE');
+  }
 
-    if (existingUser.usernameChangedAt) {
-      const now = new Date();
-      const nextAllowed = new Date(existingUser.usernameChangedAt);
-      nextAllowed.setDate(nextAllowed.getDate() + 30);
+  if (normalizedPhone) {
+    const phoneInUse = await prisma.profile.findFirst({
+      where: {
+        contactPhone: normalizedPhone,
+        userId: { not: userId },
+      },
+      select: { id: true },
+    });
 
-      if (now < nextAllowed) {
-        const diffMs = nextAllowed.getTime() - now.getTime();
-        const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-        throw new Error(`USERNAME_CHANGE_BLOCKED:${daysLeft}`);
-      }
-    }
+    if (phoneInUse) throw new Error('PHONE_IN_USE');
   }
 
   const avatarFromFile = fileToDataUrl(data.avatarFile);
-  const finalAvatarUrl = avatarFromFile || data.avatarUrl?.trim() || existingProfile?.avatarUrl || null;
+  const finalAvatarUrl =
+    avatarFromFile ||
+    data.avatarUrl?.trim() ||
+    existingProfile?.avatarUrl ||
+    null;
 
-  const result = await prisma.$transaction(async (tx) => {
-    if (nextUsername && nextUsername !== currentUsername) {
-      await tx.user.update({
-        where: { id: userId },
-        data: {
-          username: nextUsername,
-          usernameChangedAt: new Date(),
+  const profileData = {
+    displayName: data.displayName?.trim() || null,
+    bio: data.bio?.trim() || null,
+    avatarUrl: finalAvatarUrl,
+    location: existingProfile?.location || data.location?.trim() || null,
+    rut: existingProfile?.rut || normalizedRut,
+    contactPhone: existingProfile?.contactPhone || normalizedPhone,
+  };
+
+  const result = existingProfile
+    ? await prisma.profile.update({
+        where: { userId },
+        data: profileData,
+        include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+              username: true,
+            },
+          },
         },
-      });
-    }
-
-    if (!existingProfile) {
-      return tx.profile.create({
+      })
+    : await prisma.profile.create({
         data: {
           userId,
-          displayName: data.displayName?.trim() || null,
-          bio: data.bio?.trim() || null,
-          avatarUrl: finalAvatarUrl,
-          location: data.location?.trim() || null,
-          rut: data.rut?.trim() || null,
-          contactPhone: data.contactPhone?.trim() || null,
-          socialLinks: data.socialLinks?.trim() || null,
+          ...profileData,
         },
         include: {
           user: {
@@ -130,36 +191,10 @@ export async function upsertMyProfile(userId: string, data: UpdateProfileInput) 
               id: true,
               email: true,
               username: true,
-              usernameChangedAt: true,
             },
           },
         },
       });
-    }
-
-    return tx.profile.update({
-      where: { userId },
-      data: {
-        displayName: data.displayName?.trim() || null,
-        bio: data.bio?.trim() || null,
-        avatarUrl: finalAvatarUrl,
-        location: existingProfile.location || data.location?.trim() || null,
-        rut: existingProfile.rut || data.rut?.trim() || null,
-        contactPhone: existingProfile.contactPhone || data.contactPhone?.trim() || null,
-        socialLinks: data.socialLinks?.trim() || null,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            username: true,
-            usernameChangedAt: true,
-          },
-        },
-      },
-    });
-  });
 
   return result;
 }

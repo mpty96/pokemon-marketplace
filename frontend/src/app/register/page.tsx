@@ -72,6 +72,9 @@ export default function RegisterPage() {
                 className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                 placeholder="pikachu_master"
               />
+              <p className="text-xs text-[var(--muted)] mt-1">
+                Este nombre de usuario será permanente y no podrá cambiarse después.
+              </p>
             </div>
 
             <div>

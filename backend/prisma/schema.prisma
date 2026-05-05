@@ -79,8 +79,8 @@ model Profile {
   bio                String?
   avatarUrl          String?
   location           String?  // ciudad en Chile
-  rut                String?
-  contactPhone       String?
+  rut                String?  @unique
+  contactPhone       String?  @unique
   socialLinks        String?
   reputationScore    Float    @default(0)
   reputationAsSeller Float    @default(0)
@@ -93,7 +93,7 @@ model Profile {
   // Relaciones
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([rut])
+  @@index([contactPhone])
   @@map("profiles")
 }
 
