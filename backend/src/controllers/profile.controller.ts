@@ -27,31 +27,30 @@ export async function updateMyProfileController(req: AuthRequest, res: Response)
 
     res.json(profile);
   } catch (error: any) {
+    console.error('UPDATE PROFILE ERROR:', error);
+
+    if (error.message === 'INVALID_RUT') {
+      res.status(400).json({ error: 'INVALID_RUT' });
+      return;
+    }
+
+    if (error.message === 'INVALID_PHONE') {
+      res.status(400).json({ error: 'INVALID_PHONE' });
+      return;
+    }
+
+    if (error.message === 'RUT_IN_USE') {
+      res.status(409).json({ error: 'RUT_IN_USE' });
+      return;
+    }
+
+    if (error.message === 'PHONE_IN_USE') {
+      res.status(409).json({ error: 'PHONE_IN_USE' });
+      return;
+    }
+
     if (typeof error.message === 'string' && error.message.startsWith('IMMUTABLE_FIELD:')) {
-      const field = error.message.split(':')[1];
-
-      const labels: Record<string, string> = {
-        location: 'Locación',
-        rut: 'RUT',
-        contactPhone: 'Número de contacto',
-      };
-
-      res.status(400).json({
-        error: `${labels[field] || field} no se puede modificar una vez guardado`,
-      });
-      return;
-    }
-
-    if (error.message === 'USERNAME_IN_USE') {
-      res.status(409).json({ error: 'El nombre de usuario ya está en uso' });
-      return;
-    }
-
-    if (typeof error.message === 'string' && error.message.startsWith('USERNAME_CHANGE_BLOCKED:')) {
-      const daysLeft = error.message.split(':')[1];
-      res.status(400).json({
-        error: `Solo puedes cambiar tu usuario una vez cada 30 días. Te faltan ${daysLeft} día(s).`,
-      });
+      res.status(400).json({ error: error.message });
       return;
     }
 
