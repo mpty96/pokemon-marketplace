@@ -20,6 +20,7 @@ export default function EditProfilePage() {
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState('');
+  const [initialRut, setInitialRut] = useState('');
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -40,6 +41,7 @@ export default function EditProfilePage() {
         });
 
         setAvatarPreview(data.avatarUrl || '');
+        setInitialRut(data.rut || '');
       })
       .finally(() => setLoading(false));
   }, []);
@@ -182,14 +184,14 @@ export default function EditProfilePage() {
               RUT
             </label>
             <input
-              className={`${input} ${form.rut ? 'opacity-70 cursor-not-allowed' : ''}`}
+              className={`${input} ${initialRut ? 'opacity-70 cursor-not-allowed' : ''}`}
               placeholder="12.345.678-9"
               value={form.rut || ''}
-              disabled={Boolean(form.rut)}
+              disabled={Boolean(initialRut)}
               onChange={(e) => setForm({ ...form, rut: e.target.value })}
             />
 
-            {form.rut && (
+            {initialRut && (
               <p className="text-xs text-[var(--muted)] mt-1">
                 El RUT no se puede cambiar una vez guardado.
               </p>
