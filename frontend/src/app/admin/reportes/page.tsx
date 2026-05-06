@@ -112,10 +112,11 @@ if (!user || loading) {
         <select
         value={statusFilter}
         onChange={(e) => {
-        setStatusFilter(e.target.value as ReportStatus | 'ALL');
-        setSelected(null);
-        setAdminNote('');
+            setStatusFilter(e.target.value as ReportStatus | 'ALL');
+            setSelected(null);
+            setAdminNote('');
         }}
+        className="border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)]"
         >
           <option value="PENDING">Pendientes</option>
           <option value="REVIEWED">Revisados</option>
@@ -139,7 +140,7 @@ if (!user || loading) {
                   setSelected(report);
                   setAdminNote(report.adminNote || '');
                 }}
-                className="w-full text-left bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 hover:border-[var(--primary)]"
+                className="w-full max-w-full overflow-hidden text-left bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 hover:border-[var(--primary)]"
               >
                 <div className="flex justify-between gap-3 min-w-0">
                   <div className="min-w-0 flex-1">
@@ -152,9 +153,9 @@ if (!user || loading) {
                     </p>
                   </div>
 
-                  <span className="text-xs text-[var(--muted)]">
+                  <span className="shrink-0 text-xs text-[var(--muted)] whitespace-nowrap">
                     {report.status}
-                  </span>
+                    </span>
                 </div>
               </button>
             ))
@@ -178,7 +179,9 @@ if (!user || loading) {
 
               <div>
                 <p className="text-sm font-semibold mb-1">Descripción</p>
-                <p className="text-sm whitespace-pre-wrap">{selected.description}</p>
+                <p className="text-sm whitespace-pre-wrap break-words overflow-hidden">
+                {selected.description}
+                </p>
               </div>
 
               <div className="border-t border-[var(--border)] pt-4">
