@@ -7,13 +7,16 @@ import { sendVerificationEmail } from '../utils/email';
 export async function registerUser(
   email: string,
   username: string,
-  password: string
+  password: string,
+  acceptedTerms: boolean
 ) {
   // Verificar si ya existe
   const existing = await prisma.user.findFirst({
     where: { OR: [{ email }, { username }] },
   });
-
+    if (!acceptedTerms) {
+    throw new Error('TERMS_NOT_ACCEPTED');
+  }
   if (existing) {
     if (existing.email === email) throw new Error('EMAIL_IN_USE');
     if (existing.username === username) throw new Error('USERNAME_IN_USE');

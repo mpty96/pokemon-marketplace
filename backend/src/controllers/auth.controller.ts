@@ -10,10 +10,15 @@ import { AuthRequest } from '../middleware/auth.middleware';
 
 export async function register(req: Request, res: Response): Promise<void> {
   try {
-    const { email, username, password } = req.body;
+    const { email, username, password, acceptedTerms } = req.body;
 
     if (!email || !username || !password) {
       res.status(400).json({ error: 'Todos los campos son requeridos' });
+      return;
+    }
+
+    if (!acceptedTerms) {
+      res.status(400).json({ error: 'Debes aceptar los términos y condiciones' });
       return;
     }
 
@@ -22,19 +27,29 @@ export async function register(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const user = await registerUser(email, username, password);
+    const user = await registerUser(email, username, password, acceptedTerms);
+
     res.status(201).json({
       message: 'Cuenta creada. Revisa tu email para verificar tu cuenta.',
       user,
     });
   } catch (error: any) {
+    if (error.message === 'TERMS_NOT_ACCEPTED') {
+      res.status(400).json({ error: 'Debes aceptar los términos y condiciones' });
+      return;
+    }
+
     if (error.message === 'EMAIL_IN_USE') {
       res.status(409).json({ error: 'El email ya está registrado' });
-    } else if (error.message === 'USERNAME_IN_USE') {
-      res.status(409).json({ error: 'El nombre de usuario ya está en uso' });
-    } else {
-      res.status(500).json({ error: 'Error interno del servidor' });
+      return;
     }
+
+    if (error.message === 'USERNAME_IN_USE') {
+      res.status(409).json({ error: 'El nombre de usuario ya está en uso' });
+      return;
+    }
+
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 }
 
