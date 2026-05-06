@@ -45,19 +45,16 @@ export default function AdminReportsPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
-      return;
-    }
+useEffect(() => {
+  if (!user) return;
 
-    if (user?.role !== 'ADMIN') {
-      router.push('/');
-      return;
-    }
+  if (user.role !== 'ADMIN') {
+    router.push('/');
+    return;
+  }
 
-    fetchReports();
-  }, [isAuthenticated, user?.role, statusFilter]);
+  fetchReports();
+}, [user, statusFilter]);
 
   async function fetchReports() {
     setLoading(true);
@@ -99,7 +96,7 @@ export default function AdminReportsPage() {
     }
   }
 
-  if (loading) {
+if (!user || loading) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-8">
         <p className="text-[var(--muted)]">Cargando reportes...</p>
