@@ -110,9 +110,12 @@ if (!user || loading) {
 
       <div className="mb-4">
         <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as ReportStatus | 'ALL')}
-          className="border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)]"
+        value={statusFilter}
+        onChange={(e) => {
+        setStatusFilter(e.target.value as ReportStatus | 'ALL');
+        setSelected(null);
+        setAdminNote('');
+        }}
         >
           <option value="PENDING">Pendientes</option>
           <option value="REVIEWED">Revisados</option>
@@ -138,11 +141,14 @@ if (!user || loading) {
                 }}
                 className="w-full text-left bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 hover:border-[var(--primary)]"
               >
-                <div className="flex justify-between gap-3">
-                  <div>
-                    <p className="font-semibold">{report.reason}</p>
-                    <p className="text-sm text-[var(--muted)]">
-                      @{report.reporter.username} reportó a @{report.reported.username}
+                <div className="flex justify-between gap-3 min-w-0">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold break-words">
+                    {report.reason}
+                    </p>
+
+                    <p className="text-sm text-[var(--muted)] break-words">
+                    @{report.reporter.username} reportó a @{report.reported.username}
                     </p>
                   </div>
 
