@@ -82,6 +82,7 @@ export async function loginUser(email: string, password: string) {
   console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
   if (!user) throw new Error('INVALID_CREDENTIALS');
+  if (user.profile?.isBanned) throw new Error('USER_BANNED');
 
   const passwordMatch = await bcrypt.compare(password, user.passwordHash);
   if (!passwordMatch) throw new Error('INVALID_CREDENTIALS');
@@ -102,6 +103,7 @@ export async function loginUser(email: string, password: string) {
       displayName: user.profile?.displayName,
       avatarUrl: user.profile?.avatarUrl,
       reputationScore: user.profile?.reputationScore,
+      role: user.role,
     },
   };
 }
@@ -120,5 +122,6 @@ export async function getMe(userId: string) {
     username: user.username,
     emailVerified: user.emailVerified,
     profile: user.profile,
+    role: user.role,
   };
 }

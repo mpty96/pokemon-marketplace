@@ -8,6 +8,7 @@ interface User {
   displayName?:    string;
   avatarUrl?:      string;
   reputationScore?: number;
+  role?: 'USER' | 'ADMIN';
 }
 
 interface AuthState {

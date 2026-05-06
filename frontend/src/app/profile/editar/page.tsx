@@ -182,11 +182,18 @@ export default function EditProfilePage() {
               RUT
             </label>
             <input
-              className={input}
+              className={`${input} ${form.rut ? 'opacity-70 cursor-not-allowed' : ''}`}
               placeholder="12.345.678-9"
               value={form.rut || ''}
+              disabled={Boolean(form.rut)}
               onChange={(e) => setForm({ ...form, rut: e.target.value })}
             />
+
+            {form.rut && (
+              <p className="text-xs text-[var(--muted)] mt-1">
+                El RUT no se puede cambiar una vez guardado.
+              </p>
+            )}
           </div>
 
           <div>

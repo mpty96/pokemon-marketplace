@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import api from '@/lib/axios';
 import { RatingCard } from '@/components/RatingCard';
 import { Rating } from '@/types';
+import { useAuthStore } from '@/store/auth.store';
 
 interface PublicProfile {
   username: string;
@@ -38,6 +39,14 @@ export default function PublicProfilePage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [ratingTab, setRatingTab] = useState<'all' | 'seller' | 'buyer'>('all');
+  const currentUser = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportReason, setReportReason] = useState('Conducta inapropiada');
+  const [reportDescription, setReportDescription] = useState('');
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportMessage, setReportMessage] = useState('');
 
   useEffect(() => {
     api.get(`/api/ratings/user/${username}`)
@@ -64,6 +73,27 @@ export default function PublicProfilePage() {
 
   const profile = data.profile;
 
+  async function handleSubmitReport() {
+  setReportLoading(true);
+  setReportMessage('');
+
+  try {
+    await api.post('/api/reports', {
+      reportedUsername: data?.username,
+      reason: reportReason,
+      description: reportDescription,
+    });
+
+    setReportMessage('Reporte enviado correctamente.');
+    setReportDescription('');
+    setShowReportModal(false);
+  } catch (err: any) {
+    setReportMessage(err.response?.data?.error || 'Error al enviar reporte');
+  } finally {
+    setReportLoading(false);
+  }
+}
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6 text-[var(--foreground)]">
       <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-6">
@@ -84,6 +114,18 @@ export default function PublicProfilePage() {
             {profile?.location && (
               <p className="text-[var(--muted-2)] text-sm">📍 {profile.location}</p>
             )}
+            {isAuthenticated && currentUser?.username !== data.username && (
+            <button
+              onClick={() => setShowReportModal(true)}
+              className="mt-3 text-sm text-red-500 hover:underline"
+            >
+              Reportar usuario
+            </button>
+          )}
+
+          {reportMessage && (
+            <p className="mt-3 text-sm text-[var(--muted)]">{reportMessage}</p>
+          )}
           </div>
         </div>
 
@@ -177,6 +219,60 @@ export default function PublicProfilePage() {
             )?.map((rating: Rating) => (
               <RatingCard key={rating.id} rating={rating} />
             ))}
+          </div>
+        </div>
+      )}
+      {showReportModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4">
+          <div className="w-full max-w-md rounded-xl bg-[var(--surface)] border border-[var(--border)] p-5">
+            <h2 className="text-lg font-bold mb-3 text-[var(--foreground)]">
+              Reportar usuario
+            </h2>
+
+            <label className="block text-sm font-medium text-[var(--muted)] mb-1">
+              Motivo
+            </label>
+            <select
+              value={reportReason}
+              onChange={(e) => setReportReason(e.target.value)}
+              className="w-full mb-3 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)]"
+            >
+              <option>Conducta inapropiada</option>
+              <option>Estafa o intento de estafa</option>
+              <option>Producto falso o engañoso</option>
+              <option>Acoso o amenazas</option>
+              <option>Spam</option>
+              <option>Otro</option>
+            </select>
+
+            <label className="block text-sm font-medium text-[var(--muted)] mb-1">
+              Descripción
+            </label>
+            <textarea
+              value={reportDescription}
+              onChange={(e) => setReportDescription(e.target.value)}
+              className="w-full min-h-28 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)]"
+              placeholder="Describe qué ocurrió..."
+            />
+
+            <div className="flex gap-3 mt-4">
+              <button
+                type="button"
+                onClick={() => setShowReportModal(false)}
+                className="flex-1 border border-[var(--border)] rounded-lg py-2 text-[var(--foreground)]"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                disabled={reportLoading || reportDescription.trim().length < 10}
+                onClick={handleSubmitReport}
+                className="flex-1 bg-red-600 disabled:opacity-60 text-white rounded-lg py-2"
+              >
+                {reportLoading ? 'Enviando...' : 'Enviar reporte'}
+              </button>
+            </div>
           </div>
         </div>
       )}
