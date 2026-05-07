@@ -1,47 +1,86 @@
 import prisma from '../lib/prisma';
 
-export async function initiateSale(listingId: string, buyerId: string) {
+export async function initiateSale(listingId: string, sellerId: string) {
   const listing = await prisma.listing.findUnique({
     where: { id: listingId },
   });
 
-  if (!listing)                          throw new Error('LISTING_NOT_FOUND');
-  if (listing.status !== 'ACTIVE')       throw new Error('LISTING_NOT_AVAILABLE');
-  if (listing.sellerId === buyerId)      throw new Error('CANNOT_BUY_OWN');
+  if (!listing) throw new Error('LISTING_NOT_FOUND');
+  if (listing.status !== 'ACTIVE') throw new Error('LISTING_NOT_AVAILABLE');
+  if (listing.sellerId !== sellerId) throw new Error('ONLY_SELLER_CAN_INITIATE');
 
-  // Verificar que no existe ya una venta activa
-  const existingSale = await prisma.sale.findFirst({
-    where: {
-      listingId,
-      status: {
-        in: ['PENDING', 'BUYER_CONFIRMED', 'SELLER_CONFIRMED', 'COMPLETED'],
+  const conversation = await prisma.conversation.findUnique({
+    where: { listingId },
+    include: {
+      messages: {
+        where: {
+          senderId: { not: sellerId },
+        },
+        orderBy: { createdAt: 'asc' },
+        take: 1,
+        select: { senderId: true },
       },
     },
   });
 
-  if (existingSale) throw new Error('SALE_ALREADY_EXISTS');
+  const buyerId = conversation?.messages[0]?.senderId;
 
-  // Crear venta y pausar publicación en una transacción
-  const [sale] = await prisma.$transaction([
-    prisma.sale.create({
-      data: {
-        listingId,
-        buyerId,
-        sellerId:      listing.sellerId,
-        finalPriceCLP: listing.priceCLP,
-        status:        'PENDING',
-      },
-      include: {
-        listing: true,
-        buyer:   { select: { id: true, username: true } },
-        seller:  { select: { id: true, username: true } },
-      },
-    }),
-    prisma.listing.update({
+  if (!buyerId) throw new Error('BUYER_NOT_FOUND');
+
+  const existingSale = await prisma.sale.findUnique({
+    where: { listingId },
+  });
+
+  if (
+    existingSale &&
+    ['PENDING', 'BUYER_CONFIRMED', 'SELLER_CONFIRMED', 'COMPLETED'].includes(existingSale.status)
+  ) {
+    throw new Error('SALE_ALREADY_EXISTS');
+  }
+
+  const sale = await prisma.$transaction(async (tx) => {
+    const nextSale = existingSale
+      ? await tx.sale.update({
+          where: { id: existingSale.id },
+          data: {
+            buyerId,
+            sellerId: listing.sellerId,
+            finalPriceCLP: listing.priceCLP,
+            status: 'PENDING',
+            buyerConfirmed: false,
+            sellerConfirmed: false,
+            buyerConfirmedAt: null,
+            sellerConfirmedAt: null,
+            completedAt: null,
+          },
+          include: {
+            listing: true,
+            buyer: { select: { id: true, username: true } },
+            seller: { select: { id: true, username: true } },
+          },
+        })
+      : await tx.sale.create({
+          data: {
+            listingId,
+            buyerId,
+            sellerId: listing.sellerId,
+            finalPriceCLP: listing.priceCLP,
+            status: 'PENDING',
+          },
+          include: {
+            listing: true,
+            buyer: { select: { id: true, username: true } },
+            seller: { select: { id: true, username: true } },
+          },
+        });
+
+    await tx.listing.update({
       where: { id: listingId },
-      data:  { status: 'PAUSED' },
-    }),
-  ]);
+      data: { status: 'PAUSED' },
+    });
+
+    return nextSale;
+  });
 
   return sale;
 }

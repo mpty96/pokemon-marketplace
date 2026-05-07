@@ -63,13 +63,13 @@ async function main() {
       socket.leave(`listing:${listingId}`);
     });
 
-    socket.on('send_message', async (data: { listingId: string; content?: string; imageUrl?: string }) => {
+    socket.on('send_message', async (data: { listingId: string; content?: string; imageUrls?: string }) => {
       try {
-        const { listingId, content, imageUrl } = data;
+        const { listingId, content, imageUrls } = data;
         const cleanContent = content?.trim() || '';
-        const cleanImageUrl = imageUrl?.trim() || null;
+        const cleanImageUrls = imageUrls?.trim() || null;
 
-        if (!cleanContent && !cleanImageUrl) return;
+        if (!cleanContent && !cleanImageUrls) return;
 
         const listing = await prisma.listing.findUnique({
           where: { id: listingId },
@@ -91,7 +91,7 @@ async function main() {
             conversationId: conversation.id,
             senderId: user.userId,
             content: cleanContent,
-            imageUrl: cleanImageUrl,
+            imageUrls: cleanImageUrls,
           },
           include: {
             sender: {

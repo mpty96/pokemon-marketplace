@@ -55,6 +55,7 @@ export interface Message {
   senderId:       string;
   content:        string;
   imageUrl:       string | null;
+  imageUrls:      string[];
   read:           boolean;
   createdAt:      string;
   sender:         MessageSender;

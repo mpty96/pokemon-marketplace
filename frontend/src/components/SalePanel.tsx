@@ -61,7 +61,7 @@ export default function SalePanel({
 
   // Sin venta activa — solo el comprador puede iniciarla
   if (!sale || sale.status === 'CANCELLED') {
-    if (!isBuyer) return null;
+    if (!isSeller) return null;
     return (
       <div className="border border-blue-200 dark:border-blue-800 rounded-xl p-4 bg-blue-50 dark:bg-blue-950 space-y-3">
         <h3 className="font-semibold text-blue-800 dark:text-blue-300">

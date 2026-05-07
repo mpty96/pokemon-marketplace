@@ -168,6 +168,7 @@ model Message {
   senderId       String
   content        String
   imageUrl       String?
+  imageUrls      String[] @default([])
   read           Boolean  @default(false)
   createdAt      DateTime @default(now())
 

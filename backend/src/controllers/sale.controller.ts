@@ -19,8 +19,9 @@ export async function initiate(req: AuthRequest, res: Response): Promise<void> {
     const map: Record<string, [number, string]> = {
       LISTING_NOT_FOUND:    [404, 'Publicación no encontrada'],
       LISTING_NOT_AVAILABLE:[400, 'La publicación no está disponible'],
-      CANNOT_BUY_OWN:       [400, 'No puedes comprar tu propia publicación'],
-      SALE_ALREADY_EXISTS:  [400, 'Ya existe una venta activa para esta publicación'],
+      ONLY_SELLER_CAN_INITIATE: [403, 'Solo el vendedor puede finalizar la venta'],
+      BUYER_NOT_FOUND:          [400, 'Debe existir una conversación con el comprador antes de finalizar la venta'],
+      SALE_ALREADY_EXISTS:      [400, 'Ya existe una venta activa para esta publicación'],
     };
     const [status, message] = map[error.message] || [500, 'Error interno'];
     res.status(status).json({ error: message });

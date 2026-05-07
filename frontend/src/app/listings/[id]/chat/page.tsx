@@ -24,7 +24,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [sale,     setSale]     = useState<Sale | null>(null);
   const [input,    setInput]    = useState('');
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [sendingImage, setSendingImage] = useState(false);
   const [loading,  setLoading]  = useState(true);
   const [ratingData, setRatingData] = useState<RatingSaleData | null>(null);
@@ -112,32 +112,34 @@ export default function ChatPage() {
 
   async function sendMessage(e: React.FormEvent) {
     e.preventDefault();
-    if ((!input.trim() && !imageFile) || !socket) return;
+    if ((!input.trim() && imageFiles.length === 0) || !socket) return;
 
     try {
-      let imageUrl: string | null = null;
+    const imageUrls: string[] = [];
 
-      if (imageFile) {
-        setSendingImage(true);
+    if (imageFiles.length > 0) {
+      setSendingImage(true);
 
+      for (const file of imageFiles) {
         const formData = new FormData();
-        formData.append('image', imageFile);
+        formData.append('image', file);
 
         const { data } = await api.post(`/api/chat/${id}/image`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
 
-        imageUrl = data.imageUrl;
+        imageUrls.push(data.imageUrl);
       }
+    }
 
       socket.emit('send_message', {
         listingId: id,
         content: input.trim(),
-        imageUrl,
+        imageUrls,
       });
 
       setInput('');
-      setImageFile(null);
+      setImageFiles([]);
     } finally {
       setSendingImage(false);
     }
@@ -295,14 +297,18 @@ export default function ChatPage() {
                       ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
                       : 'bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)]'
                   }`}>
-                    {msg.imageUrl && (
-                      <img
-                        src={msg.imageUrl}
-                        alt="Imagen enviada"
-                        className="mb-2 max-h-64 rounded-lg object-contain"
-                      />
+                    {msg.imageUrls?.length > 0 && (
+                      <div className="mb-2 grid grid-cols-2 gap-2">
+                        {msg.imageUrls.map((url) => (
+                          <img
+                            key={url}
+                            src={url}
+                            alt="Imagen enviada"
+                            className="max-h-64 rounded-lg object-contain"
+                          />
+                        ))}
+                      </div>
                     )}
-
                     {msg.content && <p>{msg.content}</p>}
                   </div>
                   <p className={`text-xs text-gray-400 mt-1 ${isMe ? 'text-right' : 'text-left'} mx-1`}>
@@ -322,53 +328,70 @@ export default function ChatPage() {
           {listing.status === 'SOLD' ? (
             <p className="text-center text-sm text-gray-400">Esta publicación ya fue vendida</p>
           ) : (
-            <form onSubmit={sendMessage} className="space-y-2">
-              {imageFile && (
-                <div className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-2 text-sm">
-                  <span className="truncate text-[var(--muted)]">
-                    📷 {imageFile.name}
+          <form onSubmit={sendMessage} className="space-y-2">
+
+            {imageFiles.length > 0 && (
+              <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-2 text-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[var(--muted)]">
+                    📷 {imageFiles.length} imagen(es) seleccionada(s)
                   </span>
+
                   <button
                     type="button"
-                    onClick={() => setImageFile(null)}
+                    onClick={() => setImageFiles([])}
                     className="text-[var(--danger-fg)] hover:underline"
                   >
                     Quitar
                   </button>
                 </div>
-              )}
 
-              <div className="flex gap-3">
-                <label className="cursor-pointer rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--surface-2)]">
-                  📎
-                  <input
-                    type="file"
-                    accept="image/png,image/jpeg,image/jpg,image/webp"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) setImageFile(file);
-                    }}
-                  />
-                </label>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {imageFiles.map((file) => (
+                    <span
+                      key={file.name}
+                      className="text-xs bg-[var(--surface)] border border-[var(--border)] rounded px-2 py-1"
+                    >
+                      {file.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <label className="cursor-pointer rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--surface-2)]">
+                📎
 
                 <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Escribe un mensaje..."
-                  className="flex-1 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                  type="file"
+                  multiple
+                  accept="image/png,image/jpeg,image/jpg,image/webp"
+                  className="hidden"
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files || []).slice(0, 4);
+                    setImageFiles(files);
+                  }}
                 />
+              </label>
 
-                <button
-                  type="submit"
-                  disabled={(!input.trim() && !imageFile) || sendingImage}
-                  className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] px-4 py-2 rounded-lg"
-                >
-                  {sendingImage ? 'Enviando...' : 'Enviar'}
-                </button>
-              </div>
-            </form>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Escribe un mensaje..."
+                className="flex-1 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+              />
+
+              <button
+                type="submit"
+                disabled={(!input.trim() && imageFiles.length === 0) || sendingImage}
+                className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] px-4 py-2 rounded-lg"
+              >
+                {sendingImage ? 'Enviando...' : 'Enviar'}
+              </button>
+            </div>
+          </form>
           )}
         </div>
       </div>
