@@ -10,9 +10,15 @@ export async function initiateSale(listingId: string, buyerId: string) {
   if (listing.sellerId === buyerId)      throw new Error('CANNOT_BUY_OWN');
 
   // Verificar que no existe ya una venta activa
-  const existingSale = await prisma.sale.findUnique({
-    where: { listingId },
+  const existingSale = await prisma.sale.findFirst({
+    where: {
+      listingId,
+      status: {
+        in: ['PENDING', 'BUYER_CONFIRMED', 'SELLER_CONFIRMED', 'COMPLETED'],
+      },
+    },
   });
+
   if (existingSale) throw new Error('SALE_ALREADY_EXISTS');
 
   // Crear venta y pausar publicación en una transacción

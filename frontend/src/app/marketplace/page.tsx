@@ -312,9 +312,9 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
 
       <div className="p-4 flex flex-col flex-1">
         <p className="text-xs text-[var(--muted-2)] truncate">{listing.edition}</p>
-        <h3 className="font-semibold text-[var(--foreground)] text-sm mt-0.5 truncate">
-          {listing.title}
-        </h3>
+        <p className="text-base font-bold text-[var(--primary)] mt-1">
+          ${listing.priceCLP.toLocaleString('es-CL')}
+        </p>
 
         <div className="flex gap-1.5 mt-2 flex-wrap">
           <span className="text-xs bg-[var(--info-bg)] text-[var(--info-fg)] px-2 py-0.5 rounded-full">

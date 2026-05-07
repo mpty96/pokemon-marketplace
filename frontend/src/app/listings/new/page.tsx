@@ -42,7 +42,7 @@ export default function NewListingPage() {
   const router    = useRouter();
   const isAuth    = useAuthStore((s) => s.isAuthenticated);
   const [form, setForm] = useState({
-    title: '', cardName: '', edition: '', setNumber: '',
+    cardName: '', edition: '', setNumber: '',
     condition: '' as CardCondition, rarity: '' as CardRarity, language: '' as CardLanguage,
     priceCLP: '', description: '',
   });
@@ -140,7 +140,7 @@ if (success) {
                 setSuccess(false);
                 setNewId('');
                 setForm({
-                  title: '', cardName: '', edition: '', setNumber: '',
+                  cardName: '', edition: '', setNumber: '',
                   condition: '' as CardCondition, rarity: '' as CardRarity, language: '' as CardLanguage,
                   priceCLP: '', description: ''
                 });
@@ -170,7 +170,11 @@ if (success) {
 
     try {
       const formData = new FormData();
-      Object.entries(form).forEach(([k, v]) => { if (v) formData.append(k, v); });
+      Object.entries(form).forEach(([k, v]) => {
+        if (v) formData.append(k, v);
+      });
+
+      formData.append('title', form.cardName);
       images.forEach((img) => formData.append('images', img));
 
       const { data } = await api.post('/api/listings', formData, {
@@ -205,11 +209,6 @@ if (success) {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Título *</label>
-              <input required className={inputClass} placeholder="Charizard Holo Base Set"
-                value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-            </div>
             <div>
               <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Nombre de la carta *</label>
               <input required className={inputClass} placeholder="Charizard"
