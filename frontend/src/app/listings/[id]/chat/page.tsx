@@ -24,6 +24,8 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [sale,     setSale]     = useState<Sale | null>(null);
   const [input,    setInput]    = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [sendingImage, setSendingImage] = useState(false);
   const [loading,  setLoading]  = useState(true);
   const [ratingData, setRatingData] = useState<RatingSaleData | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -107,12 +109,40 @@ export default function ChatPage() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  function sendMessage(e: React.FormEvent) {
+
+  async function sendMessage(e: React.FormEvent) {
     e.preventDefault();
-    if (!input.trim() || !socket) return;
-    socket.emit('send_message', { listingId: id, content: input.trim() });
-    setInput('');
+    if ((!input.trim() && !imageFile) || !socket) return;
+
+    try {
+      let imageUrl: string | null = null;
+
+      if (imageFile) {
+        setSendingImage(true);
+
+        const formData = new FormData();
+        formData.append('image', imageFile);
+
+        const { data } = await api.post(`/api/chat/${id}/image`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        imageUrl = data.imageUrl;
+      }
+
+      socket.emit('send_message', {
+        listingId: id,
+        content: input.trim(),
+        imageUrl,
+      });
+
+      setInput('');
+      setImageFile(null);
+    } finally {
+      setSendingImage(false);
+    }
   }
+
 
   function handleSaleUpdate(updatedSale: Sale | null) {
     setSale(updatedSale);
@@ -265,7 +295,15 @@ export default function ChatPage() {
                       ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
                       : 'bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)]'
                   }`}>
-                    {msg.content}
+                    {msg.imageUrl && (
+                      <img
+                        src={msg.imageUrl}
+                        alt="Imagen enviada"
+                        className="mb-2 max-h-64 rounded-lg object-contain"
+                      />
+                    )}
+
+                    {msg.content && <p>{msg.content}</p>}
                   </div>
                   <p className={`text-xs text-gray-400 mt-1 ${isMe ? 'text-right' : 'text-left'} mx-1`}>
                     {new Date(msg.createdAt).toLocaleTimeString('es-CL', {
@@ -284,18 +322,52 @@ export default function ChatPage() {
           {listing.status === 'SOLD' ? (
             <p className="text-center text-sm text-gray-400">Esta publicación ya fue vendida</p>
           ) : (
-            <form onSubmit={sendMessage} className="flex gap-3">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Escribe un mensaje..."
-                className="flex-1 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
-              />
-              <button type="submit" disabled={!input.trim()}
-                className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] ...">
-                Enviar
-              </button>
+            <form onSubmit={sendMessage} className="space-y-2">
+              {imageFile && (
+                <div className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-2 text-sm">
+                  <span className="truncate text-[var(--muted)]">
+                    📷 {imageFile.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setImageFile(null)}
+                    className="text-[var(--danger-fg)] hover:underline"
+                  >
+                    Quitar
+                  </button>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <label className="cursor-pointer rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--surface-2)]">
+                  📎
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) setImageFile(file);
+                    }}
+                  />
+                </label>
+
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Escribe un mensaje..."
+                  className="flex-1 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                />
+
+                <button
+                  type="submit"
+                  disabled={(!input.trim() && !imageFile) || sendingImage}
+                  className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] px-4 py-2 rounded-lg"
+                >
+                  {sendingImage ? 'Enviando...' : 'Enviar'}
+                </button>
+              </div>
             </form>
           )}
         </div>

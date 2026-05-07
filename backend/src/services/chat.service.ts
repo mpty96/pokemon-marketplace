@@ -1,4 +1,6 @@
 import prisma from '../lib/prisma';
+import { uploadImage } from '../utils/cloudinary';
+
 
 export async function getConversation(listingId: string, userId: string) {
   const listing = await prisma.listing.findUnique({
@@ -155,4 +157,8 @@ export async function getUnreadCount(userId: string): Promise<number> {
   });
 
   return count;
+}
+
+export async function uploadChatImage(buffer: Buffer) {
+  return uploadImage(buffer, 'chat');
 }

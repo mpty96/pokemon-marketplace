@@ -77,6 +77,8 @@ model User {
   @@map("users")
 }
 
+
+
 model Profile {
   id                 String   @id @default(uuid())
   userId             String   @unique
@@ -103,6 +105,8 @@ model Profile {
   @@index([contactPhone])
   @@map("profiles")
 }
+
+
 
 model Listing {
   id          String        @id @default(uuid())
@@ -141,6 +145,8 @@ model Listing {
   @@map("listings")
 }
 
+
+
 model Conversation {
   id        String   @id @default(uuid())
   listingId String   @unique
@@ -154,11 +160,14 @@ model Conversation {
   @@map("conversations")
 }
 
+
+
 model Message {
   id             String   @id @default(uuid())
   conversationId String
   senderId       String
   content        String
+  imageUrl       String?
   read           Boolean  @default(false)
   createdAt      DateTime @default(now())
 
@@ -171,6 +180,8 @@ model Message {
   @@index([createdAt])
   @@map("messages")
 }
+
+
 
 model Sale {
   id                String     @id @default(uuid())
@@ -199,6 +210,8 @@ model Sale {
   @@map("sales")
 }
 
+
+
 model Rating {
   id                 String   @id @default(uuid())
   saleId             String
@@ -222,6 +235,8 @@ model Rating {
   @@index([saleId])
   @@map("ratings")
 }
+
+
 
 model Report {
   id          String   @id @default(cuid())
