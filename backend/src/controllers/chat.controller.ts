@@ -4,7 +4,7 @@ import {
   getConversation,
   getUserConversations,
   getUnreadCount,
-  uploadChatImage,
+  uploadChatImages,
 } from '../services/chat.service';
 
 export async function getChat(req: AuthRequest, res: Response): Promise<void> {
@@ -43,18 +43,23 @@ export async function unreadCount(req: AuthRequest, res: Response): Promise<void
 
 export async function uploadChatImageController(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const file = req.file as Express.Multer.File | undefined;
+    const files = req.files as Express.Multer.File[] | undefined;
 
-    if (!file) {
-      res.status(400).json({ error: 'Debes subir una imagen' });
+    if (!files || files.length === 0) {
+      res.status(400).json({ error: 'Debes subir al menos una imagen' });
       return;
     }
 
-    const imageUrl = await uploadChatImage(file.buffer);
+    if (files.length > 4) {
+      res.status(400).json({ error: 'Máximo 4 imágenes por mensaje' });
+      return;
+    }
 
-    res.json({ imageUrl });
+    const imageUrls = await uploadChatImages(files.map((file) => file.buffer));
+
+    res.json({ imageUrls });
   } catch (error) {
-    console.error('UPLOAD CHAT IMAGE ERROR:', error);
-    res.status(500).json({ error: 'Error al subir imagen del chat' });
+    console.error('UPLOAD CHAT IMAGES ERROR:', error);
+    res.status(500).json({ error: 'Error al subir imágenes del chat' });
   }
 }

@@ -115,22 +115,23 @@ export default function ChatPage() {
     if ((!input.trim() && imageFiles.length === 0) || !socket) return;
 
     try {
-    const imageUrls: string[] = [];
+    let imageUrls: string[] = [];
 
-    if (imageFiles.length > 0) {
-      setSendingImage(true);
+      if (imageFiles.length > 0) {
+        setSendingImage(true);
 
-      for (const file of imageFiles) {
         const formData = new FormData();
-        formData.append('image', file);
 
-        const { data } = await api.post(`/api/chat/${id}/image`, formData, {
+        imageFiles.slice(0, 4).forEach((file) => {
+          formData.append('images', file);
+        });
+
+        const { data } = await api.post(`/api/chat/${id}/images`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
 
-        imageUrls.push(data.imageUrl);
+        imageUrls = data.imageUrls || [];
       }
-    }
 
       socket.emit('send_message', {
         listingId: id,
@@ -140,6 +141,9 @@ export default function ChatPage() {
 
       setInput('');
       setImageFiles([]);
+    } catch (err: any) {
+      console.error('SEND MESSAGE ERROR:', err);
+      alert(err.response?.data?.error || 'Error al enviar imagen o mensaje');
     } finally {
       setSendingImage(false);
     }

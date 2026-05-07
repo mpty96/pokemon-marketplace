@@ -12,7 +12,7 @@ const router = Router();
 
 router.get('/my',          authenticate, getMyConversations);
 router.get('/unread',      authenticate, unreadCount);
-router.post('/:listingId/image', authenticate, upload.single('image'), uploadChatImageController);
+router.post('/:listingId/images', authenticate, upload.array('images', 4), uploadChatImageController);
 router.get('/:listingId',  authenticate, getChat);
 
 export default router;

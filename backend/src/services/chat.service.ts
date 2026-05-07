@@ -159,6 +159,6 @@ export async function getUnreadCount(userId: string): Promise<number> {
   return count;
 }
 
-export async function uploadChatImage(buffer: Buffer) {
-  return uploadImage(buffer, 'chat');
+export async function uploadChatImages(buffers: Buffer[]) {
+  return Promise.all(buffers.map((buffer) => uploadImage(buffer, 'chat')));
 }
