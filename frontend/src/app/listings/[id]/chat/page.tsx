@@ -187,9 +187,8 @@ export default function ChatPage() {
 }
 
 return (
-  <div className="max-w-6xl mx-auto px-4 py-8 text-[var(--foreground)]">
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_160px] gap-12 items-center">
-      <div className="space-y-4 max-w-3xl w-full mx-auto">
+  <div className="relative max-w-6xl mx-auto px-4 py-8 text-[var(--foreground)]">
+  <div className="max-w-3xl mx-auto space-y-4">
 
 
   {/* Header del chat */}
@@ -425,26 +424,25 @@ return (
             </div>
     </div>
 
-    <aside className="hidden lg:flex sticky top-[40%] -translate-y-1/2 flex-col items-center gap-3 self-center">
-      <button
-        type="button"
-        onClick={() => setShowSafetyTips(true)}
-        className="group flex flex-col items-center"
-      >
-        <img
-          src="/chat-safety.png"
-          alt="Consejos de seguridad"
-          className="w-32 h-auto object-contain transition-transform duration-200 group-hover:scale-105"
-        />
+    <aside className="hidden xl:flex absolute top-1/2 right-4 -translate-y-1/2 flex-col items-center gap-3">
+  <button
+    type="button"
+    onClick={() => setShowSafetyTips(true)}
+    className="group flex flex-col items-center"
+  >
+    <img
+      src="/chat-safety.png"
+      alt="Consejos de seguridad"
+      className="w-32 h-auto object-contain transition-transform duration-200 group-hover:scale-105"
+    />
 
-        <div className="mt-2 rounded-full bg-[var(--surface)] px-3 py-1 shadow-sm">
-          <span className="text-[11px] font-semibold text-[var(--primary)]">
-            🛡 Consejos
-          </span>
-        </div>
-      </button>
-    </aside>
-  </div>
+    <div className="mt-2 rounded-full bg-[var(--surface)] px-3 py-1 shadow-sm">
+      <span className="text-[11px] font-semibold text-[var(--primary)]">
+        🛡 Consejos
+      </span>
+    </div>
+  </button>
+</aside>
       {selectedImage && (
         <div
           className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
@@ -477,7 +475,7 @@ return (
     >
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-xl font-bold text-[var(--foreground)]">
-          🛡 Consejos de seguridad
+          Consejos de seguridad
         </h2>
 
         <button
@@ -491,7 +489,7 @@ return (
       <div className="space-y-5 text-sm leading-6 text-[var(--foreground)]">
         <div>
           <h3 className="font-semibold text-[var(--primary)] mb-1">
-            📸 Solicita fotografías detalladas
+            Solicita fotografías detalladas
           </h3>
 
           <ul className="list-disc ml-5 mt-2 space-y-1 text-[var(--muted)]">
@@ -505,7 +503,7 @@ return (
 
         <div>
           <h3 className="font-semibold text-[var(--primary)] mb-1">
-            🔍 Verifica autenticidad
+            Verifica autenticidad
           </h3>
 
           <ul className="list-disc ml-5 space-y-1 text-[var(--muted)]">
@@ -518,7 +516,7 @@ return (
 
         <div>
           <h3 className="font-semibold text-[var(--primary)] mb-1">
-            🔒 Protege tu información
+            Protege tu información
           </h3>
 
           <ul className="list-disc ml-5 space-y-1 text-[var(--muted)]">
