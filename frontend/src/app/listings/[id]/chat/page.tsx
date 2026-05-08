@@ -188,7 +188,7 @@ export default function ChatPage() {
 
 return (
   <div className="max-w-6xl mx-auto px-4 py-8 text-[var(--foreground)]">
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_120px] gap-6 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_160px] gap-12 items-center">
       <div className="space-y-4">
 
 
@@ -285,7 +285,7 @@ return (
 
       {/* Mensajes */}
       <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] overflow-hidden">
-        <div className="h-96 overflow-y-auto p-4 space-y-3 bg-[var(--surface-2)]">
+        <div className="h-[38rem] overflow-y-auto p-4 space-y-3 bg-[var(--surface-2)]">
           {messages.length === 0 && (
             <div className="text-center text-[var(--muted-2)] text-sm mt-8">
               <p>Inicia la conversación con el vendedor</p>
@@ -429,7 +429,7 @@ return (
             </div>
     </div>
 
-    <aside className="hidden lg:flex sticky top-24 flex-col items-center gap-2">
+    <aside className="hidden lg:flex sticky top-[40%] -translate-y-1/2 flex-col items-center gap-3 self-center">
       <button
         type="button"
         onClick={() => setShowSafetyTips(true)}
