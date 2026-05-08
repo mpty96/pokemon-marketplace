@@ -187,8 +187,9 @@ export default function ChatPage() {
 }
 
 return (
-  <div className="max-w-6xl mx-auto px-4 py-8 flex gap-6 items-start text-[var(--foreground)]">
-    <div className="flex-1 space-y-4">
+  <div className="max-w-6xl mx-auto px-4 py-8 text-[var(--foreground)]">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_120px] gap-6 items-start">
+      <div className="space-y-4">
 
 
   {/* Header del chat */}
@@ -425,24 +426,29 @@ return (
           </form>
           )}
         </div>
-      </div>
-      <div className="hidden lg:block sticky top-6 w-64 shrink-0">
-        <button
-          type="button"
-          onClick={() => setShowSafetyTips(true)}
-          className="group w-full"
-        >
-          <img
-            src="/chat-safety.png"
-            alt="Consejos de seguridad"
-            className="w-full rounded-2xl border border-[var(--border)] shadow-lg transition-transform duration-200 group-hover:scale-[1.02]"
-          />
+            </div>
+    </div>
 
-          <p className="mt-3 text-sm text-[var(--muted)] text-center">
-            Consejos para evitar estafas
-          </p>
-        </button>
-      </div>
+    <aside className="hidden lg:flex sticky top-24 flex-col items-center gap-2">
+      <button
+        type="button"
+        onClick={() => setShowSafetyTips(true)}
+        className="group flex flex-col items-center"
+      >
+        <img
+          src="/chat-safety.png"
+          alt="Consejos de seguridad"
+          className="w-24 h-auto object-contain transition-transform duration-200 group-hover:scale-105"
+        />
+
+        <div className="mt-2 rounded-full bg-[var(--surface)] px-3 py-1 shadow-sm">
+          <span className="text-[11px] font-semibold text-[var(--primary)]">
+            🛡 Consejos
+          </span>
+        </div>
+      </button>
+    </aside>
+  </div>
       {selectedImage && (
         <div
           className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
@@ -487,7 +493,6 @@ return (
         </button>
       </div>
       <div className="space-y-5 text-sm leading-6 text-[var(--foreground)]">
-
         <div>
           <h3 className="font-semibold text-[var(--primary)] mb-1">
             📸 Solicita fotografías detalladas
@@ -535,7 +540,6 @@ return (
     </div>
   </div>
 )}
-      </div>
-    </div>
+        </div>
   );
 }
