@@ -189,7 +189,7 @@ export default function ChatPage() {
 return (
   <div className="max-w-6xl mx-auto px-4 py-8 text-[var(--foreground)]">
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_160px] gap-12 items-center">
-      <div className="space-y-4 max-w-4xl w-full">
+      <div className="space-y-4 max-w-3xl w-full">
 
 
   {/* Header del chat */}
@@ -295,53 +295,49 @@ return (
             const isMe = String(msg.sender?.id) === String(user?.id);
             return (
               <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className="max-w-xs lg:max-w-md">
+                <div className="max-w-[75%]">
                   {!isMe && (
                     <p className="text-xs text-gray-400 mb-1 ml-1">
                       {msg.sender.profile?.displayName || msg.sender.username}
                     </p>
                   )}
-                  <div className={`px-4 py-2 rounded-2xl text-sm ${
-                    isMe
-                      ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
-                      : 'bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)]'
-                  }`}>
+                  <div className="space-y-2">
                     {msg.imageUrls?.length > 0 && (
-                    <div
-                      className={`mb-2 grid gap-2 ${
-                        msg.imageUrls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
-                      }`}
-                    >
-                      {msg.imageUrls.map((url) => (
-                        <button
-                          key={url}
-                          type="button"
-                          onClick={() => setSelectedImage(url)}
-                          className="block overflow-hidden rounded-lg bg-black/10"
-                        >
-                          <img
-                            src={url}
-                            alt="Imagen enviada"
-                            className={`w-full rounded-lg object-contain ${
-                              msg.imageUrls.length === 1 ? 'max-h-80' : 'max-h-52'
-                            }`}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                      <div
+                        className={`grid gap-2 ${
+                          msg.imageUrls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
+                        }`}
+                      >
+                        {msg.imageUrls.map((url) => (
+                          <button
+                            key={url}
+                            type="button"
+                            onClick={() => setSelectedImage(url)}
+                            className="block overflow-hidden rounded-lg bg-black/10"
+                          >
+                            <img
+                              src={url}
+                              alt="Imagen enviada"
+                              className={`w-full rounded-lg object-contain ${
+                                msg.imageUrls.length === 1 ? 'max-h-80' : 'max-h-52'
+                              }`}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
 
-                  {msg.content && (
-                    <div
-                      className={`mt-2 px-4 py-2 rounded-2xl text-sm ${
-                        isMe
-                          ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
-                          : 'bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)]'
-                      }`}
-                    >
-                      <p>{msg.content}</p>
-                    </div>
-                  )}
+                    {msg.content && (
+                      <div
+                        className={`inline-block max-w-full px-4 py-2 rounded-2xl text-sm break-words ${
+                          isMe
+                            ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
+                            : 'bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)]'
+                        }`}
+                      >
+                        {msg.content}
+                      </div>
+                    )}
                   </div>
                   <p className={`text-xs text-gray-400 mt-1 ${isMe ? 'text-right' : 'text-left'} mx-1`}>
                     {new Date(msg.createdAt).toLocaleTimeString('es-CL', {
