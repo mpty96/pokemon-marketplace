@@ -63,11 +63,11 @@ export default function SalePanel({
   if (!sale || sale.status === 'CANCELLED') {
     if (!isSeller) return null;
     return (
-      <div className="border border-blue-200 dark:border-blue-800 rounded-xl p-4 bg-blue-50 dark:bg-blue-950 space-y-3">
-        <h3 className="font-semibold text-blue-800 dark:text-blue-300">
+      <div className="border border-[var(--border)] rounded-xl p-4 bg-[var(--surface)] space-y-3">
+        <h3 className="font-semibold text-[var(--foreground)]">
           ¿Llegaron a un acuerdo?
         </h3>
-        <p className="text-sm text-blue-600 dark:text-blue-400">
+        <p className="text-sm text-[var(--muted)]">
           Inicia el proceso de venta para coordinar la entrega.
         </p>
         {error && <p className="text-sm text-red-600">{error}</p>}
@@ -102,8 +102,8 @@ export default function SalePanel({
   const myConfirmed = isBuyer ? sale.buyerConfirmed : sale.sellerConfirmed;
 
   return (
-    <div className="border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 bg-yellow-50 dark:bg-yellow-950 space-y-4">
-      <h3 className="font-semibold text-yellow-800 dark:text-yellow-300">
+    <div className="border border-[var(--border)] rounded-xl p-4 bg-[var(--surface)] space-y-4">
+      <h3 className="font-semibold text-[var(--foreground)]">
         🔄 Venta en proceso
       </h3>
 
@@ -117,7 +117,7 @@ export default function SalePanel({
           }`}>
             {sale.buyerConfirmed ? '✓' : '○'}
           </span>
-          <span className="text-gray-700 dark:text-gray-300">
+          <span className="text-[var(--muted)]">
             Comprador ({sale.buyer.username}) —{' '}
             {sale.buyerConfirmed ? '"Recibí mi carta"' : 'Pendiente'}
           </span>
@@ -130,7 +130,7 @@ export default function SalePanel({
           }`}>
             {sale.sellerConfirmed ? '✓' : '○'}
           </span>
-          <span className="text-gray-700 dark:text-gray-300">
+          <span className="text-[var(--muted)]">
             Vendedor ({sale.seller.username}) —{' '}
             {sale.sellerConfirmed ? '"Recibí mi dinero"' : 'Pendiente'}
           </span>
