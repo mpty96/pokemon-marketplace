@@ -189,7 +189,7 @@ export default function ChatPage() {
 return (
   <div className="max-w-6xl mx-auto px-4 py-8 text-[var(--foreground)]">
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_160px] gap-12 items-center">
-      <div className="space-y-4 max-w-3xl w-full">
+      <div className="space-y-1 max-w-3xl w-full">
 
 
   {/* Header del chat */}
