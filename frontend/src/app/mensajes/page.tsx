@@ -130,7 +130,7 @@ function ConversationCard({
           </div>
 
         <p className="text-xs text-[var(--muted-2)] mt-0.5">
-          {isSeller ? '🏪 Vendes a' : '🛒 Compras de'}: {otherPerson}
+          {isSeller ? 'Vendes a' : 'Compras a'}: {otherPerson}
           {' · '}
           ${conv.listingPrice.toLocaleString('es-CL')}
         </p>

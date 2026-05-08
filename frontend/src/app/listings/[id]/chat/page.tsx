@@ -27,6 +27,7 @@ export default function ChatPage() {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [sendingImage, setSendingImage] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [showSafetyTips, setShowSafetyTips] = useState(false);
   const [loading,  setLoading]  = useState(true);
   const [ratingData, setRatingData] = useState<RatingSaleData | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -185,8 +186,10 @@ export default function ChatPage() {
   }
 }
 
-  return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-4 text-[var(--foreground)]">
+return (
+  <div className="max-w-6xl mx-auto px-4 py-8 flex gap-6 items-start text-[var(--foreground)]">
+    <div className="flex-1 space-y-4">
+
 
   {/* Header del chat */}
   <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-4 flex items-center gap-4">
@@ -423,6 +426,23 @@ export default function ChatPage() {
           )}
         </div>
       </div>
+      <div className="hidden lg:block sticky top-6 w-64 shrink-0">
+        <button
+          type="button"
+          onClick={() => setShowSafetyTips(true)}
+          className="group w-full"
+        >
+          <img
+            src="/chat-safety.png"
+            alt="Consejos de seguridad"
+            className="w-full rounded-2xl border border-[var(--border)] shadow-lg transition-transform duration-200 group-hover:scale-[1.02]"
+          />
+
+          <p className="mt-3 text-sm text-[var(--muted)] text-center">
+            Consejos para evitar estafas
+          </p>
+        </button>
+      </div>
       {selectedImage && (
         <div
           className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
@@ -444,6 +464,78 @@ export default function ChatPage() {
           />
         </div>
       )}
+      {showSafetyTips && (
+  <div
+    className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
+    onClick={() => setShowSafetyTips(false)}
+  >
+    <div
+      className="w-full max-w-2xl rounded-2xl bg-[var(--surface)] border border-[var(--border)] p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-xl font-bold text-[var(--foreground)]">
+          🛡 Consejos de seguridad
+        </h2>
+
+        <button
+          type="button"
+          onClick={() => setShowSafetyTips(false)}
+          className="text-2xl text-[var(--muted)] hover:text-[var(--foreground)]"
+        >
+          ✕
+        </button>
+      </div>
+      <div className="space-y-5 text-sm leading-6 text-[var(--foreground)]">
+
+        <div>
+          <h3 className="font-semibold text-[var(--primary)] mb-1">
+            📸 Solicita fotografías detalladas
+          </h3>
+
+          <ul className="list-disc ml-5 mt-2 space-y-1 text-[var(--muted)]">
+            <li>Fotos del frente y reverso</li>
+            <li>Puntas y esquinas</li>
+            <li>Rayones y dobleces</li>
+            <li>Fotos con buena iluminación</li>
+            <li>Imágenes sin filtros</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-[var(--primary)] mb-1">
+            🔍 Verifica autenticidad
+          </h3>
+
+          <ul className="list-disc ml-5 space-y-1 text-[var(--muted)]">
+            <li>Compara colores y tipografía</li>
+            <li>Desconfía de precios muy bajos</li>
+            <li>Solicita videos si tienes dudas</li>
+            <li>Revisa reputación del usuario</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-[var(--primary)] mb-1">
+            🔒 Protege tu información
+          </h3>
+
+          <ul className="list-disc ml-5 space-y-1 text-[var(--muted)]">
+            <li>No compartas contraseñas</li>
+            <li>No compartas códigos OTP</li>
+            <li>Evita pagos sospechosos</li>
+            <li>Prefiere lugares públicos</li>
+          </ul>
+        </div>
+
+        <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4 text-yellow-200">
+          Si detectas actividad sospechosa, utiliza el sistema de reportes.
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+      </div>
     </div>
   );
 }
