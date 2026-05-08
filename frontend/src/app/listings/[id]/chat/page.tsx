@@ -26,6 +26,7 @@ export default function ChatPage() {
   const [input,    setInput]    = useState('');
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [sendingImage, setSendingImage] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [loading,  setLoading]  = useState(true);
   const [ratingData, setRatingData] = useState<RatingSaleData | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -302,18 +303,41 @@ export default function ChatPage() {
                       : 'bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)]'
                   }`}>
                     {msg.imageUrls?.length > 0 && (
-                      <div className="mb-2 grid grid-cols-2 gap-2">
-                        {msg.imageUrls.map((url) => (
+                    <div
+                      className={`mb-2 grid gap-2 ${
+                        msg.imageUrls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
+                      }`}
+                    >
+                      {msg.imageUrls.map((url) => (
+                        <button
+                          key={url}
+                          type="button"
+                          onClick={() => setSelectedImage(url)}
+                          className="block overflow-hidden rounded-lg bg-black/10"
+                        >
                           <img
-                            key={url}
                             src={url}
                             alt="Imagen enviada"
-                            className="max-h-64 rounded-lg object-contain"
+                            className={`w-full rounded-lg object-contain ${
+                              msg.imageUrls.length === 1 ? 'max-h-80' : 'max-h-52'
+                            }`}
                           />
-                        ))}
-                      </div>
-                    )}
-                    {msg.content && <p>{msg.content}</p>}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {msg.content && (
+                    <div
+                      className={`mt-2 px-4 py-2 rounded-2xl text-sm ${
+                        isMe
+                          ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
+                          : 'bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)]'
+                      }`}
+                    >
+                      <p>{msg.content}</p>
+                    </div>
+                  )}
                   </div>
                   <p className={`text-xs text-gray-400 mt-1 ${isMe ? 'text-right' : 'text-left'} mx-1`}>
                     {new Date(msg.createdAt).toLocaleTimeString('es-CL', {
@@ -399,6 +423,27 @@ export default function ChatPage() {
           )}
         </div>
       </div>
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setSelectedImage(null)}
+            className="absolute top-4 right-4 text-white text-2xl"
+          >
+            ✕
+          </button>
+
+          <img
+            src={selectedImage}
+            alt="Imagen ampliada"
+            className="max-w-full max-h-[85vh] object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }
