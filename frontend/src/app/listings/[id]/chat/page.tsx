@@ -189,7 +189,7 @@ export default function ChatPage() {
 return (
   <div className="max-w-6xl mx-auto px-4 py-8 text-[var(--foreground)]">
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_160px] gap-12 items-center">
-      <div className="space-y-4">
+      <div className="space-y-4 max-w-4xl w-full">
 
 
   {/* Header del chat */}
@@ -438,7 +438,7 @@ return (
         <img
           src="/chat-safety.png"
           alt="Consejos de seguridad"
-          className="w-24 h-auto object-contain transition-transform duration-200 group-hover:scale-105"
+          className="w-32 h-auto object-contain transition-transform duration-200 group-hover:scale-105"
         />
 
         <div className="mt-2 rounded-full bg-[var(--surface)] px-3 py-1 shadow-sm">
