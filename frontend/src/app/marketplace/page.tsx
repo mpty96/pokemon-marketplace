@@ -311,13 +311,13 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
       </div>
 
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="font-semibold text-[var(--foreground)] text-sm truncate">
-          {listing.cardName}
-        </h3>
-
         <p className="text-xs text-[var(--muted-2)] truncate mt-0.5">
           {listing.edition}
         </p>
+        
+        <h3 className="font-semibold text-[var(--foreground)] text-sm truncate">
+          {listing.cardName}
+        </h3>
 
         <p className="text-base font-bold text-[var(--primary)] mt-1">
           ${listing.priceCLP.toLocaleString('es-CL')}
