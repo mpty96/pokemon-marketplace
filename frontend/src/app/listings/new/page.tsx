@@ -216,7 +216,7 @@ if (success) {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="md:col-span-2">
+            <div>
               <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
                 Tipo de publicación *
               </label>
@@ -270,11 +270,19 @@ if (success) {
               <input required className={inputClass} placeholder="Base Set"
                 value={form.edition} onChange={(e) => setForm({ ...form, edition: e.target.value })} />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Número en el set</label>
-              <input className={inputClass} placeholder="4/102"
-                value={form.setNumber} onChange={(e) => setForm({ ...form, setNumber: e.target.value })} />
-            </div>
+            {form.listingType === 'CARD' && (
+              <div>
+                <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                  Número en el set
+                </label>
+                <input
+                  className={inputClass}
+                  placeholder="4/102"
+                  value={form.setNumber}
+                  onChange={(e) => setForm({ ...form, setNumber: e.target.value })}
+                />
+              </div>
+            )}
             {form.listingType === 'CARD' && (
               <>
                 <div>
