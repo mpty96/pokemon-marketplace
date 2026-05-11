@@ -7,6 +7,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { CardCondition, CardRarity, CardLanguage, ListingType } from '@/types';
 
 const CONDITIONS: CardCondition[] = ['MINT','NEAR_MINT','EXCELLENT','GOOD','PLAYED','POOR'];
+const NON_CARD_CONDITIONS: CardCondition[] = ['EXCELLENT', 'GOOD', 'POOR'];
 const RARITIES:   CardRarity[]    = ['COMMON','UNCOMMON','RARE','HOLO_RARE','ULTRA_RARE','SECRET_RARE','PROMO'];
 
 const CONDITION_LABELS: Record<CardCondition, string> = {
@@ -172,12 +173,14 @@ if (success) {
 
     try {
       const formData = new FormData();
+      const cleanPriceCLP = Number(form.priceCLP.replace(/\./g, '').replace(/,/g, ''));
       const payload = {
         ...form,
         title: form.cardName,
-        condition: form.listingType === 'CARD' ? form.condition : 'GOOD',
+        condition: form.condition,
         rarity: form.listingType === 'CARD' ? form.rarity : 'COMMON',
         language: form.language || 'ESP',
+        priceCLP: String(cleanPriceCLP),
       };
       Object.entries(payload).forEach(([k, v]) => {
         if (v) formData.append(k, String(v));
@@ -283,60 +286,58 @@ if (success) {
                 />
               </div>
             )}
+            <div>
+              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                Condición *
+              </label>
+
+              <select
+                required
+                className={inputClass}
+                value={form.condition}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    condition: e.target.value as CardCondition,
+                  })
+                }
+              >
+                <option value="">Seleccionar...</option>
+
+                {(form.listingType === 'CARD' ? CONDITIONS : NON_CARD_CONDITIONS).map((c) => (
+                  <option key={c} value={c}>
+                    {CONDITION_LABELS[c]}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {form.listingType === 'CARD' && (
-              <>
-                <div>
-                  <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                    Condición *
-                  </label>
+              <div>
+                <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                  Rareza *
+                </label>
 
-                  <select
-                    required
-                    className={inputClass}
-                    value={form.condition}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        condition: e.target.value as CardCondition,
-                      })
-                    }
-                  >
-                    <option value="">Seleccionar...</option>
+                <select
+                  required
+                  className={inputClass}
+                  value={form.rarity}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      rarity: e.target.value as CardRarity,
+                    })
+                  }
+                >
+                  <option value="">Seleccionar...</option>
 
-                    {CONDITIONS.map((c) => (
-                      <option key={c} value={c}>
-                        {CONDITION_LABELS[c]}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                    Rareza *
-                  </label>
-
-                  <select
-                    required
-                    className={inputClass}
-                    value={form.rarity}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        rarity: e.target.value as CardRarity,
-                      })
-                    }
-                  >
-                    <option value="">Seleccionar...</option>
-
-                    {RARITIES.map((r) => (
-                      <option key={r} value={r}>
-                        {RARITY_LABELS[r]}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </>
+                  {RARITIES.map((r) => (
+                    <option key={r} value={r}>
+                      {RARITY_LABELS[r]}
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
             <div>
               <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Idioma *</label>
@@ -356,8 +357,18 @@ if (success) {
             </div>
             <div>
             <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Precio (CLP) *</label>
-              <input required type="number" min="1" className={inputClass} placeholder="50000"
-                value={form.priceCLP} onChange={(e) => setForm({ ...form, priceCLP: e.target.value })} />
+              <input
+                required
+                type="text"
+                inputMode="numeric"
+                className={inputClass}
+                placeholder="20.000"
+                value={form.priceCLP}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^\d.,]/g, '');
+                  setForm({ ...form, priceCLP: value });
+                }}
+              />
             </div>
           </div>
 

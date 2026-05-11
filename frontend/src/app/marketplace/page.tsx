@@ -358,9 +358,12 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
         </p>
 
         <div className="flex gap-1.5 mt-2 flex-wrap">
-          <span className="text-xs bg-[var(--info-bg)] text-[var(--info-fg)] px-2 py-0.5 rounded-full">
-            {listing.rarity.replace('_', ' ')}
-          </span>
+          {listing.listingType === 'CARD' && (
+            <span className="text-xs bg-[var(--info-bg)] text-[var(--info-fg)] px-2 py-0.5 rounded-full">
+              {listing.rarity.replace('_', ' ')}
+            </span>
+          )}
+
           <span className="text-xs bg-[var(--surface-2)] text-[var(--muted)] px-2 py-0.5 rounded-full border border-[var(--border)]">
             {CONDITION_LABELS[listing.condition]}
           </span>
