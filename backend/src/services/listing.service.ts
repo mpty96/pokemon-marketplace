@@ -7,9 +7,11 @@ type ListingStatus = 'ACTIVE' | 'PAUSED' | 'SOLD' | 'CANCELLED';
 type CardCondition = 'MINT' | 'NEAR_MINT' | 'EXCELLENT' | 'GOOD' | 'PLAYED' | 'POOR';
 type CardRarity    = 'COMMON' | 'UNCOMMON' | 'RARE' | 'HOLO_RARE' | 'ULTRA_RARE' | 'SECRET_RARE' | 'PROMO';
 type CardLanguage = 'ESP' | 'ENG' | 'POR' | 'JPN' | 'KOR' | 'CHN' | 'OTHER';
+type ListingType = 'CARD' | 'POKEMON_PRODUCT' | 'BULK_LOT';
 
 interface CreateListingInput {
   sellerId:     string;
+  listingType?: ListingType;
   title:        string;
   cardName:     string;
   edition:      string;
@@ -23,15 +25,16 @@ interface CreateListingInput {
 }
 
 interface ListingFilters {
-  search?:    string;
-  edition?:   string;
-  condition?: CardCondition;
-  rarity?:    CardRarity;
-  language?:  CardLanguage;
-  minPrice?:  number;
-  maxPrice?:  number;
-  page?:      number;
-  limit?:     number;
+  search?:      string;
+  listingType?: ListingType;
+  edition?:     string;
+  condition?:   CardCondition;
+  rarity?:      CardRarity;
+  language?:    CardLanguage;
+  minPrice?:    number;
+  maxPrice?:    number;
+  page?:        number;
+  limit?:       number;
 }
 
 export async function createListing(input: CreateListingInput) {
@@ -43,6 +46,7 @@ export async function createListing(input: CreateListingInput) {
 
   const listing = await prisma.listing.create({
     data: {
+      listingType: data.listingType || 'CARD',
       ...data,
       sellerId,
       images: imageUrls,
@@ -63,7 +67,7 @@ export async function createListing(input: CreateListingInput) {
 
 export async function getListings(filters: ListingFilters) {
   const {
-    search, edition, condition, rarity, language,
+    search, edition, condition, rarity, language, listingType,
     minPrice, maxPrice, page = 1, limit = 12,
   } = filters;
 
@@ -86,6 +90,7 @@ export async function getListings(filters: ListingFilters) {
   if (condition) where.condition = condition;
   if (rarity)    where.rarity    = rarity;
   if (language)  where.language  = language;
+  if (listingType) where.listingType = listingType;
   if (minPrice || maxPrice) {
     where.priceCLP = {};
     if (minPrice) where.priceCLP = { ...where.priceCLP as object, gte: minPrice };

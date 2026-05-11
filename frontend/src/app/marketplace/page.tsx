@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import api from '@/lib/axios';
-import { Listing, CardCondition, CardRarity, CardLanguage, PaginatedListings } from '@/types';
+import { Listing, CardCondition, CardRarity, CardLanguage, ListingType, PaginatedListings } from '@/types';
 
 const CONDITIONS: { value: CardCondition; label: string }[] = [
   { value: 'MINT',      label: 'Mint' },
@@ -35,6 +35,12 @@ const LANGUAGES: { value: CardLanguage; label: string }[] = [
   { value: 'OTHER', label: 'Otro' }
 ];
 
+const LISTING_TYPES: { value: ListingType; label: string }[] = [
+  { value: 'CARD', label: 'Carta' },
+  { value: 'POKEMON_PRODUCT', label: 'Productos Pokémon' },
+  { value: 'BULK_LOT', label: 'Challas' },
+];
+
 const CONDITION_LABELS: Record<CardCondition, string> = {
   MINT: 'Mint',
   NEAR_MINT: 'Near Mint',
@@ -53,6 +59,7 @@ function MarketplaceContent() {
 
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
+    listingType: searchParams.get('listingType') || '',
     edition: searchParams.get('edition') || '',
     condition: searchParams.get('condition') || '',
     rarity: searchParams.get('rarity') || '',
@@ -92,6 +99,7 @@ function MarketplaceContent() {
   function clearFilters() {
     setFilters({
       search: '',
+      listingType: '',
       edition: '',
       condition: '',
       rarity: '',
@@ -126,6 +134,24 @@ function MarketplaceContent() {
               <button onClick={clearFilters} className="text-xs text-[var(--primary)] hover:underline">
                 Limpiar
               </button>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+                Tipo de publicación
+              </label>
+              <select
+                value={filters.listingType}
+                onChange={(e) => handleFilterChange('listingType', e.target.value)}
+                className={selectClass}
+              >
+                <option value="">Todos</option>
+                {LISTING_TYPES.map((type) => (
+                  <option key={type.value} value={type.value}>
+                    {type.label}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <form onSubmit={handleSearch}>
@@ -311,6 +337,14 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
       </div>
 
       <div className="p-4 flex flex-col flex-1">
+        <span className="mb-2 inline-flex w-fit rounded-full bg-[var(--surface-2)] border border-[var(--border)] px-2 py-0.5 text-[10px] font-semibold text-[var(--muted)]">
+          {listing.listingType === 'CARD'
+            ? 'Carta'
+            : listing.listingType === 'POKEMON_PRODUCT'
+            ? 'Producto Pokémon'
+            : 'Challa'}
+        </span>
+
         <p className="text-xs text-[var(--muted-2)] truncate mt-0.5">
           {listing.edition}
         </p>

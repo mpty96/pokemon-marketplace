@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
-import { CardCondition, CardRarity, CardLanguage } from '@/types';
+import { CardCondition, CardRarity, CardLanguage, ListingType } from '@/types';
 
 const CONDITIONS: CardCondition[] = ['MINT','NEAR_MINT','EXCELLENT','GOOD','PLAYED','POOR'];
 const RARITIES:   CardRarity[]    = ['COMMON','UNCOMMON','RARE','HOLO_RARE','ULTRA_RARE','SECRET_RARE','PROMO'];
@@ -42,6 +42,7 @@ export default function NewListingPage() {
   const router    = useRouter();
   const isAuth    = useAuthStore((s) => s.isAuthenticated);
   const [form, setForm] = useState({
+    listingType: 'CARD' as ListingType,
     cardName: '', edition: '', setNumber: '',
     condition: '' as CardCondition, rarity: '' as CardRarity, language: '' as CardLanguage,
     priceCLP: '', description: '',
@@ -140,6 +141,7 @@ if (success) {
                 setSuccess(false);
                 setNewId('');
                 setForm({
+                  listingType: 'CARD' as ListingType,
                   cardName: '', edition: '', setNumber: '',
                   condition: '' as CardCondition, rarity: '' as CardRarity, language: '' as CardLanguage,
                   priceCLP: '', description: ''
@@ -170,11 +172,16 @@ if (success) {
 
     try {
       const formData = new FormData();
-      Object.entries(form).forEach(([k, v]) => {
-        if (v) formData.append(k, v);
+      const payload = {
+        ...form,
+        title: form.cardName,
+        condition: form.listingType === 'CARD' ? form.condition : 'GOOD',
+        rarity: form.listingType === 'CARD' ? form.rarity : 'COMMON',
+        language: form.language || 'ESP',
+      };
+      Object.entries(payload).forEach(([k, v]) => {
+        if (v) formData.append(k, String(v));
       });
-
-      formData.append('title', form.cardName);
       images.forEach((img) => formData.append('images', img));
 
       const { data } = await api.post('/api/listings', formData, {
@@ -209,13 +216,57 @@ if (success) {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                Tipo de publicación *
+              </label>
+              <select
+                required
+                className={inputClass}
+                value={form.listingType}
+                onChange={(e) => {
+                  const nextType = e.target.value as ListingType;
+
+                  setForm({
+                    ...form,
+                    listingType: nextType,
+                    cardName: '',
+                    edition: '',
+                    setNumber: '',
+                    condition: '' as CardCondition,
+                    rarity: '' as CardRarity,
+                    language: '' as CardLanguage,
+                    priceCLP: '',
+                    description: '',
+                  });
+                }}
+              >
+                <option value="CARD">Carta</option>
+                <option value="POKEMON_PRODUCT">Productos Pokémon</option>
+                <option value="BULK_LOT">Challas</option>
+              </select>
+            </div>
             <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Nombre de la carta *</label>
-              <input required className={inputClass} placeholder="Charizard"
+              {form.listingType === 'CARD'
+              ? 'Nombre de la carta *'
+              : form.listingType === 'POKEMON_PRODUCT'
+              ? 'Nombre del producto *'
+              : 'Nombre del lote *'}
+              <input required className={inputClass} placeholder={
+                form.listingType === 'CARD'
+                  ? 'Charizard'
+                  : form.listingType === 'POKEMON_PRODUCT'
+                  ? 'Elite Trainer Box, Booster Pack...'
+                  : 'Lote 100 cartas comunes'
+              }
                 value={form.cardName} onChange={(e) => setForm({ ...form, cardName: e.target.value })} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Edición *</label>
+              {form.listingType === 'CARD'
+              ? 'Edición *'
+              : form.listingType === 'POKEMON_PRODUCT'
+              ? 'Colección / expansión *'
+              : 'Origen / colección del lote *'}
               <input required className={inputClass} placeholder="Base Set"
                 value={form.edition} onChange={(e) => setForm({ ...form, edition: e.target.value })} />
             </div>
@@ -224,22 +275,61 @@ if (success) {
               <input className={inputClass} placeholder="4/102"
                 value={form.setNumber} onChange={(e) => setForm({ ...form, setNumber: e.target.value })} />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Condición *</label>
-              <select required className={inputClass}
-                value={form.condition} onChange={(e) => setForm({ ...form, condition: e.target.value as CardCondition })}>
-                <option value="">Seleccionar...</option>
-                {CONDITIONS.map((c) => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Rareza *</label>
-              <select required className={inputClass}
-                value={form.rarity} onChange={(e) => setForm({ ...form, rarity: e.target.value as CardRarity })}>
-                <option value="">Seleccionar...</option>
-                {RARITIES.map((r) => <option key={r} value={r}>{RARITY_LABELS[r]}</option>)}
-              </select>
-            </div>
+            {form.listingType === 'CARD' && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                    Condición *
+                  </label>
+
+                  <select
+                    required
+                    className={inputClass}
+                    value={form.condition}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        condition: e.target.value as CardCondition,
+                      })
+                    }
+                  >
+                    <option value="">Seleccionar...</option>
+
+                    {CONDITIONS.map((c) => (
+                      <option key={c} value={c}>
+                        {CONDITION_LABELS[c]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                    Rareza *
+                  </label>
+
+                  <select
+                    required
+                    className={inputClass}
+                    value={form.rarity}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        rarity: e.target.value as CardRarity,
+                      })
+                    }
+                  >
+                    <option value="">Seleccionar...</option>
+
+                    {RARITIES.map((r) => (
+                      <option key={r} value={r}>
+                        {RARITY_LABELS[r]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
             <div>
               <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Idioma *</label>
               <select
@@ -256,8 +346,8 @@ if (success) {
                 ))}
               </select>
             </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Precio (CLP) *</label>
+            <div>
+            <label className="block text-sm font-medium text-[var(--foreground)] mb-1">Precio (CLP) *</label>
               <input required type="number" min="1" className={inputClass} placeholder="50000"
                 value={form.priceCLP} onChange={(e) => setForm({ ...form, priceCLP: e.target.value })} />
             </div>
@@ -287,7 +377,13 @@ if (success) {
 
           <button type="submit" disabled={loading}
             className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors">
-            {loading ? 'Publicando...' : 'Publicar carta'}
+            {loading
+            ? 'Publicando...'
+            : form.listingType === 'CARD'
+            ? 'Publicar carta'
+            : form.listingType === 'POKEMON_PRODUCT'
+            ? 'Publicar producto'
+            : 'Publicar challa'}
           </button>
         </form>
       </div>

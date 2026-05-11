@@ -20,8 +20,16 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
   try {
     const sellerId = req.user!.userId;
     const {
-      title, cardName, edition, setNumber,
-      condition, rarity, language, priceCLP, description,
+      listingType = 'CARD',
+      title,
+      cardName,
+      edition,
+      setNumber,
+      condition,
+      rarity,
+      language,
+      priceCLP,
+      description,
     } = req.body;
 
         if (!title || !cardName || !edition || !condition || !rarity || !language || !priceCLP) {
@@ -47,6 +55,7 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
 
     const listing = await createListing({
       sellerId,
+      listingType,
       title,
       cardName,
       edition,
@@ -71,12 +80,13 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
 export async function list(req: AuthRequest, res: Response): Promise<void> {
   try {
     const {
-      search, edition, condition, rarity, language,
+      search, edition, condition, rarity, language, listingType,
       minPrice, maxPrice, page, limit,
     } = req.query;
 
     const result = await getListings({
       search:    search    as string,
+      listingType: listingType as any,
       edition:   edition   as string,
       condition: condition as CardCondition,
       rarity:    rarity    as CardRarity,

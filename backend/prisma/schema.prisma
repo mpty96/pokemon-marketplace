@@ -107,11 +107,18 @@ model Profile {
 }
 
 
+enum ListingType {
+  CARD
+  POKEMON_PRODUCT
+  BULK_LOT
+}
+
 
 model Listing {
   id          String        @id @default(uuid())
   sellerId    String
-  title       String // ej: "Charizard Holo Base Set"
+  listingType ListingType @default(CARD)
+  title       String
   cardName    String
   edition     String // ej: "Base Set", "Jungle", "Fossil"
   setNumber   String? // número en el set
@@ -135,6 +142,7 @@ model Listing {
   // Índices para búsqueda en marketplace
   @@index([sellerId])
   @@index([status])
+  @@index([listingType])
   @@index([cardName])
   @@index([edition])
   @@index([rarity])

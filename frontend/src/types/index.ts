@@ -13,10 +13,12 @@ export interface Seller {
 }
 
 export type CardLanguage = 'ESP' | 'ENG' | 'POR' | 'JPN' | 'KOR' | 'CHN' | 'OTHER';
+export type ListingType = 'CARD' | 'POKEMON_PRODUCT' | 'BULK_LOT';
 
 export interface Listing {
   id:          string;
   sellerId:    string;
+  listingType: ListingType;
   title:       string;
   cardName:    string;
   edition:     string;
