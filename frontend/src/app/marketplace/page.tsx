@@ -15,6 +15,12 @@ const CONDITIONS: { value: CardCondition; label: string }[] = [
   { value: 'POOR',      label: 'Dañada' },
 ];
 
+const NON_CARD_CONDITIONS: { value: CardCondition; label: string }[] = [
+  { value: 'EXCELLENT', label: 'Excelente' },
+  { value: 'GOOD', label: 'Buena' },
+  { value: 'POOR', label: 'Dañada' },
+];
+
 const RARITIES: { value: CardRarity; label: string }[] = [
   { value: 'COMMON',      label: 'Común' },
   { value: 'UNCOMMON',    label: 'Poco común' },
@@ -142,7 +148,17 @@ function MarketplaceContent() {
               </label>
               <select
                 value={filters.listingType}
-                onChange={(e) => handleFilterChange('listingType', e.target.value)}
+                onChange={(e) => {
+                  const nextType = e.target.value;
+
+                  setFilters((prev) => ({
+                    ...prev,
+                    listingType: nextType,
+                    condition: '',
+                    rarity: '',
+                    page: 1,
+                  }));
+                }}
                 className={selectClass}
               >
                 <option value="">Todos</option>
@@ -198,7 +214,10 @@ function MarketplaceContent() {
                 className={selectClass}
               >
                 <option value="">Todas</option>
-                {CONDITIONS.map((c) => (
+                {(filters.listingType === 'CARD' || !filters.listingType
+                  ? CONDITIONS
+                  : NON_CARD_CONDITIONS
+                ).map((c) => (
                   <option key={c.value} value={c.value}>
                     {c.label}
                   </option>
@@ -206,23 +225,25 @@ function MarketplaceContent() {
               </select>
             </div>
 
-            <div>
-              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
-                Rareza
-              </label>
-              <select
-                value={filters.rarity}
-                onChange={(e) => handleFilterChange('rarity', e.target.value)}
-                className={selectClass}
-              >
-                <option value="">Todas</option>
-                {RARITIES.map((r) => (
-                  <option key={r.value} value={r.value}>
-                    {r.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {(!filters.listingType || filters.listingType === 'CARD') && (
+              <div>
+                <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+                  Rareza
+                </label>
+                <select
+                  value={filters.rarity}
+                  onChange={(e) => handleFilterChange('rarity', e.target.value)}
+                  className={selectClass}
+                >
+                  <option value="">Todas</option>
+                  {RARITIES.map((r) => (
+                    <option key={r.value} value={r.value}>
+                      {r.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
