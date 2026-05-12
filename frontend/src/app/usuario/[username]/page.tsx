@@ -22,7 +22,7 @@ interface PublicProfile {
   ratingsReceived: Rating[];
   ratingsAsSeller: Rating[];
   ratingsAsBuyer: Rating[];
-  activeListings: Listing[];
+  activeListings?: Listing[];
 }
 
 function Stars({ score }: { score: number }) {
@@ -199,7 +199,7 @@ export default function PublicProfilePage() {
           </div>
         </div>
       </div>
-      {data.activeListings.length > 0 && (
+      {(data.activeListings?.length || 0) > 0 && (
       <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -213,12 +213,12 @@ export default function PublicProfilePage() {
           </div>
 
           <span className="text-sm text-[var(--muted)]">
-            {data.activeListings.length} activas
+            {data.activeListings?.length || 0} activas
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {data.activeListings.map((listing) => (
+          {data.activeListings?.map((listing) => (
             <Link
               key={listing.id}
               href={`/listings/${listing.id}`}
