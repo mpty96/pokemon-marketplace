@@ -58,27 +58,36 @@ export default function NewListingPage() {
   const [profileComplete, setProfileComplete] = useState<boolean | null>(null);
   const [missingFields, setMissingFields] = useState<string[]>([]);
 
-  useEffect(() => {
+  
+useEffect(() => {
   if (!isAuth) {
     router.replace('/');
+    return;
   }
+
+  let mounted = true;
+
+  api
+    .get('/api/profile/completion-status')
+    .then(({ data }) => {
+      if (!mounted) return;
+      setProfileComplete(data.complete);
+      setMissingFields(data.missingFields || []);
+    })
+    .catch(() => {
+      if (!mounted) return;
+      router.replace('/');
+    });
+
+  return () => {
+    mounted = false;
+  };
 }, [isAuth, router]);
 
-  if (!isAuth) {
-    return null;
-  }
+if (!isAuth) {
+  return null;
+}
 
-  useEffect(() => {
-    api.get('/api/profile/completion-status')
-      .then(({ data }) => {
-        setProfileComplete(data.complete);
-        setMissingFields(data.missingFields || []);
-      })
-      .catch(() => {
-        setProfileComplete(false);
-        setMissingFields([]);
-      });
-  }, []);
 
 if (profileComplete === false) {
   const labels: Record<string, string> = {
