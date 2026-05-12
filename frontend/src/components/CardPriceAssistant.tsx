@@ -189,9 +189,22 @@ export default function CardPriceAssistant() {
 
                   {result && (
                     <div className="mt-5 border-t border-[var(--border)] pt-4 space-y-3 text-sm">
-                      <h3 className="font-semibold text-[var(--foreground)]">
-                        Resultado aproximado
-                      </h3>
+											<div className="flex items-center justify-between gap-3">
+												<h3 className="font-semibold text-[var(--foreground)]">
+													Resultado aproximado
+												</h3>
+
+												<button
+													type="button"
+													onClick={() => {
+														setResult(null);
+														setError('');
+													}}
+													className="text-xs text-[var(--primary)] hover:underline"
+												>
+													Limpiar resultado
+												</button>
+											</div>
 
                       <p className="text-[var(--muted)]">
                         Carta: <span className="text-[var(--foreground)]">{result.detectedCard}</span>
@@ -204,6 +217,36 @@ export default function CardPriceAssistant() {
                       <p className="text-[var(--muted)]">
                         Referencias internas: {result.internalReferences.completedSalesCount} ventas completadas, {result.internalReferences.activeListingsCount} publicaciones activas.
                       </p>
+
+											{result.internalReferences.activeListingsCount > 0 && (
+												<a
+													href={result.pokeMarketSearchUrl}
+													className="inline-block text-[var(--primary)] hover:underline font-medium"
+												>
+													Ver publicaciones activas similares en PokeMarket
+												</a>
+											)}
+
+											<p className="text-[var(--muted)]">
+												Número en el set:{' '}
+												<span className="text-[var(--foreground)]">
+													{result.setNumber || 'No especificado'}
+												</span>
+											</p>
+
+											<p className="text-[var(--muted)]">
+												Idioma:{' '}
+												<span className="text-[var(--foreground)]">
+													{result.language}
+												</span>
+											</p>
+
+											<p className="text-[var(--muted)]">
+												Condición:{' '}
+												<span className="text-[var(--foreground)]">
+													{result.condition}
+												</span>
+											</p>
 
                       <div className="rounded-lg bg-[var(--surface-2)] border border-[var(--border)] p-3">
                         {result.estimatedPriceCLP.min && result.estimatedPriceCLP.max ? (

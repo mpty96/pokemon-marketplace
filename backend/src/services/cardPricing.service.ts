@@ -24,6 +24,26 @@ function buildSearchQuery(input: AnalyzeCardPricingInput) {
     .join(' ');
 }
 
+function buildTcgMatchQuery(input: AnalyzeCardPricingInput) {
+  return [
+    input.cardName,
+    input.edition,
+    input.setNumber || '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
+function buildPokeMarketQuery(input: AnalyzeCardPricingInput) {
+  return [
+    input.cardName,
+    input.edition,
+    input.setNumber || '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
 export async function analyzeCardPricing(input: AnalyzeCardPricingInput) {
   const query = buildSearchQuery(input);
 
@@ -111,20 +131,21 @@ export async function analyzeCardPricing(input: AnalyzeCardPricingInput) {
       completedSalesCount: completedPrices.length,
       activeListingsCount: activePrices.length,
     },
-    externalComparisonLinks: [
-      {
-        name: 'TCGPlayer',
-        url: `https://www.tcgplayer.com/search/pokemon/product?productLineName=pokemon&q=${encodeURIComponent(query)}`,
-      },
-      {
-        name: 'DexValue',
-        url: `https://dexvalue.cl/search?q=${encodeURIComponent(query)}`,
-      },
-      {
-        name: 'TCGMatch',
-        url: `https://tcgmatch.cl/search?q=${encodeURIComponent(query)}`,
-      },
-    ],
+    pokeMarketSearchUrl: `/marketplace?search=${encodeURIComponent(buildPokeMarketQuery(input))}`,
+			externalComparisonLinks: [
+			{
+					name: 'TCGPlayer',
+					url: `https://www.tcgplayer.com/search/pokemon/product?productLineName=pokemon&q=${encodeURIComponent(query)}`,
+			},
+			{
+					name: 'DexValue',
+					url: `https://dexvalue.cl/search?q=${encodeURIComponent(query)}`,
+			},
+			{
+					name: 'TCGMatch',
+					url: `https://tcgmatch.cl/search?q=${encodeURIComponent(buildTcgMatchQuery(input))}`,
+			},
+		],
     disclaimer:
       'Este valor es solamente una referencia aproximada. El precio real puede variar según el estado físico de la carta, idioma, edición, rareza, meta actual, demanda, disponibilidad, autenticidad y confianza entre comprador/vendedor. Compara siempre con publicaciones activas y ventas recientes dentro de PokeMarket antes de tomar una decisión.',
   };
