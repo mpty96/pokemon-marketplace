@@ -10,180 +10,165 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="mt-16 border-t border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)]">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
-              <p className="text-lg font-bold text-[var(--primary)]">
-                🎴 PokeMarket Chile
-              </p>
-              <p className="text-sm text-[var(--muted)] mt-1 max-w-xl">
-                Marketplace para coleccionistas en Chile. Compra, vende y conversa
-                con otros usuarios de forma más informada, transparente y segura.
-              </p>
-              <p className="text-xs text-[var(--muted-2)] mt-2">
-                © 2026 PokeMarket Chile · Versión Beta
-              </p>
-            </div>
+      <footer className="mt-16 border-t border-[var(--border)] bg-[var(--surface)]">
+        <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+          <p className="text-sm font-semibold text-[var(--foreground)]">
+            PokeMarket Chile
+          </p>
 
-            <div className="grid grid-cols-2 sm:flex gap-2">
-              <FooterButton onClick={() => setActiveModal('security')}>
-                🛡 Seguridad
-              </FooterButton>
+          <p className="text-sm text-[var(--muted)] mt-2 leading-6">
+            Marketplace para coleccionistas en Chile. Compra, venta y publicación de cartas,
+            productos Pokémon y lotes entre usuarios.
+          </p>
 
-              <FooterButton onClick={() => setActiveModal('terms')}>
-                📜 Términos
-              </FooterButton>
+          <nav className="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+            <FooterLink onClick={() => setActiveModal('security')}>
+              Seguridad
+            </FooterLink>
 
-              <FooterButton onClick={() => setActiveModal('reputation')}>
-                ⭐ Reputación
-              </FooterButton>
+            <FooterLink onClick={() => setActiveModal('terms')}>
+              Términos y condiciones
+            </FooterLink>
 
-              <FooterButton onClick={() => setActiveModal('info')}>
-                ℹ Información
-              </FooterButton>
-            </div>
-          </div>
+            <FooterLink onClick={() => setActiveModal('reputation')}>
+              Reputación y reportes
+            </FooterLink>
+
+            <FooterLink onClick={() => setActiveModal('info')}>
+              Información general
+            </FooterLink>
+          </nav>
+
+          <p className="text-xs text-[var(--muted-2)] mt-6">
+            © 2026 PokeMarket Chile. Plataforma en versión beta.
+          </p>
         </div>
       </footer>
 
       <FooterModal
         open={activeModal === 'security'}
         title="Seguridad y prevención de estafas"
-        icon="🛡"
         onClose={() => setActiveModal(null)}
       >
         <Section title="Antes de comprar">
           <p>
-            Antes de concretar cualquier compra, revisa cuidadosamente la publicación,
-            las fotografías, la descripción, la reputación del vendedor y las
-            calificaciones recibidas. No te apresures si el precio parece demasiado
-            bajo o si el vendedor evita responder preguntas importantes.
+            Antes de concretar una compra, revisa cuidadosamente la publicación,
+            la descripción, las fotografías disponibles, la reputación del vendedor
+            y las calificaciones recibidas. No realices pagos si tienes dudas sobre
+            la autenticidad, el estado del producto o la seriedad del usuario.
           </p>
-          <ul className="list-disc ml-5 space-y-1">
-            <li>Solicita fotografías claras del frente y reverso de la carta.</li>
-            <li>Pide fotos de esquinas, bordes, superficie y zonas holográficas.</li>
-            <li>Solicita imágenes con buena iluminación y sin filtros.</li>
-            <li>Pregunta por rayones, dobleces, marcas, humedad o desgaste.</li>
-            <li>Compara la carta con referencias confiables antes de pagar.</li>
-          </ul>
+
+          <p>
+            En el caso de cartas individuales, solicita fotografías claras del frente
+            y reverso, incluyendo bordes, esquinas, superficie, holograma y cualquier
+            zona que pueda presentar rayones, dobleces, desgaste o marcas visibles.
+          </p>
         </Section>
 
-        <Section title="Protección personal">
+        <Section title="Protección de información personal">
           <p>
             No compartas contraseñas, códigos de verificación, claves bancarias,
-            documentos innecesarios ni información sensible. Si acuerdas una entrega
-            presencial, prefiere lugares públicos, iluminados y concurridos.
+            documentos innecesarios ni información sensible. PokeMarket no solicita
+            claves, códigos OTP ni datos bancarios privados mediante chats entre usuarios.
           </p>
         </Section>
 
         <Section title="Señales de alerta">
-          <ul className="list-disc ml-5 space-y-1">
-            <li>Presión para pagar rápido.</li>
-            <li>Negativa a enviar más fotos o videos.</li>
-            <li>Precios extremadamente bajos sin explicación.</li>
-            <li>Usuarios con mala reputación o reportes previos.</li>
-            <li>Solicitud de pagos extraños o fuera del acuerdo.</li>
-          </ul>
+          <p>
+            Desconfía de precios excesivamente bajos, usuarios que presionan para pagar
+            rápido, vendedores que evitan enviar fotografías adicionales, solicitudes de
+            pagos poco claros o cualquier conducta que parezca sospechosa.
+          </p>
         </Section>
       </FooterModal>
 
       <FooterModal
         open={activeModal === 'terms'}
-        title="Términos y condiciones de uso"
-        icon="📜"
+        title="Términos y condiciones"
         onClose={() => setActiveModal(null)}
       >
-        <Section title="Uso general de PokeMarket">
+        <Section title="Uso de la plataforma">
           <p>
-            PokeMarket es una plataforma de publicación y contacto entre usuarios.
-            Las compras, ventas, acuerdos, pagos, entregas y verificaciones finales
-            son responsabilidad directa de las partes involucradas.
+            PokeMarket funciona como una plataforma de publicación y contacto entre
+            usuarios. Las compras, ventas, acuerdos, pagos, entregas y verificaciones
+            finales son responsabilidad directa de las personas involucradas en cada
+            transacción.
           </p>
         </Section>
 
         <Section title="Responsabilidad del usuario">
           <p>
-            Cada usuario debe publicar información real, clara y honesta. Las imágenes,
-            descripciones, precios y condiciones del producto deben representar
+            Cada usuario debe publicar información real, clara y honesta. Las fotografías,
+            descripciones, precios, condiciones y detalles del producto deben representar
             fielmente lo ofrecido.
           </p>
+
           <p>
-            Está prohibido publicar productos falsos como auténticos, manipular
-            información, ocultar daños relevantes o intentar engañar a otros usuarios.
+            Está prohibido intentar engañar a otros usuarios, ocultar daños relevantes,
+            publicar productos falsos como auténticos, manipular información o utilizar
+            la plataforma con fines fraudulentos.
           </p>
         </Section>
 
-        <Section title="Estado Beta">
+        <Section title="Estado beta">
           <p>
             PokeMarket se encuentra en desarrollo continuo. Algunas funciones pueden
             cambiar, mejorar o ajustarse con el tiempo. El uso de la plataforma implica
-            aceptar que todavía pueden existir ajustes técnicos, visuales o funcionales.
+            aceptar que pueden existir modificaciones técnicas, visuales o funcionales.
           </p>
         </Section>
       </FooterModal>
 
       <FooterModal
         open={activeModal === 'reputation'}
-        title="Sistema de reputación, reportes y strikes"
-        icon="⭐"
+        title="Sistema de reputación y reportes"
         onClose={() => setActiveModal(null)}
       >
         <Section title="Reputación">
           <p>
-            La reputación ayuda a medir la experiencia de otros usuarios al comprar o
-            vender. Las calificaciones pueden considerar comunicación, precio, proceso
-            de venta y cumplimiento del acuerdo.
+            El sistema de reputación permite reflejar la experiencia de otros usuarios
+            al comprar o vender. Las calificaciones ayudan a evaluar comunicación,
+            cumplimiento, claridad del proceso y comportamiento general durante una
+            transacción.
           </p>
         </Section>
 
         <Section title="Reportes">
           <p>
-            Si un usuario tiene una conducta sospechosa, intenta estafar, amenaza,
-            acosa, publica información falsa o incumple acuerdos importantes, puede ser
-            reportado desde su perfil público.
+            Si un usuario presenta una conducta sospechosa, intenta estafar, entrega
+            información falsa, incumple acuerdos importantes, amenaza, acosa o realiza
+            acciones contrarias al correcto uso de la plataforma, puede ser reportado
+            desde su perfil público.
           </p>
         </Section>
 
         <Section title="Strikes y sanciones">
           <p>
-            Los reportes pueden derivar en advertencias o strikes. Si un usuario acumula
-            conductas graves o reiteradas, PokeMarket podrá restringir funciones,
-            suspender la cuenta o prohibir el acceso a la plataforma.
-          </p>
-          <p>
-            El sistema de strikes busca proteger a la comunidad y reducir riesgos en
-            las transacciones entre usuarios.
+            Los reportes pueden derivar en advertencias, strikes, restricciones,
+            suspensión de funciones o bloqueo permanente de la cuenta. Estas medidas
+            buscan proteger a la comunidad y reducir riesgos en las transacciones.
           </p>
         </Section>
       </FooterModal>
 
       <FooterModal
         open={activeModal === 'info'}
-        title="Información sobre PokeMarket"
-        icon="ℹ"
+        title="Información general"
         onClose={() => setActiveModal(null)}
       >
-        <Section title="Qué es PokeMarket">
+        <Section title="Sobre PokeMarket">
           <p>
-            PokeMarket Chile es un marketplace pensado para coleccionistas de cartas,
-            productos Pokémon y lotes/challas dentro de Chile.
+            PokeMarket Chile es un marketplace orientado a coleccionistas dentro de Chile.
+            Permite publicar cartas individuales, productos Pokémon sellados o relacionados,
+            y lotes de cartas de menor valor conocidos comúnmente como challas.
           </p>
-        </Section>
-
-        <Section title="Qué puedes publicar">
-          <ul className="list-disc ml-5 space-y-1">
-            <li>Cartas individuales.</li>
-            <li>Productos Pokémon como ETBs, booster packs, sobres y similares.</li>
-            <li>Challas o lotes de cartas de menor valor.</li>
-          </ul>
         </Section>
 
         <Section title="Transparencia">
           <p>
-            La plataforma muestra historial de transacciones, reputación, publicaciones
-            activas y datos relevantes para que los usuarios puedan tomar mejores
-            decisiones antes de comprar o vender.
+            La plataforma incorpora perfiles públicos, reputación, historial de ventas,
+            publicaciones activas, reportes y calificaciones para entregar mayor contexto
+            antes de comprar o vender.
           </p>
         </Section>
       </FooterModal>
@@ -191,7 +176,7 @@ export default function Footer() {
   );
 }
 
-function FooterButton({
+function FooterLink({
   children,
   onClick,
 }: {
@@ -202,7 +187,7 @@ function FooterButton({
     <button
       type="button"
       onClick={onClick}
-      className="text-sm border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] px-3 py-2 rounded-lg hover:bg-[var(--surface-2)] transition-colors"
+      className="text-[var(--muted)] hover:text-[var(--primary)] hover:underline transition-colors"
     >
       {children}
     </button>
@@ -218,10 +203,12 @@ function Section({
 }) {
   return (
     <section className="space-y-2">
-      <h3 className="text-base font-bold text-[var(--foreground)]">
+      <h3 className="text-base font-semibold text-[var(--foreground)]">
         {title}
       </h3>
-      {children}
+      <div className="space-y-3">
+        {children}
+      </div>
     </section>
   );
 }
