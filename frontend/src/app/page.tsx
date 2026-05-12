@@ -55,7 +55,7 @@ export default function HomePage() {
 
         <div className="relative px-6 py-10 text-center">
           <div className="inline-flex items-center gap-2 bg-[var(--surface-2)] text-[var(--foreground)] text-xs font-semibold px-3 py-1 rounded-full mb-3 border border-[var(--border)]">
-            🇨🇱 Solo para Chile
+            Solo para Chile
           </div>
 
           <h1 className="text-3xl md:text-4xl font-extrabold mb-2 tracking-tight text-[var(--foreground)]">
@@ -64,7 +64,7 @@ export default function HomePage() {
           </h1>
 
           <p className="text-[var(--muted)] mb-5 text-base max-w-xl mx-auto">
-            Marketplace para cartas, productos Pokémon y challas/lotes entre coleccionistas.
+            Marketplace para cartas, productos Pokémon y lotes/challas entre coleccionistas.
           </p>
 
           <div className="flex gap-2 justify-center flex-wrap">

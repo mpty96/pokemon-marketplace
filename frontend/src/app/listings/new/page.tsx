@@ -61,8 +61,8 @@ export default function NewListingPage() {
   
 useEffect(() => {
   if (!isAuth) {
-    router.replace('/');
-    return;
+  router.replace('/login');
+  return;
   }
 
   let mounted = true;
@@ -76,7 +76,7 @@ useEffect(() => {
     })
     .catch(() => {
       if (!mounted) return;
-      router.replace('/');
+      router.replace('/login');
     });
 
   return () => {
