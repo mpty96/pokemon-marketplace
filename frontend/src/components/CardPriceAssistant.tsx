@@ -214,19 +214,6 @@ export default function CardPriceAssistant() {
                         Edición: <span className="text-[var(--foreground)]">{result.edition}</span>
                       </p>
 
-                      <p className="text-[var(--muted)]">
-                        Referencias internas: {result.internalReferences.completedSalesCount} ventas completadas, {result.internalReferences.activeListingsCount} publicaciones activas.
-                      </p>
-
-											{result.internalReferences.activeListingsCount > 0 && (
-												<a
-													href={result.pokeMarketSearchUrl}
-													className="inline-block text-[var(--primary)] hover:underline font-medium"
-												>
-													Ver publicaciones activas similares en PokeMarket
-												</a>
-											)}
-
 											<p className="text-[var(--muted)]">
 												Número en el set:{' '}
 												<span className="text-[var(--foreground)]">
@@ -247,6 +234,19 @@ export default function CardPriceAssistant() {
 													{result.condition}
 												</span>
 											</p>
+
+											<p className="text-[var(--muted)]">
+                        Referencias internas: {result.internalReferences.completedSalesCount} ventas completadas, {result.internalReferences.activeListingsCount} publicaciones activas.
+                      </p>
+
+											{result.internalReferences.activeListingsCount > 0 && (
+												<a
+													href={result.pokeMarketSearchUrl}
+													className="inline-block text-[var(--primary)] hover:underline font-medium"
+												>
+													Ver publicaciones activas similares en PokeMarket
+												</a>
+											)}
 
                       <div className="rounded-lg bg-[var(--surface-2)] border border-[var(--border)] p-3">
                         {result.estimatedPriceCLP.min && result.estimatedPriceCLP.max ? (

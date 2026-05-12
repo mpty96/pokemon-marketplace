@@ -143,7 +143,7 @@ export async function analyzeCardPricing(input: AnalyzeCardPricingInput) {
 			},
 			{
 					name: 'TCGMatch',
-					url: `https://tcgmatch.cl/search?q=${encodeURIComponent(buildTcgMatchQuery(input))}`,
+					url: `https://tcgmatch.cl/cartas/busqueda/q=${encodeURIComponent(buildTcgMatchQuery(input)).replace(/%20/g, '+')}`,
 			},
 		],
     disclaimer:
