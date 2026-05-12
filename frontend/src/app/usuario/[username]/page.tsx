@@ -76,7 +76,7 @@ export default function PublicProfilePage() {
   const [reportMessage, setReportMessage] = useState('');
 
   useEffect(() => {
-    api.get(`/api/ratings/user/${username}`)
+    api.get(`/api/profile/public/${username}`)
       .then(({ data }) => setData(data))
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
