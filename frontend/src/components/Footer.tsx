@@ -17,8 +17,8 @@ export default function Footer() {
           </p>
 
           <p className="text-sm text-[var(--muted)] mt-2 leading-6">
-            Marketplace para coleccionistas en Chile. Compra, venta y publicación de cartas,
-            productos Pokémon y lotes entre usuarios.
+            Marketplace dedicado a los coleccionistas de Pokémon en Chile. 
+            Compra, vende e interactúa de manera segura y honesta.
           </p>
 
           <nav className="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">

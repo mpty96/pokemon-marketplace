@@ -527,9 +527,9 @@ return (
           </ul>
         </div>
 
-        <p className="text-sm text-[var(--foreground)] font-medium">
+        <div className="text-[var(--primary)]">
           Si detectas actividad sospechosa, utiliza el sistema de reportes.
-        </p>
+        </div>
       </div>
     </div>
   </div>
