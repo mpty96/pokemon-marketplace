@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import ThemeInitializer from '@/components/ThemeInitializer';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'PokeMarket Chile',
@@ -17,8 +18,9 @@ export default function RootLayout({
     <html lang="es">
       <body className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
         <ThemeInitializer />
-        <Header />
-        <main>{children}</main>
+          <Header />
+          <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

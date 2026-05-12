@@ -207,10 +207,6 @@ export default function PublicProfilePage() {
               <h2 className="text-lg font-bold text-[var(--foreground)]">
                 Calificaciones recibidas
               </h2>
-
-              <p className="text-sm text-[var(--muted)]">
-                Opiniones y experiencias de otros usuarios.
-              </p>
             </div>
 
             <span className="text-sm text-[var(--muted)]">
@@ -273,10 +269,6 @@ export default function PublicProfilePage() {
             <h2 className="text-lg font-bold text-[var(--foreground)]">
               Publicaciones activas
             </h2>
-
-            <p className="text-sm text-[var(--muted)]">
-              Cartas y productos actualmente publicados por este usuario.
-            </p>
           </div>
 
           <span className="text-sm text-[var(--muted)]">
