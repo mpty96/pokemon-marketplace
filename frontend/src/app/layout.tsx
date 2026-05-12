@@ -3,6 +3,7 @@ import './globals.css';
 import ThemeInitializer from '@/components/ThemeInitializer';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import CardPriceAssistant from '@/components/CardPriceAssistant';
 
 export const metadata: Metadata = {
   title: 'PokeMarket Chile',
@@ -21,6 +22,7 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
         <Footer />
+        <CardPriceAssistant />
       </body>
     </html>
   );

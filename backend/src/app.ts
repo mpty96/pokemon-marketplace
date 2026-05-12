@@ -9,6 +9,7 @@ import saleRoutes    from './routes/sale.routes';
 import ratingRoutes  from './routes/rating.routes';
 import profileRoutes from './routes/profile.routes';
 import reportRoutes from './routes/report.routes';
+import cardPricingRoutes from './routes/cardPricing.routes';
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use('/api/sales',    saleRoutes);
 app.use('/api/ratings',  ratingRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/card-pricing', cardPricingRoutes);
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
