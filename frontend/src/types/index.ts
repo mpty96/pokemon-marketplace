@@ -147,3 +147,15 @@ export interface ListingSalesHistoryItem {
   priceCLP: number;
   completedAt: string;
 }
+
+
+export interface FeaturedSeller {
+  username: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  location: string | null;
+  reputationScore: number;
+  totalSales: number;
+  totalPurchases: number;
+  activeListingsCount: number;
+}

@@ -5,6 +5,7 @@ import {
   upsertMyProfile,
   getPublicProfileByUsername,
   getProfileCompletionStatus,
+  getFeaturedSellers,
 } from '../services/profile.service';
 
 export async function getMyProfileController(req: AuthRequest, res: Response): Promise<void> {
@@ -82,5 +83,18 @@ export async function getProfileCompletionStatusController(
     res.json(result);
   } catch {
     res.status(500).json({ error: 'Error al obtener estado del perfil' });
+  }
+}
+
+
+export async function getFeaturedSellersController(
+  req: AuthRequest,
+  res: Response
+): Promise<void> {
+  try {
+    const sellers = await getFeaturedSellers();
+    res.json(sellers);
+  } catch {
+    res.status(500).json({ error: 'Error al obtener vendedores destacados' });
   }
 }

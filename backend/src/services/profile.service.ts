@@ -274,3 +274,49 @@ export async function getProfileCompletionStatus(userId: string) {
     missingFields,
   };
 }
+
+
+export async function getFeaturedSellers() {
+  const profiles = await prisma.profile.findMany({
+    where: {
+      user: {
+        listings: {
+          some: {
+            status: 'ACTIVE',
+            deletedAt: null,
+          },
+        },
+      },
+    },
+    orderBy: [
+      { reputationScore: 'desc' },
+      { totalSales: 'desc' },
+    ],
+    take: 8,
+    include: {
+      user: {
+        select: {
+          username: true,
+          listings: {
+            where: {
+              status: 'ACTIVE',
+              deletedAt: null,
+            },
+            select: { id: true },
+          },
+        },
+      },
+    },
+  });
+
+  return profiles.map((profile) => ({
+    username: profile.user.username,
+    displayName: profile.displayName,
+    avatarUrl: profile.avatarUrl,
+    location: profile.location,
+    reputationScore: profile.reputationScore,
+    totalSales: profile.totalSales,
+    totalPurchases: profile.totalPurchases,
+    activeListingsCount: profile.user.listings.length,
+  }));
+}

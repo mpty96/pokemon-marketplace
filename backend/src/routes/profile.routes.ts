@@ -5,6 +5,7 @@ import {
   updateMyProfileController,
   getPublicProfileController,
   getProfileCompletionStatusController,
+  getFeaturedSellersController,
 } from '../controllers/profile.controller';
 import { upload } from '../middleware/upload.middleware';
 
@@ -13,6 +14,7 @@ const router = Router();
 router.get('/me', authenticate, getMyProfileController);
 router.put('/me', authenticate, upload.single('avatar'), updateMyProfileController);
 router.get('/completion-status', authenticate, getProfileCompletionStatusController);
+router.get('/featured-sellers', getFeaturedSellersController);
 router.get('/public/:username', getPublicProfileController);
 
 export default router;

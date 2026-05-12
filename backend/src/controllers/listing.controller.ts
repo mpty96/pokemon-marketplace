@@ -8,6 +8,8 @@ import {
   deleteListing,
   getMyListings,
   getListingsHistory,
+  getRecentListingsForHome,
+  getPopularListingsForHome,
 } from '../services/listing.service';
 import { getProfileCompletionStatus } from '../services/profile.service';
 
@@ -170,5 +172,24 @@ export async function listingsHistory(req: AuthRequest, res: Response): Promise<
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener historial' });
+  }
+}
+
+
+export async function homeRecentListings(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const listings = await getRecentListingsForHome();
+    res.json(listings);
+  } catch {
+    res.status(500).json({ error: 'Error al obtener publicaciones recientes' });
+  }
+}
+
+export async function homePopularListings(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const listings = await getPopularListingsForHome();
+    res.json(listings);
+  } catch {
+    res.status(500).json({ error: 'Error al obtener publicaciones populares' });
   }
 }

@@ -296,3 +296,44 @@ return {
   })),
 };
 }
+
+
+export async function getRecentListingsForHome() {
+  return prisma.listing.findMany({
+    where: {
+      status: 'ACTIVE',
+      deletedAt: null,
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 12,
+    include: {
+      seller: {
+        select: {
+          id: true,
+          username: true,
+          profile: { select: { displayName: true, avatarUrl: true, reputationScore: true } },
+        },
+      },
+    },
+  });
+}
+
+export async function getPopularListingsForHome() {
+  return prisma.listing.findMany({
+    where: {
+      status: 'ACTIVE',
+      deletedAt: null,
+    },
+    orderBy: { views: 'desc' },
+    take: 12,
+    include: {
+      seller: {
+        select: {
+          id: true,
+          username: true,
+          profile: { select: { displayName: true, avatarUrl: true, reputationScore: true } },
+        },
+      },
+    },
+  });
+}
