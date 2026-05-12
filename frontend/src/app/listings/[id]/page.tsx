@@ -65,21 +65,38 @@ export default function ListingDetailPage() {
 
   const isOwner = user?.id === listing.sellerId;
 
-  const maxPrice = Math.max(...salesHistory.map((item) => item.priceCLP), 0);
+  const prices = salesHistory.map((item) => item.priceCLP);
+  const minPrice = prices.length ? Math.min(...prices) : 0;
+  const maxPrice = prices.length ? Math.max(...prices) : 0;
 
-  function getPointY(price: number) {
-    if (!maxPrice) return 90;
-    return 90 - (price / maxPrice) * 70;
-  }
+  const chartMinPrice = minPrice === maxPrice ? Math.max(0, minPrice - 1000) : minPrice;
+  const chartMaxPrice = minPrice === maxPrice ? maxPrice + 1000 : maxPrice;
 
   function getPointX(index: number) {
     if (salesHistory.length <= 1) return 50;
-    return (index / (salesHistory.length - 1)) * 100;
+    return 10 + (index / (salesHistory.length - 1)) * 80;
+  }
+
+  function getPointY(price: number) {
+    const range = chartMaxPrice - chartMinPrice;
+    if (!range) return 50;
+    return 85 - ((price - chartMinPrice) / range) * 65;
   }
 
   const chartPoints = salesHistory
     .map((item, index) => `${getPointX(index)},${getPointY(item.priceCLP)}`)
     .join(' ');
+
+  const firstDate = salesHistory[0]?.completedAt;
+  const lastDate = salesHistory[salesHistory.length - 1]?.completedAt;
+
+  function formatChartDate(date?: string) {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString('es-CL', {
+      day: '2-digit',
+      month: '2-digit',
+    });
+  }
 
 
   return (
@@ -248,27 +265,82 @@ export default function ListingDetailPage() {
     </div>
   ) : (
     <div className="space-y-5">
-      <div className="h-52 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] p-4">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
-          <polyline
-            points={chartPoints}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="text-[var(--primary)]"
-          />
+      <div className="rounded-xl bg-[var(--surface-2)] border border-[var(--border)] p-4">
+        <div className="flex justify-between text-xs text-[var(--muted)] mb-2">
+          <span>${chartMaxPrice.toLocaleString('es-CL')}</span>
+          <span>Historial según ventas completadas</span>
+        </div>
 
-          {salesHistory.map((item, index) => (
-            <circle
-              key={item.id}
-              cx={getPointX(index)}
-              cy={getPointY(item.priceCLP)}
-              r="2"
-              fill="currentColor"
-              className="text-[var(--primary)]"
+        <div className="h-52">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <line
+              x1="10"
+              y1="85"
+              x2="90"
+              y2="85"
+              stroke="currentColor"
+              strokeWidth="0.5"
+              className="text-[var(--border)]"
             />
-          ))}
-        </svg>
+
+            <line
+              x1="10"
+              y1="20"
+              x2="10"
+              y2="85"
+              stroke="currentColor"
+              strokeWidth="0.5"
+              className="text-[var(--border)]"
+            />
+
+            {salesHistory.length >= 2 && (
+              <polyline
+                points={chartPoints}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-[var(--primary)]"
+              />
+            )}
+
+            {salesHistory.map((item, index) => (
+              <g key={item.id}>
+                <circle
+                  cx={getPointX(index)}
+                  cy={getPointY(item.priceCLP)}
+                  r="2"
+                  fill="currentColor"
+                  className="text-[var(--primary)]"
+                />
+
+                <text
+                  x={getPointX(index)}
+                  y={getPointY(item.priceCLP) - 4}
+                  textAnchor="middle"
+                  fontSize="4"
+                  fill="currentColor"
+                  className="text-[var(--foreground)]"
+                >
+                  ${(item.priceCLP / 1000).toFixed(0)}k
+                </text>
+              </g>
+            ))}
+          </svg>
+        </div>
+
+        <div className="flex justify-between text-xs text-[var(--muted)] mt-2">
+          <span>{formatChartDate(firstDate)}</span>
+          <span>${chartMinPrice.toLocaleString('es-CL')}</span>
+          <span>{formatChartDate(lastDate)}</span>
+        </div>
+
+        {salesHistory.length === 1 && (
+          <p className="text-xs text-[var(--muted)] mt-3 text-center">
+            Solo existe una venta en este rango. Se necesita más de una venta para formar una línea de tendencia.
+          </p>
+        )}
       </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {salesHistory.map((item) => (

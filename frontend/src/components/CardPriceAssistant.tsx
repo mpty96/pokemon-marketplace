@@ -62,7 +62,7 @@ export default function CardPriceAssistant() {
         onClick={() => setOpen(true)}
         className="fixed bottom-5 right-5 z-50 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] px-5 py-3 shadow-lg hover:bg-[var(--primary-hover)] transition-colors text-sm font-semibold"
       >
-        Valor carta
+        Valorar carta
       </button>
 
       {open && (
