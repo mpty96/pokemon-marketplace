@@ -199,6 +199,57 @@ export default function PublicProfilePage() {
           </div>
         </div>
       </div>
+      
+      {data.ratingsReceived.length > 0 && (
+        <div className="mt-6">
+          <div className="flex gap-4 border-b border-[var(--border)] mb-4">
+            <button
+              onClick={() => setRatingTab('all')}
+              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+                ratingTab === 'all'
+                  ? 'border-[var(--primary)] text-[var(--primary)]'
+                  : 'border-transparent text-[var(--muted)]'
+              }`}
+            >
+              Todas ({data.ratingsReceived.length})
+            </button>
+
+            <button
+              onClick={() => setRatingTab('seller')}
+              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+                ratingTab === 'seller'
+                  ? 'border-[var(--primary)] text-[var(--primary)]'
+                  : 'border-transparent text-[var(--muted)]'
+              }`}
+            >
+              Como vendedor ({data.ratingsAsSeller?.length || 0})
+            </button>
+
+            <button
+              onClick={() => setRatingTab('buyer')}
+              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+                ratingTab === 'buyer'
+                  ? 'border-[var(--primary)] text-[var(--primary)]'
+                  : 'border-transparent text-[var(--muted)]'
+              }`}
+            >
+              Como comprador ({data.ratingsAsBuyer?.length || 0})
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {(ratingTab === 'all'
+              ? data.ratingsReceived
+              : ratingTab === 'seller'
+              ? data.ratingsAsSeller
+              : data.ratingsAsBuyer
+            )?.map((rating: Rating) => (
+              <RatingCard key={rating.id} rating={rating} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {(data.activeListings?.length || 0) > 0 && (
       <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-5">
         <div className="flex items-center justify-between mb-4">
@@ -270,55 +321,7 @@ export default function PublicProfilePage() {
         </div>
       </div>
     )}
-      {data.ratingsReceived.length > 0 && (
-        <div className="mt-6">
-          <div className="flex gap-4 border-b border-[var(--border)] mb-4">
-            <button
-              onClick={() => setRatingTab('all')}
-              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
-                ratingTab === 'all'
-                  ? 'border-[var(--primary)] text-[var(--primary)]'
-                  : 'border-transparent text-[var(--muted)]'
-              }`}
-            >
-              Todas ({data.ratingsReceived.length})
-            </button>
-
-            <button
-              onClick={() => setRatingTab('seller')}
-              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
-                ratingTab === 'seller'
-                  ? 'border-[var(--primary)] text-[var(--primary)]'
-                  : 'border-transparent text-[var(--muted)]'
-              }`}
-            >
-              Como vendedor ({data.ratingsAsSeller?.length || 0})
-            </button>
-
-            <button
-              onClick={() => setRatingTab('buyer')}
-              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
-                ratingTab === 'buyer'
-                  ? 'border-[var(--primary)] text-[var(--primary)]'
-                  : 'border-transparent text-[var(--muted)]'
-              }`}
-            >
-              Como comprador ({data.ratingsAsBuyer?.length || 0})
-            </button>
-          </div>
-
-          <div className="space-y-3">
-            {(ratingTab === 'all'
-              ? data.ratingsReceived
-              : ratingTab === 'seller'
-              ? data.ratingsAsSeller
-              : data.ratingsAsBuyer
-            )?.map((rating: Rating) => (
-              <RatingCard key={rating.id} rating={rating} />
-            ))}
-          </div>
-        </div>
-      )}
+    
       {showReportModal && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4">
           <div className="w-full max-w-md rounded-xl bg-[var(--surface)] border border-[var(--border)] p-5">
