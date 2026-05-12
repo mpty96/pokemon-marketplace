@@ -14,6 +14,7 @@ export interface Seller {
 
 export type CardLanguage = 'ESP' | 'ENG' | 'POR' | 'JPN' | 'KOR' | 'CHN' | 'OTHER';
 export type ListingType = 'CARD' | 'POKEMON_PRODUCT' | 'BULK_LOT';
+export type SalesHistoryRange = '7d' | '1m' | '6m' | '1y';
 
 export interface Listing {
   id:          string;
@@ -134,4 +135,15 @@ export interface RatingSaleData {
   myRating:     Rating | null;
   theirRating:  Rating | null;
   canRate:      boolean;
+}
+
+
+export interface ListingSalesHistoryItem {
+  id: string;
+  listingId: string;
+  title: string;
+  cardName: string;
+  image: string | null;
+  priceCLP: number;
+  completedAt: string;
 }

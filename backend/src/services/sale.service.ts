@@ -200,3 +200,69 @@ export async function getSaleByListing(listingId: string, userId: string) {
 
   return sale;
 }
+
+
+type SalesHistoryRange = '7d' | '1m' | '6m' | '1y';
+
+function getRangeDate(range: SalesHistoryRange): Date {
+  const date = new Date();
+
+  if (range === '7d') date.setDate(date.getDate() - 7);
+  if (range === '1m') date.setMonth(date.getMonth() - 1);
+  if (range === '6m') date.setMonth(date.getMonth() - 6);
+  if (range === '1y') date.setFullYear(date.getFullYear() - 1);
+
+  return date;
+}
+
+export async function getListingSalesHistory(
+  listingId: string,
+  range: SalesHistoryRange = '1m'
+) {
+  const baseListing = await prisma.listing.findUnique({
+    where: { id: listingId },
+    select: {
+      cardName: true,
+      listingType: true,
+    },
+  });
+
+  if (!baseListing) throw new Error('LISTING_NOT_FOUND');
+
+  const fromDate = getRangeDate(range);
+
+  const sales = await prisma.sale.findMany({
+    where: {
+      status: 'COMPLETED',
+      completedAt: { gte: fromDate },
+      listing: {
+        listingType: baseListing.listingType,
+        cardName: {
+          equals: baseListing.cardName,
+          mode: 'insensitive',
+        },
+      },
+    },
+    orderBy: { completedAt: 'asc' },
+    include: {
+      listing: {
+        select: {
+          id: true,
+          title: true,
+          cardName: true,
+          images: true,
+        },
+      },
+    },
+  });
+
+  return sales.map((sale) => ({
+    id: sale.id,
+    listingId: sale.listingId,
+    title: sale.listing.title,
+    cardName: sale.listing.cardName,
+    image: sale.listing.images[0] || null,
+    priceCLP: sale.finalPriceCLP,
+    completedAt: sale.completedAt,
+  }));
+}

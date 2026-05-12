@@ -1,6 +1,14 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth.middleware';
-import { initiate, confirm, cancel, getSale, getMyTransactions, getRecentTransactions } from '../controllers/sale.controller';
+import {
+  initiate,
+  confirm,
+  cancel,
+  getSale,
+  getMyTransactions,
+  getRecentTransactions,
+  getListingHistory,
+} from '../controllers/sale.controller';
 
 const router = Router();
 
@@ -9,6 +17,7 @@ router.get('/recent', getRecentTransactions);
 router.post('/:listingId/initiate', authenticate, initiate);
 router.post('/:listingId/confirm',  authenticate, confirm);
 router.post('/:listingId/cancel',   authenticate, cancel);
+router.get('/listing/:listingId/history', getListingHistory);
 router.get('/:listingId',           authenticate, getSale);
 
 export default router;

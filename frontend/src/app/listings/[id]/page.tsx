@@ -3,7 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import api from '@/lib/axios';
-import { Listing, CardCondition, CardRarity } from '@/types';
+import {
+  Listing,
+  CardCondition,
+  CardRarity,
+  ListingSalesHistoryItem,
+  SalesHistoryRange,
+} from '@/types';
 import { useAuthStore } from '@/store/auth.store';
 import Link from 'next/link';
 
@@ -19,18 +25,29 @@ const RARITY_LABELS: Record<CardRarity, string> = {
 };
 
 export default function ListingDetailPage() {
-  const { id }          = useParams<{ id: string }>();
-  const router          = useRouter();
-  const { user, isAuthenticated } = useAuthStore();
-  const [listing, setListing]     = useState<Listing | null>(null);
-  const [activeImg, setActiveImg] = useState(0);
-  const [loading, setLoading]     = useState(true);
+  const { id }                          = useParams<{ id: string }>();
+  const router                          = useRouter();
+  const { user, isAuthenticated }       = useAuthStore();
+  const [listing, setListing]           = useState<Listing | null>(null);
+  const [activeImg, setActiveImg]       = useState(0);
+  const [loading, setLoading]           = useState(true);
+  const [historyRange, setHistoryRange] = useState<SalesHistoryRange>('1m');
+  const [salesHistory, setSalesHistory] = useState<ListingSalesHistoryItem[]>([]);
 
   useEffect(() => {
     api.get(`/api/listings/${id}`)
       .then(({ data }) => { setListing(data); setLoading(false); })
       .catch(() => { router.push('/marketplace'); });
   }, [id]);
+
+  useEffect(() => {
+  if (!id) return;
+
+  api
+    .get(`/api/sales/listing/${id}/history?range=${historyRange}`)
+    .then(({ data }) => setSalesHistory(data))
+    .catch(() => setSalesHistory([]));
+}, [id, historyRange]);
 
   async function handleDelete() {
     if (!confirm('¿Eliminar esta publicación?')) return;
@@ -47,6 +64,23 @@ export default function ListingDetailPage() {
   if (!listing) return null;
 
   const isOwner = user?.id === listing.sellerId;
+
+  const maxPrice = Math.max(...salesHistory.map((item) => item.priceCLP), 0);
+
+  function getPointY(price: number) {
+    if (!maxPrice) return 90;
+    return 90 - (price / maxPrice) * 70;
+  }
+
+  function getPointX(index: number) {
+    if (salesHistory.length <= 1) return 50;
+    return (index / (salesHistory.length - 1)) * 100;
+  }
+
+  const chartPoints = salesHistory
+    .map((item, index) => `${getPointX(index)},${getPointY(item.priceCLP)}`)
+    .join(' ');
+
 
   return (
     <div className="min-h-screen bg-[var(--background)] py-8 px-4">
@@ -173,6 +207,92 @@ export default function ListingDetailPage() {
               </div>
             </div>
           </div>
+        </div>
+        <div className="mt-6 bg-[var(--surface)] rounded-xl shadow border border-[var(--border)] p-6">
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+    <div>
+      <h2 className="text-lg font-bold text-[var(--foreground)]">
+        Historial de ventas similares
+      </h2>
+      <p className="text-sm text-[var(--muted)]">
+        Basado en ventas completadas con el mismo nombre de publicación.
+      </p>
+    </div>
+
+    <div className="flex gap-2 flex-wrap">
+      {[
+        { value: '7d', label: '7 días' },
+        { value: '1m', label: '1 mes' },
+        { value: '6m', label: '6 meses' },
+        { value: '1y', label: '1 año' },
+      ].map((item) => (
+        <button
+          key={item.value}
+          type="button"
+          onClick={() => setHistoryRange(item.value as SalesHistoryRange)}
+          className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+            historyRange === item.value
+              ? 'bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]'
+              : 'bg-[var(--surface-2)] text-[var(--muted)] border-[var(--border)] hover:text-[var(--foreground)]'
+          }`}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  {salesHistory.length === 0 ? (
+    <div className="text-center text-[var(--muted-2)] py-10 text-sm">
+      Aún no hay ventas similares en este rango.
+    </div>
+  ) : (
+    <div className="space-y-5">
+      <div className="h-52 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] p-4">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
+          <polyline
+            points={chartPoints}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="text-[var(--primary)]"
+          />
+
+          {salesHistory.map((item, index) => (
+            <circle
+              key={item.id}
+              cx={getPointX(index)}
+              cy={getPointY(item.priceCLP)}
+              r="2"
+              fill="currentColor"
+              className="text-[var(--primary)]"
+            />
+          ))}
+        </svg>
+      </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {salesHistory.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-3"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-[var(--foreground)] truncate">
+                        {item.cardName}
+                      </p>
+                      <p className="text-xs text-[var(--muted)]">
+                        {new Date(item.completedAt).toLocaleDateString('es-CL')}
+                      </p>
+                    </div>
+
+                    <p className="text-sm font-bold text-[var(--primary)]">
+                      ${item.priceCLP.toLocaleString('es-CL')}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

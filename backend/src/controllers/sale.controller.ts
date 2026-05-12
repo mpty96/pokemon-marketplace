@@ -5,6 +5,7 @@ import {
   confirmSale,
   cancelSale,
   getSaleByListing,
+  getListingSalesHistory,
 } from '../services/sale.service';
 import prisma from '../lib/prisma';
 
@@ -149,5 +150,30 @@ export async function getRecentTransactions(req: Request, res: Response): Promis
     })));
   } catch {
     res.status(500).json({ error: 'Error al obtener transacciones recientes' });
+  }
+}
+
+
+export async function getListingHistory(req: Request, res: Response): Promise<void> {
+  try {
+    const listingId = req.params.listingId as string;
+    const range = (req.query.range as '7d' | '1m' | '6m' | '1y') || '1m';
+
+    const validRanges = ['7d', '1m', '6m', '1y'];
+
+    if (!validRanges.includes(range)) {
+      res.status(400).json({ error: 'Rango inválido' });
+      return;
+    }
+
+    const data = await getListingSalesHistory(listingId, range);
+    res.json(data);
+  } catch (error: any) {
+    if (error.message === 'LISTING_NOT_FOUND') {
+      res.status(404).json({ error: 'Publicación no encontrada' });
+      return;
+    }
+
+    res.status(500).json({ error: 'Error al obtener historial de ventas' });
   }
 }
