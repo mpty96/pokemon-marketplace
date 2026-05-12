@@ -201,11 +201,27 @@ export default function PublicProfilePage() {
       </div>
       
       {data.ratingsReceived.length > 0 && (
-        <div className="mt-6">
-          <div className="flex gap-4 border-b border-[var(--border)] mb-4">
+        <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-bold text-[var(--foreground)]">
+                Calificaciones recibidas
+              </h2>
+
+              <p className="text-sm text-[var(--muted)]">
+                Opiniones y experiencias de otros usuarios.
+              </p>
+            </div>
+
+            <span className="text-sm text-[var(--muted)]">
+              {data.ratingsReceived.length} calificaciones
+            </span>
+          </div>
+
+          <div className="flex gap-4 border-b border-[var(--border)] mb-4 overflow-x-auto">
             <button
               onClick={() => setRatingTab('all')}
-              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+              className={`pb-2 text-sm font-medium border-b-2 whitespace-nowrap transition-colors ${
                 ratingTab === 'all'
                   ? 'border-[var(--primary)] text-[var(--primary)]'
                   : 'border-transparent text-[var(--muted)]'
@@ -216,7 +232,7 @@ export default function PublicProfilePage() {
 
             <button
               onClick={() => setRatingTab('seller')}
-              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+              className={`pb-2 text-sm font-medium border-b-2 whitespace-nowrap transition-colors ${
                 ratingTab === 'seller'
                   ? 'border-[var(--primary)] text-[var(--primary)]'
                   : 'border-transparent text-[var(--muted)]'
@@ -227,7 +243,7 @@ export default function PublicProfilePage() {
 
             <button
               onClick={() => setRatingTab('buyer')}
-              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+              className={`pb-2 text-sm font-medium border-b-2 whitespace-nowrap transition-colors ${
                 ratingTab === 'buyer'
                   ? 'border-[var(--primary)] text-[var(--primary)]'
                   : 'border-transparent text-[var(--muted)]'
@@ -237,7 +253,7 @@ export default function PublicProfilePage() {
             </button>
           </div>
 
-          <div className="space-y-3">
+          <div className="max-h-[500px] overflow-y-auto pr-1 space-y-3">
             {(ratingTab === 'all'
               ? data.ratingsReceived
               : ratingTab === 'seller'
@@ -321,7 +337,7 @@ export default function PublicProfilePage() {
         </div>
       </div>
     )}
-    
+
       {showReportModal && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4">
           <div className="w-full max-w-md rounded-xl bg-[var(--surface)] border border-[var(--border)] p-5">

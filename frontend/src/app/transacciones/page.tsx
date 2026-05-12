@@ -58,7 +58,7 @@ export default function TransaccionesPage() {
 
       <div className="mb-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
         <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
-          Buscar transacciones
+          Búsqueda avanzada
         </label>
 
         <input
