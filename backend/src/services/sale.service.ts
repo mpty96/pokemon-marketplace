@@ -222,8 +222,12 @@ export async function getListingSalesHistory(
   const baseListing = await prisma.listing.findUnique({
     where: { id: listingId },
     select: {
-      cardName: true,
-      listingType: true,
+    cardName: true,
+    edition: true,
+    setNumber: true,
+    language: true,
+    condition: true,
+    listingType: true,
     },
   });
 
@@ -231,17 +235,45 @@ export async function getListingSalesHistory(
 
   const fromDate = getRangeDate(range);
 
+  const listingMatch: any = {
+  listingType: baseListing.listingType,
+  cardName: {
+    equals: baseListing.cardName,
+    mode: 'insensitive',
+    },
+  };
+
+  if (baseListing.listingType === 'CARD') {
+    listingMatch.edition = {
+      equals: baseListing.edition,
+      mode: 'insensitive',
+    };
+
+    listingMatch.language = baseListing.language;
+    listingMatch.condition = baseListing.condition;
+
+    if (baseListing.setNumber) {
+      listingMatch.setNumber = {
+        equals: baseListing.setNumber,
+        mode: 'insensitive',
+      };
+    }
+  }
+
+  if (baseListing.listingType === 'POKEMON_PRODUCT') {
+    listingMatch.edition = {
+      equals: baseListing.edition,
+      mode: 'insensitive',
+    };
+
+    listingMatch.condition = baseListing.condition;
+  }
+
   const sales = await prisma.sale.findMany({
     where: {
       status: 'COMPLETED',
       completedAt: { gte: fromDate },
-      listing: {
-        listingType: baseListing.listingType,
-        cardName: {
-          equals: baseListing.cardName,
-          mode: 'insensitive',
-        },
-      },
+      listing: listingMatch,
     },
     orderBy: { completedAt: 'asc' },
     include: {
