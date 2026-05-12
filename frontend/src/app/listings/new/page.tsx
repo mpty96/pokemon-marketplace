@@ -58,8 +58,13 @@ export default function NewListingPage() {
   const [profileComplete, setProfileComplete] = useState<boolean | null>(null);
   const [missingFields, setMissingFields] = useState<string[]>([]);
 
+  useEffect(() => {
   if (!isAuth) {
-    router.push('/login');
+    router.replace('/');
+  }
+}, [isAuth, router]);
+
+  if (!isAuth) {
     return null;
   }
 
@@ -246,7 +251,7 @@ if (success) {
               >
                 <option value="CARD">Carta</option>
                 <option value="POKEMON_PRODUCT">Productos Pokémon</option>
-                <option value="BULK_LOT">Challas</option>
+                <option value="BULK_LOT">Lote de cartas</option>
               </select>
             </div>
             <div>
