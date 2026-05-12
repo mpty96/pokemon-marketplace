@@ -22,32 +22,63 @@ export default function TransaccionesPage() {
   const { isAuthenticated } = useAuthStore();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
-      return;
+  if (!isAuthenticated) {
+    router.push('/login');
+    return;
+  }
+
+  const fetchTransactions = () => {
+    const params = new URLSearchParams();
+    params.set('ts', String(Date.now()));
+
+    if (search.trim()) {
+      params.set('search', search.trim());
     }
 
-    api.get(`/api/sales/recent?ts=${Date.now()}`)
+    api.get(`/api/sales/recent?${params.toString()}`)
       .then(({ data }) => setTransactions(data))
       .finally(() => setLoading(false));
+  };
 
-    const interval = setInterval(() => {
-      api.get(`/api/sales/recent?ts=${Date.now()}`)
-        .then(({ data }) => setTransactions(data));
-    }, 30000);
+  fetchTransactions();
 
-    return () => clearInterval(interval);
-  }, [isAuthenticated]);
+  const interval = setInterval(fetchTransactions, 30000);
 
-  if (!isAuthenticated) return null;
+  return () => clearInterval(interval);
+}, [isAuthenticated, search]);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 text-[var(--foreground)]">
       <h1 className="text-2xl font-bold text-[var(--foreground)] mb-6">
         📦 Transacciones
       </h1>
+
+      <div className="mb-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
+        <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
+          Buscar transacciones
+        </label>
+
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar por usuario o nombre de carta..."
+          className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+        />
+
+        {search.trim() && (
+          <button
+            type="button"
+            onClick={() => setSearch('')}
+            className="mt-2 text-xs text-[var(--primary)] hover:underline"
+          >
+            Limpiar búsqueda
+          </button>
+        )}
+      </div>
 
       {loading ? (
         <div className="space-y-3">

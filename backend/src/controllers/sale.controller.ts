@@ -128,12 +128,26 @@ export async function getMyTransactions(req: AuthRequest, res: Response): Promis
 
 export async function getRecentTransactions(req: Request, res: Response): Promise<void> {
   try {
+    const search = String(req.query.search || '').trim();
+
     const sales = await prisma.sale.findMany({
-      where:   { status: 'COMPLETED' },
+      where: {
+        status: 'COMPLETED',
+        ...(search
+          ? {
+              OR: [
+                { listing: { title: { contains: search, mode: 'insensitive' } } },
+                { listing: { cardName: { contains: search, mode: 'insensitive' } } },
+                { buyer: { username: { contains: search, mode: 'insensitive' } } },
+                { seller: { username: { contains: search, mode: 'insensitive' } } },
+              ],
+            }
+          : {}),
+      },
       orderBy: { completedAt: 'desc' },
       take:    20,
       include: {
-        listing: { select: { id: true, title: true, images: true, priceCLP: true } },
+        listing: { select: { id: true, title: true, cardName: true, images: true, priceCLP: true } },
         buyer:   { select: { id: true, username: true } },
         seller:  { select: { id: true, username: true } },
       },
@@ -141,7 +155,7 @@ export async function getRecentTransactions(req: Request, res: Response): Promis
     res.json(sales.map((s) => ({
       id:          s.id,
       listingId:   s.listingId,
-      title:       s.listing.title,
+      title:       s.listing.cardName || s.listing.title,
       image:       s.listing.images[0] || null,
       priceCLP:    s.finalPriceCLP,
       completedAt: s.completedAt,
