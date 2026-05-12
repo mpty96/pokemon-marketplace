@@ -293,7 +293,18 @@ export default function ListingDetailPage() {
               className="text-[var(--border)]"
             />
 
-            {salesHistory.length >= 2 && (
+            {salesHistory.length === 1 ? (
+              <line
+                x1="10"
+                y1={getPointY(salesHistory[0].priceCLP)}
+                x2="90"
+                y2={getPointY(salesHistory[0].priceCLP)}
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                className="text-[var(--primary)]"
+              />
+            ) : (
               <polyline
                 points={chartPoints}
                 fill="none"
