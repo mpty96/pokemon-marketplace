@@ -33,6 +33,7 @@ export default function ListingDetailPage() {
   const [loading, setLoading]           = useState(true);
   const [historyRange, setHistoryRange] = useState<SalesHistoryRange>('1m');
   const [salesHistory, setSalesHistory] = useState<ListingSalesHistoryItem[]>([]);
+  const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
 
   useEffect(() => {
     api.get(`/api/listings/${id}`)
@@ -66,35 +67,49 @@ export default function ListingDetailPage() {
   const isOwner = user?.id === listing.sellerId;
 
   const prices = salesHistory.map((item) => item.priceCLP);
-  const minPrice = prices.length ? Math.min(...prices) : 0;
-  const maxPrice = prices.length ? Math.max(...prices) : 0;
+  const latestPrice = prices.length ? prices[prices.length - 1] : listing.priceCLP;
+  const minPrice = prices.length ? Math.min(...prices) : listing.priceCLP;
+  const maxPrice = prices.length ? Math.max(...prices) : listing.priceCLP;
 
-  const chartMinPrice = minPrice === maxPrice ? Math.max(0, minPrice - 1000) : minPrice;
-  const chartMaxPrice = minPrice === maxPrice ? maxPrice + 1000 : maxPrice;
+  const chartMinPrice = Math.max(0, minPrice - Math.max(1000, Math.round(minPrice * 0.08)));
+  const chartMaxPrice = maxPrice + Math.max(1000, Math.round(maxPrice * 0.08));
 
   function getPointX(index: number) {
     if (salesHistory.length <= 1) return 50;
-    return 10 + (index / (salesHistory.length - 1)) * 80;
+    return 8 + (index / (salesHistory.length - 1)) * 84;
   }
 
   function getPointY(price: number) {
     const range = chartMaxPrice - chartMinPrice;
     if (!range) return 50;
-    return 85 - ((price - chartMinPrice) / range) * 65;
+    return 86 - ((price - chartMinPrice) / range) * 68;
   }
 
-  const chartPoints = salesHistory
-    .map((item, index) => `${getPointX(index)},${getPointY(item.priceCLP)}`)
-    .join(' ');
+  const chartPoints =
+    salesHistory.length === 1
+      ? `8,${getPointY(salesHistory[0].priceCLP)} 92,${getPointY(salesHistory[0].priceCLP)}`
+      : salesHistory.map((item, index) => `${getPointX(index)},${getPointY(item.priceCLP)}`).join(' ');
 
-  const firstDate = salesHistory[0]?.completedAt;
-  const lastDate = salesHistory[salesHistory.length - 1]?.completedAt;
+  const areaPoints = chartPoints
+    ? `8,88 ${chartPoints} 92,88`
+    : '';
 
-  function formatChartDate(date?: string) {
+  const hoveredSale = hoveredPoint !== null ? salesHistory[hoveredPoint] : null;
+
+  function formatShortDate(date?: string) {
     if (!date) return '';
     return new Date(date).toLocaleDateString('es-CL', {
       day: '2-digit',
       month: '2-digit',
+    });
+  }
+
+  function formatFullDate(date?: string) {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString('es-CL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
     });
   }
 
@@ -225,155 +240,198 @@ export default function ListingDetailPage() {
             </div>
           </div>
         </div>
-        <div className="mt-6 bg-[var(--surface)] rounded-xl shadow border border-[var(--border)] p-6">
-  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
-    <div>
-      <h2 className="text-lg font-bold text-[var(--foreground)]">
-        Historial de ventas similares
-      </h2>
-      <p className="text-sm text-[var(--muted)]">
-        Basado en ventas completadas con el mismo nombre de publicación.
-      </p>
-    </div>
+        <div className="mt-6 bg-[var(--surface)] rounded-xl border border-[var(--border)] p-4">
+          <div className="flex items-center justify-between gap-4 mb-3">
+            <div>
+              <h2 className="text-base font-bold text-[var(--foreground)]">
+                Historial de precio
+              </h2>
 
-    <div className="flex gap-2 flex-wrap">
-      {[
-        { value: '7d', label: '7 días' },
-        { value: '1m', label: '1 mes' },
-        { value: '6m', label: '6 meses' },
-        { value: '1y', label: '1 año' },
-      ].map((item) => (
-        <button
-          key={item.value}
-          type="button"
-          onClick={() => setHistoryRange(item.value as SalesHistoryRange)}
-          className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-            historyRange === item.value
-              ? 'bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]'
-              : 'bg-[var(--surface-2)] text-[var(--muted)] border-[var(--border)] hover:text-[var(--foreground)]'
-          }`}
-        >
-          {item.label}
-        </button>
-      ))}
-    </div>
-  </div>
+              <div className="flex items-center gap-3 mt-2">
+                <p className="text-2xl font-bold text-[var(--foreground)]">
+                  ${latestPrice.toLocaleString('es-CL')}
+                </p>
 
-  {salesHistory.length === 0 ? (
-    <div className="text-center text-[var(--muted-2)] py-10 text-sm">
-      Aún no hay ventas similares en este rango.
-    </div>
-  ) : (
-    <div className="space-y-5">
-      <div className="rounded-xl bg-[var(--surface-2)] border border-[var(--border)] p-4">
-        <div className="flex justify-between text-xs text-[var(--muted)] mb-2">
-          <span>${chartMaxPrice.toLocaleString('es-CL')}</span>
-          <span>Historial según ventas completadas</span>
-        </div>
+                <span className="text-xs rounded-full bg-[var(--success-bg)] text-[var(--success-fg)] px-2 py-0.5 font-medium">
+                  Referencial
+                </span>
+              </div>
+            </div>
 
-        <div className="h-52">
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <line
-              x1="10"
-              y1="85"
-              x2="90"
-              y2="85"
-              stroke="currentColor"
-              strokeWidth="0.5"
-              className="text-[var(--border)]"
-            />
-
-            <line
-              x1="10"
-              y1="20"
-              x2="10"
-              y2="85"
-              stroke="currentColor"
-              strokeWidth="0.5"
-              className="text-[var(--border)]"
-            />
-
-            {salesHistory.length === 1 ? (
-              <line
-                x1="10"
-                y1={getPointY(salesHistory[0].priceCLP)}
-                x2="90"
-                y2={getPointY(salesHistory[0].priceCLP)}
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                className="text-[var(--primary)]"
-              />
-            ) : (
-              <polyline
-                points={chartPoints}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-[var(--primary)]"
-              />
-            )}
-
-            {salesHistory.map((item, index) => (
-              <g key={item.id}>
-                <circle
-                  cx={getPointX(index)}
-                  cy={getPointY(item.priceCLP)}
-                  r="2"
-                  fill="currentColor"
-                  className="text-[var(--primary)]"
-                />
-
-                <text
-                  x={getPointX(index)}
-                  y={getPointY(item.priceCLP) - 4}
-                  textAnchor="middle"
-                  fontSize="4"
-                  fill="currentColor"
-                  className="text-[var(--foreground)]"
+            <div className="flex rounded-lg border border-[var(--border)] overflow-hidden bg-[var(--surface-2)]">
+              {[
+                { value: '7d', label: '7D' },
+                { value: '1m', label: '1M' },
+                { value: '6m', label: '6M' },
+                { value: '1y', label: '1A' },
+              ].map((item) => (
+                <button
+                  key={item.value}
+                  type="button"
+                  onClick={() => setHistoryRange(item.value as SalesHistoryRange)}
+                  className={`px-3 py-1.5 text-xs transition-colors ${
+                    historyRange === item.value
+                      ? 'bg-[var(--surface)] text-[var(--foreground)] font-semibold'
+                      : 'text-[var(--muted)] hover:text-[var(--foreground)]'
+                  }`}
                 >
-                  ${(item.priceCLP / 1000).toFixed(0)}k
-                </text>
-              </g>
-            ))}
-          </svg>
-        </div>
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-        <div className="flex justify-between text-xs text-[var(--muted)] mt-2">
-          <span>{formatChartDate(firstDate)}</span>
-          <span>${chartMinPrice.toLocaleString('es-CL')}</span>
-          <span>{formatChartDate(lastDate)}</span>
-        </div>
-
-        {salesHistory.length === 1 && (
-          <p className="text-xs text-[var(--muted)] mt-3 text-center">
-            Solo existe una venta en este rango. Se necesita más de una venta para formar una línea de tendencia.
+          <p className="text-xs text-[var(--muted)] mb-3">
+            Basado en ventas completadas similares dentro de PokeMarket.
           </p>
-        )}
-      </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {salesHistory.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-3"
-                  >
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-[var(--foreground)] truncate">
-                        {item.cardName}
+
+          {salesHistory.length === 0 ? (
+            <div className="h-56 flex items-center justify-center rounded-lg bg-[var(--surface-2)] text-sm text-[var(--muted-2)]">
+              Aún no hay ventas similares en este rango.
+            </div>
+          ) : (
+            <div className="relative rounded-lg bg-[var(--surface-2)] border border-[var(--border)] p-3">
+              <div className="absolute left-3 top-3 bottom-8 flex flex-col justify-between text-[10px] text-[var(--muted-2)]">
+                <span>${chartMaxPrice.toLocaleString('es-CL')}</span>
+                <span>${Math.round((chartMaxPrice + chartMinPrice) / 2).toLocaleString('es-CL')}</span>
+                <span>${chartMinPrice.toLocaleString('es-CL')}</span>
+              </div>
+
+              <div className="ml-14 h-56 relative">
+                <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
+                  <defs>
+                    <linearGradient id="priceAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="currentColor" stopOpacity="0.25" />
+                      <stop offset="100%" stopColor="currentColor" stopOpacity="0.02" />
+                    </linearGradient>
+                  </defs>
+
+                  {[20, 54, 88].map((y) => (
+                    <line
+                      key={y}
+                      x1="8"
+                      y1={y}
+                      x2="92"
+                      y2={y}
+                      stroke="currentColor"
+                      strokeWidth="0.3"
+                      className="text-[var(--border)]"
+                    />
+                  ))}
+
+                  {areaPoints && (
+                    <polygon
+                      points={areaPoints}
+                      fill="url(#priceAreaGradient)"
+                      className="text-[var(--primary)]"
+                    />
+                  )}
+
+                  <polyline
+                    points={chartPoints}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-[var(--primary)]"
+                  />
+
+                  {salesHistory.map((item, index) => {
+                    const x = salesHistory.length === 1 ? 50 : getPointX(index);
+                    const y = getPointY(item.priceCLP);
+                    const active = hoveredPoint === index;
+
+                    return (
+                      <g key={item.id}>
+                        {active && (
+                          <line
+                            x1={x}
+                            y1="18"
+                            x2={x}
+                            y2="88"
+                            stroke="currentColor"
+                            strokeWidth="0.4"
+                            strokeDasharray="2 2"
+                            className="text-[var(--muted-2)]"
+                          />
+                        )}
+
+                        <circle
+                          cx={x}
+                          cy={y}
+                          r={active ? 3 : 2}
+                          fill="currentColor"
+                          className="text-[var(--primary)] cursor-pointer"
+                          onMouseEnter={() => setHoveredPoint(index)}
+                          onMouseLeave={() => setHoveredPoint(null)}
+                        />
+                      </g>
+                    );
+                  })}
+                </svg>
+
+                {hoveredSale && (
+                  <div className="absolute right-3 top-8 w-44 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-lg p-3 text-xs z-10">
+                    <p className="font-semibold text-[var(--foreground)] mb-2">
+                      {formatFullDate(hoveredSale.completedAt)}
+                    </p>
+
+                    <div className="space-y-1">
+                      <p className="flex justify-between gap-2 text-[var(--muted)]">
+                        <span>Mercado</span>
+                        <span className="font-semibold text-[var(--foreground)]">
+                          ${hoveredSale.priceCLP.toLocaleString('es-CL')}
+                        </span>
                       </p>
-                      <p className="text-xs text-[var(--muted)]">
-                        {new Date(item.completedAt).toLocaleDateString('es-CL')}
+
+                      <p className="flex justify-between gap-2 text-[var(--muted)]">
+                        <span>Más bajo</span>
+                        <span className="font-semibold text-[var(--success-fg)]">
+                          ${minPrice.toLocaleString('es-CL')}
+                        </span>
+                      </p>
+
+                      <p className="flex justify-between gap-2 text-[var(--muted)]">
+                        <span>Más alto</span>
+                        <span className="font-semibold text-[var(--danger-fg)]">
+                          ${maxPrice.toLocaleString('es-CL')}
+                        </span>
                       </p>
                     </div>
+                  </div>
+                )}
+              </div>
 
-                    <p className="text-sm font-bold text-[var(--primary)]">
-                      ${item.priceCLP.toLocaleString('es-CL')}
+              <div className="ml-14 mt-1 flex justify-between text-[10px] text-[var(--muted-2)]">
+                <span>{formatShortDate(salesHistory[0]?.completedAt)}</span>
+                <span>{formatShortDate(salesHistory[Math.floor(salesHistory.length / 2)]?.completedAt)}</span>
+                <span>{formatShortDate(salesHistory[salesHistory.length - 1]?.completedAt)}</span>
+              </div>
+            </div>
+          )}
+
+          {salesHistory.length > 0 && (
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {salesHistory.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2"
+                >
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium text-[var(--foreground)] truncate">
+                      {item.cardName}
+                    </p>
+                    <p className="text-[11px] text-[var(--muted)]">
+                      {formatFullDate(item.completedAt)}
                     </p>
                   </div>
-                ))}
-              </div>
+
+                  <p className="text-sm font-bold text-[var(--primary)]">
+                    ${item.priceCLP.toLocaleString('es-CL')}
+                  </p>
+                </div>
+              ))}
             </div>
           )}
         </div>
