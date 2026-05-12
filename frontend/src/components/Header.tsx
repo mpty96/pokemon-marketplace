@@ -32,7 +32,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--surface)]">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold text-[var(--primary)] hover:opacity-90">
-          🎴 PokéMarket
+          PokeMarket
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">

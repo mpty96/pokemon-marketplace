@@ -527,13 +527,13 @@ return (
           </ul>
         </div>
 
-        <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4 text-yellow-200">
+        <p className="text-sm text-[var(--foreground)] font-medium">
           Si detectas actividad sospechosa, utiliza el sistema de reportes.
-        </div>
+        </p>
       </div>
     </div>
   </div>
 )}
-        </div>
-  );
+</div>
+);
 }

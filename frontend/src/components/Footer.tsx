@@ -187,7 +187,7 @@ function FooterLink({
     <button
       type="button"
       onClick={onClick}
-      className="text-[var(--muted)] hover:text-[var(--primary)] hover:underline transition-colors"
+      className="cursor-pointer text-[var(--muted)] hover:text-[var(--primary)] hover:underline transition-colors"
     >
       {children}
     </button>
