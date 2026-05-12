@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import api from '@/lib/axios';
 import { RatingCard } from '@/components/RatingCard';
-import { Rating } from '@/types';
+import { Rating, Listing } from '@/types';
 import { useAuthStore } from '@/store/auth.store';
 
 interface PublicProfile {
@@ -21,6 +22,7 @@ interface PublicProfile {
   ratingsReceived: Rating[];
   ratingsAsSeller: Rating[];
   ratingsAsBuyer: Rating[];
+  activeListings: Listing[];
 }
 
 function Stars({ score }: { score: number }) {
@@ -31,6 +33,31 @@ function Stars({ score }: { score: number }) {
       {'☆'.repeat(5 - rounded)}
     </span>
   );
+}
+
+function listingTypeLabel(type: Listing['listingType']) {
+  if (type === 'CARD') return 'Carta';
+  if (type === 'POKEMON_PRODUCT') return 'Producto Pokémon';
+  return 'Challa';
+}
+
+function conditionLabel(condition: Listing['condition']) {
+  switch (condition) {
+    case 'MINT':
+      return 'Mint';
+    case 'NEAR_MINT':
+      return 'Near Mint';
+    case 'EXCELLENT':
+      return 'Excelente';
+    case 'GOOD':
+      return 'Buena';
+    case 'PLAYED':
+      return 'Jugada';
+    case 'POOR':
+      return 'Dañada';
+    default:
+      return condition;
+  }
 }
 
 export default function PublicProfilePage() {
@@ -172,7 +199,77 @@ export default function PublicProfilePage() {
           </div>
         </div>
       </div>
+      {data.activeListings.length > 0 && (
+      <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-lg font-bold text-[var(--foreground)]">
+              Publicaciones activas
+            </h2>
 
+            <p className="text-sm text-[var(--muted)]">
+              Cartas y productos actualmente publicados por este usuario.
+            </p>
+          </div>
+
+          <span className="text-sm text-[var(--muted)]">
+            {data.activeListings.length} activas
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {data.activeListings.map((listing) => (
+            <Link
+              key={listing.id}
+              href={`/listings/${listing.id}`}
+              className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] overflow-hidden hover:border-[var(--primary)] transition-colors"
+            >
+              <div className="aspect-square bg-[var(--surface)] overflow-hidden">
+                <img
+                  src={listing.images[0]}
+                  alt={listing.cardName}
+                  className="w-full h-full object-contain hover:scale-105 transition-transform duration-200"
+                />
+              </div>
+
+              <div className="p-3">
+                <span className="inline-flex rounded-full bg-[var(--surface)] border border-[var(--border)] px-2 py-0.5 text-[10px] font-semibold text-[var(--muted)] mb-2">
+                  {listingTypeLabel(listing.listingType)}
+                </span>
+
+                <h3 className="font-semibold text-[var(--foreground)] truncate text-sm">
+                  {listing.cardName}
+                </h3>
+
+                <p className="text-xs text-[var(--muted-2)] truncate mt-0.5">
+                  {listing.edition}
+                </p>
+
+                <div className="flex items-center justify-between mt-3">
+                  <span className="text-[var(--primary)] font-bold text-sm">
+                    ${listing.priceCLP.toLocaleString('es-CL')}
+                  </span>
+
+                  <span className="text-xs bg-[var(--surface)] border border-[var(--border)] rounded-full px-2 py-0.5 text-[var(--muted)]">
+                    {conditionLabel(listing.condition)}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between mt-2 text-[11px] text-[var(--muted-2)]">
+                  <span>
+                    👁 {listing.views}
+                  </span>
+
+                  <span>
+                    {new Date(listing.createdAt).toLocaleDateString('es-CL')}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    )}
       {data.ratingsReceived.length > 0 && (
         <div className="mt-6">
           <div className="flex gap-4 border-b border-[var(--border)] mb-4">

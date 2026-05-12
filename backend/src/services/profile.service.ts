@@ -222,6 +222,29 @@ export async function getPublicProfileByUsername(username: string) {
           },
         },
       },
+      listings: {
+        where: {
+          status: 'ACTIVE',
+          deletedAt: null,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: 12,
+        select: {
+          id: true,
+          listingType: true,
+          title: true,
+          cardName: true,
+          edition: true,
+          priceCLP: true,
+          condition: true,
+          rarity: true,
+          images: true,
+          createdAt: true,
+          views: true,
+        },
+      },
       ratingsGiven: {
         orderBy: { createdAt: 'desc' },
         include: {
@@ -250,6 +273,7 @@ export async function getPublicProfileByUsername(username: string) {
     ratingsReceived: user.ratingsReceived,
     ratingsAsSeller,
     ratingsAsBuyer,
+    activeListings: user.listings,
   };
 }
 
