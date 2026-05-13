@@ -255,8 +255,25 @@ type SalesHistoryRange = '7d' | '1m' | '6m' | '1y';
 function normalizeText(text: string) {
   return text
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\u0300-\u036f]/g, '') // quitar tildes
     .toLowerCase()
+
+    // reemplazar guiones y underscores por espacio
+    .replace(/[-_]/g, ' ')
+
+    // quitar símbolos raros
+    .replace(/[^\w\s]/g, '')
+
+    // quitar espacios dobles
+    .replace(/\s+/g, ' ')
+
+    // singularizar plurales comunes
+    .replace(/\bcollections\b/g, 'collection')
+    .replace(/\bboosters\b/g, 'booster')
+    .replace(/\bboxes\b/g, 'box')
+    .replace(/\bpacks\b/g, 'pack')
+    .replace(/\btrainers\b/g, 'trainer')
+
     .trim();
 }
 
