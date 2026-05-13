@@ -14,7 +14,8 @@ export async function initiate(req: AuthRequest, res: Response): Promise<void> {
     const buyerId   = req.user!.userId;
     const listingId = req.params.listingId as string;
 
-    const sale = await initiateSale(listingId, buyerId);
+    const quantity = Number(req.body.quantity || 1);
+    const sale = await initiateSale(listingId, buyerId, quantity);
     res.status(201).json(sale);
   } catch (error: any) {
     const map: Record<string, [number, string]> = {
@@ -23,6 +24,7 @@ export async function initiate(req: AuthRequest, res: Response): Promise<void> {
       ONLY_SELLER_CAN_INITIATE: [403, 'Solo el vendedor puede finalizar la venta'],
       BUYER_NOT_FOUND:          [400, 'Debe existir una conversación con el comprador antes de finalizar la venta'],
       SALE_ALREADY_EXISTS:      [400, 'Ya existe una venta activa para esta publicación'],
+      INSUFFICIENT_STOCK: [400, 'No hay stock suficiente para esa cantidad'],
     };
     const [status, message] = map[error.message] || [500, 'Error interno'];
     res.status(status).json({ error: message });

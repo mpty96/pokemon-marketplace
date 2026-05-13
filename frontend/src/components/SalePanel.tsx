@@ -9,11 +9,12 @@ interface SalePanelProps {
   sale:       Sale | null;
   isSeller:   boolean;
   isBuyer:    boolean;
+  quantity?:  number;
   onSaleUpdate: (sale: Sale | null) => void;
 }
 
 export default function SalePanel({
-  listingId, sale, isSeller, isBuyer, onSaleUpdate,
+  listingId, sale, isSeller, isBuyer, quantity = 1, onSaleUpdate,
 }: SalePanelProps) {
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
@@ -22,7 +23,9 @@ export default function SalePanel({
     setLoading(true);
     setError('');
     try {
-      const { data } = await api.post(`/api/sales/${listingId}/initiate`);
+      const { data } = await api.post(`/api/sales/${listingId}/initiate`, {
+        quantity,
+      });
       onSaleUpdate(data);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Error al iniciar la venta');
@@ -106,6 +109,15 @@ export default function SalePanel({
       <h3 className="font-semibold text-[var(--foreground)]">
         🔄 Venta en proceso
       </h3>
+
+      <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-3 text-sm">
+        <p className="text-[var(--muted)]">
+          Cantidad: <span className="font-semibold text-[var(--foreground)]">{sale.quantity || 1}</span>
+        </p>
+        <p className="text-[var(--muted)]">
+          Total: <span className="font-semibold text-[var(--primary)]">${sale.finalPriceCLP.toLocaleString('es-CL')}</span>
+        </p>
+      </div>
 
       {/* Estado de confirmaciones */}
       <div className="space-y-2">

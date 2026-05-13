@@ -282,6 +282,7 @@ return (
         sale={sale}
         isSeller={isSeller}
         isBuyer={isBuyer}
+        quantity={displayedQuantity}
         onSaleUpdate={handleSaleUpdate}
       />
 

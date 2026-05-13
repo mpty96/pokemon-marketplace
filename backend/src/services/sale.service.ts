@@ -1,6 +1,6 @@
 import prisma from '../lib/prisma';
 
-export async function initiateSale(listingId: string, sellerId: string) {
+export async function initiateSale(listingId: string, sellerId: string, quantity = 1) {
   const listing = await prisma.listing.findUnique({
     where: { id: listingId },
   });
@@ -8,6 +8,17 @@ export async function initiateSale(listingId: string, sellerId: string) {
   if (!listing) throw new Error('LISTING_NOT_FOUND');
   if (listing.status !== 'ACTIVE') throw new Error('LISTING_NOT_AVAILABLE');
   if (listing.sellerId !== sellerId) throw new Error('ONLY_SELLER_CAN_INITIATE');
+
+  const safeQuantity =
+  listing.listingType === 'POKEMON_PRODUCT'
+    ? Math.max(1, Math.min(3, Number(quantity || 1)))
+    : 1;
+
+  if (listing.listingType === 'POKEMON_PRODUCT') {
+    if (!listing.stock || listing.stock < safeQuantity) {
+      throw new Error('INSUFFICIENT_STOCK');
+    }
+  }
 
   const conversation = await prisma.conversation.findUnique({
     where: { listingId },
@@ -45,7 +56,8 @@ export async function initiateSale(listingId: string, sellerId: string) {
           data: {
             buyerId,
             sellerId: listing.sellerId,
-            finalPriceCLP: listing.priceCLP,
+            finalPriceCLP: listing.priceCLP * safeQuantity,
+            quantity: safeQuantity,
             status: 'PENDING',
             buyerConfirmed: false,
             sellerConfirmed: false,
@@ -64,7 +76,8 @@ export async function initiateSale(listingId: string, sellerId: string) {
             listingId,
             buyerId,
             sellerId: listing.sellerId,
-            finalPriceCLP: listing.priceCLP,
+            finalPriceCLP: listing.priceCLP * safeQuantity,
+            quantity: safeQuantity,
             status: 'PENDING',
           },
           include: {
