@@ -435,7 +435,7 @@ if (success) {
             ? 'Publicar carta'
             : form.listingType === 'POKEMON_PRODUCT'
             ? 'Publicar producto'
-            : 'Publicar challa'}
+            : 'Publicar lote'}
           </button>
         </form>
       </div>

@@ -38,7 +38,7 @@ function Stars({ score }: { score: number }) {
 function listingTypeLabel(type: Listing['listingType']) {
   if (type === 'CARD') return 'Carta';
   if (type === 'POKEMON_PRODUCT') return 'Producto Pokémon';
-  return 'Challa';
+  return 'Lote';
 }
 
 function conditionLabel(condition: Listing['condition']) {

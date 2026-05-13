@@ -17,7 +17,7 @@ const CONDITION_LABELS: Record<CardCondition, string> = {
 function typeLabel(type: Listing['listingType']) {
   if (type === 'CARD') return 'Carta';
   if (type === 'POKEMON_PRODUCT') return 'Producto Pokémon';
-  return 'Challa';
+  return 'Lote';
 }
 
 export default function HomePage() {
@@ -25,6 +25,11 @@ export default function HomePage() {
   const [popularListings, setPopularListings] = useState<Listing[]>([]);
   const [featuredSellers, setFeaturedSellers] = useState<FeaturedSeller[]>([]);
   const [loading, setLoading] = useState(true);
+  const recentCards = recentListings.filter((l) => l.listingType === 'CARD');
+  const popularCards = popularListings.filter((l) => l.listingType === 'CARD');
+  const recentProducts = recentListings.filter((l) => l.listingType === 'POKEMON_PRODUCT');
+  const popularProducts = popularListings.filter((l) => l.listingType === 'POKEMON_PRODUCT');
+  const recentLots = recentListings.filter((l) => l.listingType === 'BULK_LOT');
 
   useEffect(() => {
     Promise.all([
@@ -64,7 +69,7 @@ export default function HomePage() {
           </h1>
 
           <p className="text-[var(--muted)] mb-5 text-base max-w-xl mx-auto">
-            Marketplace para cartas, productos Pokémon y lotes/challas entre coleccionistas.
+            Marketplace para cartas, productos Pokémon y lotes entre coleccionistas.
           </p>
 
           <div className="flex gap-2 justify-center flex-wrap">
@@ -94,16 +99,42 @@ export default function HomePage() {
         <div className="space-y-10">
           <HorizontalListingSection
             title="Cartas recientes"
-            description="Últimas publicaciones activas en PokeMarket."
-            listings={recentListings}
-            emptyText="Aún no hay publicaciones recientes."
+            description="Últimas cartas publicadas en PokeMarket."
+            listings={recentCards}
+            emptyText="Aún no hay cartas recientes."
+            href="/marketplace?listingType=CARD"
           />
 
           <HorizontalListingSection
             title="Cartas populares"
-            description="Publicaciones activas con más vistas."
-            listings={popularListings}
-            emptyText="Aún no hay publicaciones populares."
+            description="Cartas activas con más vistas."
+            listings={popularCards}
+            emptyText="Aún no hay cartas populares."
+            href="/marketplace?listingType=CARD"
+          />
+
+          <HorizontalListingSection
+            title="Productos recientes"
+            description="Últimos productos Pokémon publicados."
+            listings={recentProducts}
+            emptyText="Aún no hay productos recientes."
+            href="/marketplace?listingType=POKEMON_PRODUCT"
+          />
+
+          <HorizontalListingSection
+            title="Productos populares"
+            description="Productos Pokémon activos con más vistas."
+            listings={popularProducts}
+            emptyText="Aún no hay productos populares."
+            href="/marketplace?listingType=POKEMON_PRODUCT"
+          />
+
+          <HorizontalListingSection
+            title="Lotes recientes"
+            description="Últimos lotes publicados por la comunidad."
+            listings={recentLots}
+            emptyText="Aún no hay lotes recientes."
+            href="/marketplace?listingType=BULK_LOT"
           />
 
           <FeaturedSellersSection sellers={featuredSellers} />
@@ -134,11 +165,13 @@ function HorizontalListingSection({
   description,
   listings,
   emptyText,
+  href = '/marketplace',
 }: {
   title: string;
   description: string;
   listings: Listing[];
   emptyText: string;
+  href?: string;
 }) {
   return (
     <section>
@@ -148,7 +181,7 @@ function HorizontalListingSection({
           <p className="text-[var(--muted)] text-sm">{description}</p>
         </div>
 
-        <Link href="/marketplace" className="text-sm text-[var(--primary)] hover:underline font-medium">
+        <Link href={href} className="text-sm text-[var(--primary)] hover:underline font-medium">
           Ver todas →
         </Link>
       </div>

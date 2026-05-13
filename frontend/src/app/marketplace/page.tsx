@@ -44,7 +44,7 @@ const LANGUAGES: { value: CardLanguage; label: string }[] = [
 const LISTING_TYPES: { value: ListingType; label: string }[] = [
   { value: 'CARD', label: 'Carta' },
   { value: 'POKEMON_PRODUCT', label: 'Productos Pokémon' },
-  { value: 'BULK_LOT', label: 'Challas' },
+  { value: 'BULK_LOT', label: 'Lotes' },
 ];
 
 const CONDITION_LABELS: Record<CardCondition, string> = {
@@ -363,7 +363,7 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
             ? 'Carta'
             : listing.listingType === 'POKEMON_PRODUCT'
             ? 'Producto Pokémon'
-            : 'Challa'}
+            : 'Lote'}
         </span>
 
         <p className="text-xs text-[var(--muted-2)] truncate mt-0.5">
