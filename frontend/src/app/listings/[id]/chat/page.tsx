@@ -34,7 +34,6 @@ export default function ChatPage() {
   const [storedQuantity, setStoredQuantity] = useState(1);
   const quantityFromUrl = Number(searchParams.get('quantity') || '0');
   const requestedQuantity = Math.max(1, Math.min(3, quantityFromUrl || storedQuantity || 1));
-  const bottomRef =       useRef              <HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -162,7 +161,7 @@ export default function ChatPage() {
       );
 
       if (!alreadyHasQuantity) {
-        const quantityLine = `Cantidad requerida: ${displayedQuantity} unidad${displayedQuantity > 1 ? 'es' : ''}.`;
+        const quantityLine = `Cantidad requerida: ${requestedQuantity} unidad${requestedQuantity > 1 ? 'es' : ''}.`;
         contentToSend = contentToSend
           ? `${quantityLine}\n\n${contentToSend}`
           : quantityLine;
@@ -210,9 +209,10 @@ export default function ChatPage() {
   const isOwner  = user?.id === listing.sellerId;
   const isSeller = isOwner;
   const isBuyer  = isAuthenticated && !isOwner;
+
   const latestQuantityMessage = [...messages]
-  .reverse()
-  .find((message) => message.content?.startsWith('Cantidad requerida:'));
+    .reverse()
+    .find((message) => message.content?.startsWith('Cantidad requerida:'));
 
   const savedQuantityMatch = latestQuantityMessage?.content?.match(/Cantidad requerida:\s*(\d+)/i);
 
@@ -401,7 +401,6 @@ return (
               </div>
             );
           })}
-          <div ref={bottomRef} />
         </div>
 
         {/* Input */}
