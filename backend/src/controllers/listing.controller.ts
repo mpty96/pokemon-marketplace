@@ -123,7 +123,16 @@ export async function update(req: AuthRequest, res: Response): Promise<void> {
   try {
     const id       = req.params.id as string;
     const sellerId = req.user!.userId;
-    const listing  = await updateListing(id, sellerId, req.body);
+    const { priceCLP } = req.body;
+
+    if (!priceCLP || Number(priceCLP) <= 0) {
+      res.status(400).json({ error: 'Precio inválido' });
+      return;
+    }
+
+    const listing = await updateListing(id, sellerId, {
+      priceCLP: Number(priceCLP),
+    });
     res.json(listing);
   } catch (error: any) {
     if (error.message === 'LISTING_NOT_FOUND') {
