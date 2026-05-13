@@ -60,7 +60,7 @@ export default function CardPriceAssistant() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-50 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] px-5 py-3 shadow-lg hover:bg-[var(--primary-hover)] transition-colors text-sm font-semibold"
+        className="fixed bottom-20 sm:bottom-5 right-4 sm:right-5 z-50 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] px-4 sm:px-5 py-2.5 sm:py-3 shadow-lg hover:bg-[var(--primary-hover)] transition-colors text-xs sm:text-sm font-semibold"
       >
         Valorar carta
       </button>

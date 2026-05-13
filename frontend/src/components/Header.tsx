@@ -40,20 +40,24 @@ export default function Header() {
           <Link href="/marketplace" className={linkClass('/marketplace')}>Marketplace</Link>
 
           {isAuthenticated && (
-            <Link href="/mensajes" className={`${linkClass('/mensajes')} relative`}>
-              Mensajes
-              {unreadCount > 0 && (
-                <span className="absolute -top-1.5 -right-4 bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
-                  {unreadCount > 99 ? '99+' : unreadCount}
-                </span>
-              )}
-            </Link>
-          )}
+            <>
+              <Link href="/mensajes" className={`${linkClass('/mensajes')} relative`}>
+                Mensajes
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -right-4 bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+              </Link>
 
-          {isAuthenticated && (
-            <Link href="/transacciones" className={linkClass('/transacciones')}>
-              Transacciones
-            </Link>
+              <Link href="/transacciones" className={linkClass('/transacciones')}>
+                Transacciones
+              </Link>
+
+              <Link href="/consejos" className={linkClass('/consejos')}>
+                Consejos
+              </Link>
+            </>
           )}
         </nav>
 
@@ -113,6 +117,10 @@ export default function Header() {
 
             <Link href="/transacciones" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
               Transacciones
+            </Link>
+
+            <Link href="/consejos" className={linkClass('/consejos')}>
+              Consejos
             </Link>
           </>
         )}
