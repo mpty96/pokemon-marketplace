@@ -293,8 +293,8 @@ return (
       )}
 
       {/* Mensajes */}
-      <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-3 sm:p-4 h-[55vh] sm:h-[500px] overflow-y-auto min-w-0">
-        <div className="h-[38rem] overflow-y-auto p-4 space-y-3 bg-[var(--surface-2)]">
+      <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] overflow-hidden min-w-0 flex flex-col h-[70vh] sm:h-[700px]">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 bg-[var(--surface-2)] min-h-0">
           {messages.length === 0 && (
             <div className="text-center text-[var(--muted-2)] text-sm mt-8">
               <p>Inicia la conversación con el vendedor</p>
