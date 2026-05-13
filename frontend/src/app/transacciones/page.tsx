@@ -12,6 +12,7 @@ interface Transaction {
   title: string;
   image: string | null;
   priceCLP: number;
+  quantity: number;
   completedAt: string | null;
   buyer: { id: string; username: string };
   seller: { id: string; username: string };
@@ -122,6 +123,12 @@ export default function TransaccionesPage() {
                 <p className="text-sm text-[var(--primary)] font-medium">
                   ${tx.priceCLP.toLocaleString('es-CL')}
                 </p>
+
+                {tx.quantity > 1 && (
+                  <p className="text-xs text-[var(--muted)]">
+                    {tx.quantity} unidades vendidas
+                  </p>
+                )}
 
                 <p className="text-xs text-[var(--muted-2)] mt-0.5">
                   🏪 Vendida por:{' '}

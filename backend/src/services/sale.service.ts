@@ -137,24 +137,59 @@ export async function confirmSale(listingId: string, userId: string, role: 'buye
     updateData.completedAt = new Date();
 
     // Completar venta: marcar listing como SOLD, actualizar perfiles
+  const quantitySold = sale.quantity || 1;
+
+  if (sale.listing.listingType === 'POKEMON_PRODUCT') {
+    const currentStock = sale.listing.stock || 0;
+    const nextStock = Math.max(0, currentStock - quantitySold);
+
     await prisma.$transaction([
       prisma.sale.update({
         where: { id: sale.id },
-        data:  updateData,
+        data: updateData,
       }),
+
       prisma.listing.update({
         where: { id: listingId },
-        data:  { status: 'SOLD' },
+        data: {
+          stock: nextStock,
+          status: nextStock > 0 ? 'ACTIVE' : 'SOLD',
+        },
       }),
+
       prisma.profile.update({
         where: { userId: sale.sellerId },
-        data:  { totalSales: { increment: 1 } },
+        data: { totalSales: { increment: 1 } },
       }),
+
       prisma.profile.update({
         where: { userId: sale.buyerId },
-        data:  { totalPurchases: { increment: 1 } },
+        data: { totalPurchases: { increment: 1 } },
       }),
     ]);
+  } else {
+    await prisma.$transaction([
+      prisma.sale.update({
+        where: { id: sale.id },
+        data: updateData,
+      }),
+
+      prisma.listing.update({
+        where: { id: listingId },
+        data: { status: 'SOLD' },
+      }),
+
+      prisma.profile.update({
+        where: { userId: sale.sellerId },
+        data: { totalSales: { increment: 1 } },
+      }),
+
+      prisma.profile.update({
+        where: { userId: sale.buyerId },
+        data: { totalPurchases: { increment: 1 } },
+      }),
+    ]);
+  }
 
     return { ...sale, ...updateData, bothConfirmed: true };
   }
@@ -307,7 +342,7 @@ export async function getListingSalesHistory(
     title: sale.listing.title,
     cardName: sale.listing.cardName,
     image: sale.listing.images[0] || null,
-    priceCLP: sale.finalPriceCLP,
+    priceCLP: Math.round(sale.finalPriceCLP / (sale.quantity || 1)),
     completedAt: sale.completedAt,
   }));
 }
