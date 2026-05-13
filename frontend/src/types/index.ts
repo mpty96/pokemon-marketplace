@@ -160,3 +160,8 @@ export interface FeaturedSeller {
   totalPurchases: number;
   activeListingsCount: number;
 }
+
+export interface UserLevelInfo {
+  level: number;
+  completedTransactions: number;
+}

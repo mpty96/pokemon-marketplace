@@ -202,26 +202,37 @@ export async function upsertMyProfile(userId: string, data: UpdateProfileInput) 
 export async function getPublicProfileByUsername(username: string) {
   const user = await prisma.user.findUnique({
     where: { username },
-    select: {
-      username: true,
-      profile: true,
-      ratingsReceived: {
-        orderBy: { createdAt: 'desc' },
-        include: {
-          rater: {
-            select: {
-              id: true,
-              username: true,
+      select: {
+        username: true,
+        profile: true,
+
+        salesAsSeller: {
+          where: { status: 'COMPLETED' },
+          select: { id: true },
+        },
+
+        salesAsBuyer: {
+          where: { status: 'COMPLETED' },
+          select: { id: true },
+        },
+
+        ratingsReceived: {
+          orderBy: { createdAt: 'desc' },
+          include: {
+            rater: {
+              select: {
+                id: true,
+                username: true,
+              },
             },
-          },
-          sale: {
-            select: {
-              sellerId: true,
-              buyerId: true,
+            sale: {
+              select: {
+                sellerId: true,
+                buyerId: true,
+              },
             },
           },
         },
-      },
       listings: {
         where: {
           status: 'ACTIVE',
@@ -267,6 +278,18 @@ export async function getPublicProfileByUsername(username: string) {
   const ratingsAsBuyer =
     user.ratingsReceived?.filter((r) => r.ratedId === r.sale.buyerId) || [];
 
+  const totalCompletedTransactions =
+  user.salesAsSeller.length + user.salesAsBuyer.length;
+
+  function getUserLevel(total: number) {
+    if (total >= 500) return 5;
+    if (total >= 100) return 4;
+    if (total >= 50) return 3;
+    if (total >= 30) return 2;
+    if (total >= 10) return 1;
+    return 0;
+  }
+
   return {
     username: user.username,
     profile: user.profile,
@@ -274,6 +297,8 @@ export async function getPublicProfileByUsername(username: string) {
     ratingsAsSeller,
     ratingsAsBuyer,
     activeListings: user.listings,
+    userLevel: getUserLevel(totalCompletedTransactions),
+    completedTransactions: totalCompletedTransactions,
   };
 }
 

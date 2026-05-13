@@ -11,18 +11,20 @@ import { useAuthStore } from '@/store/auth.store';
 interface PublicProfile {
   username: string;
   profile: {
-    displayName: string | null;
-    avatarUrl: string | null;
-    bio: string | null;
-    location: string | null;
-    reputationScore: number;
-    totalSales: number;
-    totalPurchases: number;
+    displayName:        string | null;
+    avatarUrl:          string | null;
+    bio:                string | null;
+    location:           string | null;
+    reputationScore:    number;
+    totalSales:         number;
+    totalPurchases:     number;
   } | null;
-  ratingsReceived: Rating[];
-  ratingsAsSeller: Rating[];
-  ratingsAsBuyer: Rating[];
-  activeListings?: Listing[];
+  ratingsReceived:      Rating[];
+  ratingsAsSeller:      Rating[];
+  ratingsAsBuyer:       Rating[];
+  activeListings?:      Listing[];
+  userLevel:            number;
+  completedTransactions:number;
 }
 
 function Stars({ score }: { score: number }) {
@@ -58,6 +60,91 @@ function conditionLabel(condition: Listing['condition']) {
     default:
       return condition;
   }
+}
+
+const USER_LEVELS = [
+  {
+    level: 1,
+    label: 'Nivel 1',
+    requirement: '+10 Transacciones',
+    image: '/levels/poke-ball.png',
+  },
+  {
+    level: 2,
+    label: 'Nivel 2',
+    requirement: '+30 Transacciones',
+    image: '/levels/great-ball.png',
+  },
+  {
+    level: 3,
+    label: 'Nivel 3',
+    requirement: '+50 Transacciones',
+    image: '/levels/ultra-ball.png',
+  },
+  {
+    level: 4,
+    label: 'Nivel 4',
+    requirement: '+100 Transacciones',
+    image: '/levels/honor-ball.png',
+  },
+  {
+    level: 5,
+    label: 'Nivel 5',
+    requirement: '+500 Transacciones',
+    image: '/levels/master-ball.png',
+  },
+];
+
+function UserLevelBadge({
+  level,
+  completedTransactions,
+}: {
+  level: number;
+  completedTransactions: number;
+}) {
+  return (
+    <div className="mt-4 sm:mt-0 sm:ml-auto text-left sm:text-right">
+      <p className="text-xs uppercase tracking-wide text-[var(--muted-2)]">
+        Nivel
+      </p>
+
+      <p className="text-sm font-semibold text-[var(--foreground)] mb-2">
+        {level > 0 ? `Nivel ${level}` : 'Sin nivel'}
+      </p>
+
+      <div className="flex justify-start sm:justify-end gap-2">
+        {USER_LEVELS.map((item) => {
+          const unlocked = level >= item.level;
+
+          return (
+            <div
+              key={item.level}
+              title={`${item.label} -> ${item.requirement}`}
+              className={`w-8 h-8 rounded-full border flex items-center justify-center ${
+                unlocked
+                  ? 'border-[var(--primary)] bg-[var(--surface)]'
+                  : 'border-[var(--border)] bg-[var(--surface-2)]'
+              }`}
+            >
+              {unlocked ? (
+                <img
+                  src={item.image}
+                  alt={item.label}
+                  className="w-6 h-6 object-contain"
+                />
+              ) : (
+                <span className="w-3 h-3 rounded-full border border-[var(--muted-2)]" />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="text-[11px] text-[var(--muted-2)] mt-2">
+        {completedTransactions} transacciones completadas
+      </p>
+    </div>
+  );
 }
 
 export default function PublicProfilePage() {
@@ -124,13 +211,17 @@ export default function PublicProfilePage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6 text-[var(--foreground)]">
       <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-6">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="w-16 h-16 rounded-full bg-[var(--info-bg)] overflow-hidden flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
             {profile?.avatarUrl ? (
               <img src={profile.avatarUrl} alt={data.username} className="w-full h-full object-cover" />
             ) : (
               data.username[0].toUpperCase()
             )}
+            <UserLevelBadge
+              level={data.userLevel || 0}
+              completedTransactions={data.completedTransactions || 0}
+            />
           </div>
 
           <div className="flex-1">
