@@ -218,10 +218,6 @@ export default function PublicProfilePage() {
             ) : (
               data.username[0].toUpperCase()
             )}
-            <UserLevelBadge
-              level={data.userLevel || 0}
-              completedTransactions={data.completedTransactions || 0}
-            />
           </div>
 
           <div className="flex-1">
@@ -245,6 +241,10 @@ export default function PublicProfilePage() {
             <p className="mt-3 text-sm text-[var(--muted)]">{reportMessage}</p>
           )}
           </div>
+                      <UserLevelBadge
+              level={data.userLevel || 0}
+              completedTransactions={data.completedTransactions || 0}
+            />
         </div>
 
         {profile?.bio && (
