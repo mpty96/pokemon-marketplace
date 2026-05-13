@@ -185,6 +185,15 @@ if (success) {
     setError('');
     setLoading(true);
 
+    if (
+      form.listingType === 'POKEMON_PRODUCT' &&
+      form.cardName.trim().length < 5
+    ) {
+      setError('Escribe el nombre completo del producto sin utilizar siglas.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const formData = new FormData();
       const cleanPriceCLP = Number(form.priceCLP.replace(/\./g, '').replace(/,/g, ''));

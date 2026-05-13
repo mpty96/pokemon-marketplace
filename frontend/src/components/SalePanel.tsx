@@ -10,11 +10,14 @@ interface SalePanelProps {
   isSeller:   boolean;
   isBuyer:    boolean;
   quantity?:  number;
+  listingType?: 'CARD' | 'POKEMON_PRODUCT' | 'BULK_LOT';
   onSaleUpdate: (sale: Sale | null) => void;
 }
 
 export default function SalePanel({
-  listingId, sale, isSeller, isBuyer, quantity = 1, onSaleUpdate,
+  listingId, sale, isSeller, isBuyer, quantity = 1,
+  listingType = 'CARD',
+  onSaleUpdate,
 }: SalePanelProps) {
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
@@ -164,7 +167,11 @@ export default function SalePanel({
           {loading
             ? 'Confirmando...'
             : isBuyer
-            ? '✅ Confirmar: Recibí mi carta'
+            ? listingType === 'POKEMON_PRODUCT'
+              ? '✅ Confirmar: Recibí mi producto'
+              : listingType === 'BULK_LOT'
+                ? '✅ Confirmar: Recibí mi lote'
+                : '✅ Confirmar: Recibí mi carta'
             : '✅ Confirmar: Recibí el pago'}
         </button>
       )}

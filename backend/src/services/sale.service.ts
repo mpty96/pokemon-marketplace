@@ -252,6 +252,14 @@ export async function getSaleByListing(listingId: string, userId: string) {
 
 type SalesHistoryRange = '7d' | '1m' | '6m' | '1y';
 
+function normalizeText(text: string) {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 function getRangeDate(range: SalesHistoryRange): Date {
   const date = new Date();
 
@@ -283,20 +291,14 @@ export async function getListingSalesHistory(
 
   const fromDate = getRangeDate(range);
 
+  const normalizedCardName = normalizeText(baseListing.cardName);
+  const normalizedEdition = normalizeText(baseListing.edition);
+
   const listingMatch: any = {
-  listingType: baseListing.listingType,
-  cardName: {
-    equals: baseListing.cardName,
-    mode: 'insensitive',
-    },
+    listingType: baseListing.listingType,
   };
 
   if (baseListing.listingType === 'CARD') {
-    listingMatch.edition = {
-      equals: baseListing.edition,
-      mode: 'insensitive',
-    };
-
     listingMatch.language = baseListing.language;
     listingMatch.condition = baseListing.condition;
 
@@ -309,15 +311,10 @@ export async function getListingSalesHistory(
   }
 
   if (baseListing.listingType === 'POKEMON_PRODUCT') {
-    listingMatch.edition = {
-      equals: baseListing.edition,
-      mode: 'insensitive',
-    };
-
     listingMatch.condition = baseListing.condition;
   }
 
-  const sales = await prisma.sale.findMany({
+  const rawSales = await prisma.sale.findMany({
     where: {
       status: 'COMPLETED',
       completedAt: { gte: fromDate },
@@ -330,13 +327,24 @@ export async function getListingSalesHistory(
           id: true,
           title: true,
           cardName: true,
+          edition: true,
           images: true,
         },
       },
     },
   });
 
-  return sales.map((sale) => ({
+  const sales = rawSales.filter((sale) => {
+    const saleCardName = normalizeText(sale.listing.cardName);
+    const saleEdition = normalizeText(sale.listing.edition);
+
+  return (
+    saleCardName === normalizedCardName &&
+    saleEdition === normalizedEdition
+  );
+});
+
+return sales.map((sale) => ({
     id: sale.id,
     listingId: sale.listingId,
     title: sale.listing.title,

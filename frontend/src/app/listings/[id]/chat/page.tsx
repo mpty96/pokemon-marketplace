@@ -283,6 +283,7 @@ return (
         isSeller={isSeller}
         isBuyer={isBuyer}
         quantity={displayedQuantity}
+        listingType={listing.listingType}
         onSaleUpdate={handleSaleUpdate}
       />
 
@@ -491,7 +492,7 @@ return (
           />
 
           <div className="mt-2 rounded-full bg-[var(--surface)] px-3 py-1 shadow-sm border border-[var(--border)]">
-            <span className="text-[11px] font-semibold text-[var(--primary)]">
+            <span className="text-sm xl:text-base font-bold text-[var(--primary)] tracking-wide">
               Consejos
             </span>
           </div>
