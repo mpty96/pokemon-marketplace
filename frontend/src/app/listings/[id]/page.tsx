@@ -58,7 +58,7 @@ export default function ListingDetailPage() {
   useEffect(() => {
     if (!listing || listing.listingType !== 'POKEMON_PRODUCT') return;
 
-    const maxAllowed = Math.min(5, listing.stock || 1);
+    const maxAllowed = Math.min(3, listing.stock || 1);
 
     if (quantity > maxAllowed) {
       setQuantity(maxAllowed);
@@ -216,40 +216,12 @@ export default function ListingDetailPage() {
                 </div>
 
                 {listing.listingType === 'POKEMON_PRODUCT' && (
-                  <div className="space-y-3">
-                    <p className="text-sm font-medium text-[var(--foreground)]">
-                      Stock disponible:{' '}
-                      <span className="text-[var(--primary)]">
-                        {listing.stock ?? 1}
-                      </span>
-                    </p>
-
-                    {!isOwner && isAuthenticated && listing.status === 'ACTIVE' && (
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm text-[var(--muted)]">
-                          Cantidad:
-                        </span>
-
-                        <select
-                          value={quantity}
-                          onChange={(e) => setQuantity(Number(e.target.value))}
-                          className="border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                        >
-                          {Array.from({
-                            length: Math.min(5, listing.stock || 1),
-                          }).map((_, index) => {
-                            const value = index + 1;
-
-                            return (
-                              <option key={value} value={value}>
-                                {value} unidad{value > 1 ? 'es' : ''}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    )}
-                  </div>
+                  <p className="text-sm font-medium text-[var(--foreground)]">
+                    Stock disponible:{' '}
+                    <span className="text-[var(--primary)]">
+                      {listing.stock ?? 1}
+                    </span>
+                  </p>
                 )}
 
                 <div className="space-y-2">
@@ -330,19 +302,48 @@ export default function ListingDetailPage() {
                     </button>
                   </>
                 ) : isAuthenticated ? (
-                  <button
-                    onClick={() =>
-                      router.push(
-                        `/listings/${id}/chat${
-                          listing.listingType === 'POKEMON_PRODUCT'
-                            ? `?quantity=${quantity}`
-                            : ''
-                        }`
-                      )
-                    }
-                    className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors">
-                    💬 Contactar vendedor
-                  </button>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {listing.listingType === 'POKEMON_PRODUCT' && (
+                      <div className="sm:w-44">
+                        <label className="block text-xs font-medium text-[var(--muted)] mb-1">
+                          Cantidad requerida:
+                        </label>
+
+                        <select
+                          value={quantity}
+                          onChange={(e) => setQuantity(Number(e.target.value))}
+                          className="w-full border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                        >
+                          {Array.from({
+                            length: Math.min(3, listing.stock || 1),
+                          }).map((_, index) => {
+                            const value = index + 1;
+
+                            return (
+                              <option key={value} value={value}>
+                                {value} unidad{value > 1 ? 'es' : ''}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                    )}
+
+                    <button
+                      onClick={() =>
+                        router.push(
+                          `/listings/${id}/chat${
+                            listing.listingType === 'POKEMON_PRODUCT'
+                              ? `?quantity=${quantity}`
+                              : ''
+                          }`
+                        )
+                      }
+                      className="flex-1 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors"
+                    >
+                      💬 Contactar vendedor
+                    </button>
+                  </div>
                 ) : (
                   <button onClick={() => router.push('/login')}
                     className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors">

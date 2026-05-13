@@ -29,9 +29,11 @@ export default function ChatPage() {
   const [sendingImage,    setSendingImage]    = useState(false);
   const [selectedImage,   setSelectedImage]   = useState<string | null>(null);
   const [showSafetyTips,  setShowSafetyTips]  = useState(false);
-  const requestedQuantity                     = Number(searchParams.get('quantity') || '1');
+  const quantityFromUrl = Number(searchParams.get('quantity') || '1');
+  const requestedQuantity = Math.max(1, Math.min(3, quantityFromUrl));
   const [loading,         setLoading]         = useState(true);
   const [ratingData,      setRatingData]      = useState<RatingSaleData | null>(null);
+  const [quantityNoticeSent, setQuantityNoticeSent] = useState(false);
   const bottomRef =       useRef              <HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -157,6 +159,32 @@ export default function ChatPage() {
     }
   }
 
+  useEffect(() => {
+  if (!socket || !id || !listing || !user) return;
+  if (quantityNoticeSent) return;
+  if (listing.listingType !== 'POKEMON_PRODUCT') return;
+  if (user.id === listing.sellerId) return;
+  if (!searchParams.get('quantity')) return;
+
+  const content = `Cantidad requerida: ${requestedQuantity} unidad${requestedQuantity > 1 ? 'es' : ''}.`;
+
+  const alreadyExists = messages.some((message) => message.content === content);
+
+  if (alreadyExists) {
+    setQuantityNoticeSent(true);
+    return;
+  }
+
+  socket.emit('send_message', {
+    listingId: id,
+    content,
+    imageUrls: [],
+  });
+
+  setQuantityNoticeSent(true);
+  router.replace(`/listings/${id}/chat`);
+  }, [socket, id, listing, user, requestedQuantity, quantityNoticeSent, messages, searchParams, router]);
+
 
   function handleSaleUpdate(updatedSale: Sale | null) {
     setSale(updatedSale);
@@ -182,6 +210,17 @@ export default function ChatPage() {
   const isOwner  = user?.id === listing.sellerId;
   const isSeller = isOwner;
   const isBuyer  = isAuthenticated && !isOwner;
+  const latestQuantityMessage = [...messages]
+  .reverse()
+  .find((message) => message.content?.startsWith('Cantidad requerida:'));
+
+  const savedQuantityMatch = latestQuantityMessage?.content?.match(/Cantidad requerida:\s*(\d+)/i);
+
+  const displayedQuantity =
+    listing.listingType === 'POKEMON_PRODUCT'
+      ? Number(savedQuantityMatch?.[1] || requestedQuantity || 1)
+      : 1;
+
 
   if (isOwner && !sale && listing.status === 'ACTIVE') {
   // El vendedor solo ve el chat si ya hay una venta iniciada o mensajes
@@ -211,7 +250,7 @@ return (
 
         {listing.listingType === 'POKEMON_PRODUCT' && (
           <p className="text-xs text-[var(--muted)]">
-            Cantidad solicitada: {requestedQuantity}
+            Cantidad requerida: {displayedQuantity}
           </p>
         )}
       </div>
@@ -299,7 +338,7 @@ return (
       {/* Mensajes */}
       <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] overflow-hidden min-w-0 flex flex-col h-[58vh] sm:h-[520px]">
         <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 bg-[var(--surface-2)] min-h-0">
-          
+
           {messages.length === 0 && (
             <div className="text-center text-[var(--muted-2)] text-sm mt-8">
               <p>Inicia la conversación con el vendedor</p>
