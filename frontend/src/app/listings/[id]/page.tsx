@@ -80,7 +80,15 @@ export default function ListingDetailPage() {
         priceCLP: cleanPrice,
       });
 
-      setListing(data);
+      setListing((prev) => {
+      if (!prev) return data;
+
+      return {
+        ...prev,
+        priceCLP: data.priceCLP,
+      };
+    });
+    
       setShowEditPrice(false);
       setEditPrice('');
     } catch (err: any) {
