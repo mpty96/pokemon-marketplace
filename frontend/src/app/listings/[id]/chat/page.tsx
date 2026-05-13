@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
 import { useSocket } from '@/hooks/useSocket';
@@ -16,21 +16,23 @@ import { clearUnread } from '@/hooks/useUnreadCount';
 export default function ChatPage() {
   const { id }   = useParams<{ id: string }>();
   const router   = useRouter();
+  const searchParams = useSearchParams();
   const { user, isAuthenticated } = useAuthStore();
   const socket   = useSocket();
 
-  const [listing,  setListing]  = useState<Listing | null>(null);
-  const [chatData, setChatData] = useState<ConversationData | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [sale,     setSale]     = useState<Sale | null>(null);
-  const [input,    setInput]    = useState('');
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [sendingImage, setSendingImage] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [showSafetyTips, setShowSafetyTips] = useState(false);
-  const [loading,  setLoading]  = useState(true);
-  const [ratingData, setRatingData] = useState<RatingSaleData | null>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const [listing,         setListing]         = useState<Listing | null>(null);
+  const [chatData,        setChatData]        = useState<ConversationData | null>(null);
+  const [messages,        setMessages]        = useState<Message[]>([]);
+  const [sale,            setSale]            = useState<Sale | null>(null);
+  const [input,           setInput]           = useState('');
+  const [imageFiles,      setImageFiles]      = useState<File[]>([]);
+  const [sendingImage,    setSendingImage]    = useState(false);
+  const [selectedImage,   setSelectedImage]   = useState<string | null>(null);
+  const [showSafetyTips,  setShowSafetyTips]  = useState(false);
+  const requestedQuantity                     = Number(searchParams.get('quantity') || '1');
+  const [loading,         setLoading]         = useState(true);
+  const [ratingData,      setRatingData]      = useState<RatingSaleData | null>(null);
+  const bottomRef =       useRef              <HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isAuthenticated) { router.push('/login'); return; }
@@ -193,14 +195,22 @@ return (
 
   {/* Header del chat */}
   <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-3 sm:p-4 flex items-center gap-3 sm:gap-4 min-w-0">
-  <button onClick={() => router.back()} className="text-[var(--muted-2)] hover:text-[var(--foreground)]">←</button>
-  <img src={listing.images[0]} alt={listing.title}
-    className="w-10 h-10 sm:w-12 sm:h-12 object-contain rounded-lg bg-[var(--surface-2)] shrink-0" />
+    <button onClick={() => router.back()} className="text-[var(--muted-2)] hover:text-[var(--foreground)]">←</button>
+      <img src={listing.images[0]} alt={listing.title}
+        className="w-10 h-10 sm:w-12 sm:h-12 object-contain rounded-lg bg-[var(--surface-2)] shrink-0" />
   <div className="flex-1 min-w-0">
     <h2 className="font-semibold text-[var(--foreground)] truncate text-sm sm:text-base">{listing.title}</h2>
-    <p className="text-sm text-[var(--primary)] font-medium">
-        ${listing.priceCLP.toLocaleString('es-CL')}
-      </p>
+      <div className="space-y-1">
+        <p className="text-sm text-[var(--primary)] font-medium">
+          ${listing.priceCLP.toLocaleString('es-CL')}
+        </p>
+
+        {listing.listingType === 'POKEMON_PRODUCT' && (
+          <p className="text-xs text-[var(--muted)]">
+            Cantidad solicitada: {requestedQuantity}
+          </p>
+        )}
+      </div>
       {/* Link al perfil del otro usuario */}
       <Link
         href={`/usuario/${isSeller

@@ -84,6 +84,7 @@ export interface Sale {
   buyerId:          string;
   sellerId:         string;
   finalPriceCLP:    number;
+  quantity:         number;
   status:           SaleStatus;
   buyerConfirmed:   boolean;
   sellerConfirmed:  boolean;

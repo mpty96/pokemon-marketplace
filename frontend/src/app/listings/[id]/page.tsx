@@ -38,6 +38,7 @@ export default function ListingDetailPage() {
   const [editPrice, setEditPrice] = useState('');
   const [savingPrice, setSavingPrice] = useState(false);
   const [priceError, setPriceError] = useState('');
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     api.get(`/api/listings/${id}`)
@@ -53,6 +54,16 @@ export default function ListingDetailPage() {
     .then(({ data }) => setSalesHistory(data))
     .catch(() => setSalesHistory([]));
 }, [id, historyRange]);
+
+  useEffect(() => {
+    if (!listing || listing.listingType !== 'POKEMON_PRODUCT') return;
+
+    const maxAllowed = Math.min(5, listing.stock || 1);
+
+    if (quantity > maxAllowed) {
+      setQuantity(maxAllowed);
+    }
+  }, [listing, quantity]);
 
   async function handleDelete() {
     if (!confirm('¿Eliminar esta publicación?')) return;
@@ -205,12 +216,40 @@ export default function ListingDetailPage() {
                 </div>
 
                 {listing.listingType === 'POKEMON_PRODUCT' && (
-                  <p className="text-sm font-medium text-[var(--foreground)]">
-                    Stock disponible:{' '}
-                    <span className="text-[var(--primary)]">
-                      {listing.stock ?? 1}
-                    </span>
-                  </p>
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium text-[var(--foreground)]">
+                      Stock disponible:{' '}
+                      <span className="text-[var(--primary)]">
+                        {listing.stock ?? 1}
+                      </span>
+                    </p>
+
+                    {!isOwner && isAuthenticated && listing.status === 'ACTIVE' && (
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-[var(--muted)]">
+                          Cantidad:
+                        </span>
+
+                        <select
+                          value={quantity}
+                          onChange={(e) => setQuantity(Number(e.target.value))}
+                          className="border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                        >
+                          {Array.from({
+                            length: Math.min(5, listing.stock || 1),
+                          }).map((_, index) => {
+                            const value = index + 1;
+
+                            return (
+                              <option key={value} value={value}>
+                                {value} unidad{value > 1 ? 'es' : ''}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                    )}
+                  </div>
                 )}
 
                 <div className="space-y-2">
@@ -292,7 +331,15 @@ export default function ListingDetailPage() {
                   </>
                 ) : isAuthenticated ? (
                   <button
-                    onClick={() => router.push(`/listings/${id}/chat`)}
+                    onClick={() =>
+                      router.push(
+                        `/listings/${id}/chat${
+                          listing.listingType === 'POKEMON_PRODUCT'
+                            ? `?quantity=${quantity}`
+                            : ''
+                        }`
+                      )
+                    }
                     className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors">
                     💬 Contactar vendedor
                   </button>

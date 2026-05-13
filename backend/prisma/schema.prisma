@@ -199,6 +199,7 @@ model Sale {
   buyerId           String
   sellerId          String
   finalPriceCLP     Int
+  quantity          Int        @default(1)
   status            SaleStatus @default(PENDING)
   buyerConfirmed    Boolean    @default(false)
   sellerConfirmed   Boolean    @default(false)
