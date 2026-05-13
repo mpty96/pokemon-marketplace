@@ -103,12 +103,12 @@ function UserLevelBadge({
   completedTransactions: number;
 }) {
   return (
-    <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto text-left sm:text-right">
+    <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto text-right">
       <p className="text-sm font-semibold text-[var(--foreground)] mb-2">
         {level > 0 ? `Nivel ${level}` : 'Sin nivel'}
       </p>
 
-      <div className="flex justify-start sm:justify-end gap-1.5 sm:gap-2 flex-wrap">
+      <div className="flex justify-end gap-1.5 sm:gap-2 flex-wrap">
         {USER_LEVELS.map((item) => {
           const unlocked = level >= item.level;
 
@@ -291,10 +291,6 @@ export default function PublicProfilePage() {
                 Calificaciones recibidas
               </h2>
             </div>
-
-            <span className="text-sm text-[var(--muted)]">
-              {data.ratingsReceived.length} calificaciones
-            </span>
           </div>
 
           <div className="flex gap-4 border-b border-[var(--border)] mb-4 overflow-x-auto">
@@ -399,7 +395,7 @@ export default function PublicProfilePage() {
 
                 <div className="flex items-center justify-between mt-2 text-[11px] text-[var(--muted-2)]">
                   <span>
-                    👁 {listing.views}
+                    Vistas: {listing.views}
                   </span>
 
                   <span>

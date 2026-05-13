@@ -76,8 +76,8 @@ const displayed =
               <span className="text-xs text-[var(--muted-2)]">reputación</span>
             </div>
           </div>
-          <div className="w-full sm:w-auto flex flex-col items-start sm:items-end gap-1">
-            <div className="w-full sm:w-auto flex flex-col items-start sm:items-end gap-1">
+          <div className="w-full sm:w-auto flex flex-col items-start sm:items-end gap-3 sm:ml-auto">
+            <div className="w-full sm:w-auto flex flex-col items-start sm:items-end gap-3 sm:ml-auto">
               <Link
                 href={`/usuario/${user?.username}`}
                 className="text-sm text-[var(--primary)] hover:underline"
