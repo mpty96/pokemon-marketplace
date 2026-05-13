@@ -31,6 +31,7 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
       rarity,
       language,
       priceCLP,
+      stock,
       description,
     } = req.body;
 
@@ -66,6 +67,7 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
       rarity:    rarity    as CardRarity,
       language:  language  as CardLanguage,
       priceCLP:  Number(priceCLP),
+      stock: listingType === 'POKEMON_PRODUCT' ? Number(stock || 1) : undefined,
       description,
       imageFiles: files.map((f) => f.buffer),
     });

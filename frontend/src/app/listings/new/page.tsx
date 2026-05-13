@@ -46,7 +46,7 @@ export default function NewListingPage() {
     listingType: 'CARD' as ListingType,
     cardName: '', edition: '', setNumber: '',
     condition: '' as CardCondition, rarity: '' as CardRarity, language: '' as CardLanguage,
-    priceCLP: '', description: '',
+    priceCLP: '', stock: '', description: '',
   });
 
   const [images,   setImages]   = useState<File[]>([]);
@@ -159,7 +159,7 @@ if (success) {
                   listingType: 'CARD' as ListingType,
                   cardName: '', edition: '', setNumber: '',
                   condition: '' as CardCondition, rarity: '' as CardRarity, language: '' as CardLanguage,
-                  priceCLP: '', description: ''
+                  priceCLP: '', stock: '', description: '',
                 });
                 setImages([]);
                 setPreviews([]);
@@ -195,6 +195,7 @@ if (success) {
         rarity: form.listingType === 'CARD' ? form.rarity : 'COMMON',
         language: form.language || 'ESP',
         priceCLP: String(cleanPriceCLP),
+        stock: form.listingType === 'POKEMON_PRODUCT' ? form.stock : '',
       };
       Object.entries(payload).forEach(([k, v]) => {
         if (v) formData.append(k, String(v));
@@ -254,6 +255,7 @@ if (success) {
                     rarity: '' as CardRarity,
                     language: '' as CardLanguage,
                     priceCLP: '',
+                    stock: '', 
                     description: '',
                   });
                 }}
@@ -384,6 +386,23 @@ if (success) {
                 }}
               />
             </div>
+            {form.listingType === 'POKEMON_PRODUCT' && (
+            <div>
+              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                Stock disponible *
+              </label>
+
+              <input
+                required
+                type="number"
+                min="1"
+                className={inputClass}
+                placeholder="1"
+                value={form.stock}
+                onChange={(e) => setForm({ ...form, stock: e.target.value })}
+              />
+            </div>
+          )}
           </div>
 
           <div>

@@ -378,6 +378,12 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
           ${listing.priceCLP.toLocaleString('es-CL')}
         </p>
 
+        {listing.listingType === 'POKEMON_PRODUCT' && (
+          <p className="text-xs text-[var(--muted)] mt-1">
+            Stock disponible: {listing.stock ?? 1}
+          </p>
+        )}
+
         <div className="flex gap-1.5 mt-2 flex-wrap">
           {listing.listingType === 'CARD' && (
             <span className="text-xs bg-[var(--info-bg)] text-[var(--info-fg)] px-2 py-0.5 rounded-full">

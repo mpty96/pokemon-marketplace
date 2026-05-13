@@ -28,6 +28,7 @@ export interface Listing {
   rarity:      CardRarity;
   language:    CardLanguage;
   priceCLP:    number;
+  stock:       number | null;
   description: string | null;
   images:      string[];
   status:      ListingStatus;

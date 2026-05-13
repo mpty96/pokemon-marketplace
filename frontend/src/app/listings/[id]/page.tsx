@@ -88,7 +88,7 @@ export default function ListingDetailPage() {
         priceCLP: data.priceCLP,
       };
     });
-    
+
       setShowEditPrice(false);
       setEditPrice('');
     } catch (err: any) {
@@ -203,6 +203,15 @@ export default function ListingDetailPage() {
                 <div className="text-3xl font-bold text-[var(--primary)]">
                   ${listing.priceCLP.toLocaleString('es-CL')}
                 </div>
+
+                {listing.listingType === 'POKEMON_PRODUCT' && (
+                  <p className="text-sm font-medium text-[var(--foreground)]">
+                    Stock disponible:{' '}
+                    <span className="text-[var(--primary)]">
+                      {listing.stock ?? 1}
+                    </span>
+                  </p>
+                )}
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">

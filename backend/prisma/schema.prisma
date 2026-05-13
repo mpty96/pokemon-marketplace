@@ -126,11 +126,12 @@ model Listing {
   rarity      CardRarity
   language    String
   priceCLP    Int // precio en pesos chilenos
+  stock       Int?
   description String?
   images      String[] // URLs de Cloudinary
   status      ListingStatus @default(ACTIVE)
   views       Int           @default(0)
-  deletedAt   DateTime? // 👈 soft delete
+  deletedAt   DateTime? 
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 

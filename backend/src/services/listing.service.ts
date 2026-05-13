@@ -20,6 +20,7 @@ interface CreateListingInput {
   rarity:       CardRarity;
   language:     CardLanguage;
   priceCLP:     number;
+  stock?:       number;
   description?: string;
   imageFiles:   Buffer[];
 }
