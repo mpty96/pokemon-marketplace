@@ -29,11 +29,11 @@ export default function ChatPage() {
   const [sendingImage,    setSendingImage]    = useState(false);
   const [selectedImage,   setSelectedImage]   = useState<string | null>(null);
   const [showSafetyTips,  setShowSafetyTips]  = useState(false);
-  const quantityFromUrl = Number(searchParams.get('quantity') || '1');
-  const requestedQuantity = Math.max(1, Math.min(3, quantityFromUrl));
   const [loading,         setLoading]         = useState(true);
   const [ratingData,      setRatingData]      = useState<RatingSaleData | null>(null);
-  const [quantityNoticeSent, setQuantityNoticeSent] = useState(false);
+  const [storedQuantity, setStoredQuantity] = useState(1);
+  const quantityFromUrl = Number(searchParams.get('quantity') || '0');
+  const requestedQuantity = Math.max(1, Math.min(3, quantityFromUrl || storedQuantity || 1));
   const bottomRef =       useRef              <HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -70,6 +70,14 @@ export default function ChatPage() {
       }
     }).finally(() => setLoading(false));
   }, [id, isAuthenticated]);
+
+
+  useEffect(() => {
+  if (!id) return;
+
+  const saved = Number(sessionStorage.getItem(`listing:${id}:quantity`) || '1');
+  setStoredQuantity(Math.max(1, Math.min(3, saved)));
+  }, [id]);
 
 
   useEffect(() => {
@@ -143,11 +151,29 @@ export default function ChatPage() {
         imageUrls = data.imageUrls || [];
       }
 
-      socket.emit('send_message', {
-        listingId: id,
-        content: input.trim(),
-        imageUrls,
-      });
+      let contentToSend = input.trim();
+
+    if (
+      listing?.listingType === 'POKEMON_PRODUCT' &&
+      user?.id !== listing.sellerId
+    ) {
+      const alreadyHasQuantity = messages.some((message) =>
+        message.content?.startsWith('Cantidad requerida:')
+      );
+
+      if (!alreadyHasQuantity) {
+        const quantityLine = `Cantidad requerida: ${displayedQuantity} unidad${displayedQuantity > 1 ? 'es' : ''}.`;
+        contentToSend = contentToSend
+          ? `${quantityLine}\n\n${contentToSend}`
+          : quantityLine;
+      }
+    }
+
+    socket.emit('send_message', {
+      listingId: id,
+      content: contentToSend,
+      imageUrls,
+    });
 
       setInput('');
       setImageFiles([]);
@@ -158,32 +184,6 @@ export default function ChatPage() {
       setSendingImage(false);
     }
   }
-
-  useEffect(() => {
-  if (!socket || !id || !listing || !user) return;
-  if (quantityNoticeSent) return;
-  if (listing.listingType !== 'POKEMON_PRODUCT') return;
-  if (user.id === listing.sellerId) return;
-  if (!searchParams.get('quantity')) return;
-
-  const content = `Cantidad requerida: ${requestedQuantity} unidad${requestedQuantity > 1 ? 'es' : ''}.`;
-
-  const alreadyExists = messages.some((message) => message.content === content);
-
-  if (alreadyExists) {
-    setQuantityNoticeSent(true);
-    return;
-  }
-
-  socket.emit('send_message', {
-    listingId: id,
-    content,
-    imageUrls: [],
-  });
-
-  setQuantityNoticeSent(true);
-  router.replace(`/listings/${id}/chat`);
-  }, [socket, id, listing, user, requestedQuantity, quantityNoticeSent, messages, searchParams, router]);
 
 
   function handleSaleUpdate(updatedSale: Sale | null) {

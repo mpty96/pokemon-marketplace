@@ -330,15 +330,19 @@ export default function ListingDetailPage() {
                     )}
 
                     <button
-                      onClick={() =>
+                      onClick={() => {
+                        if (listing.listingType === 'POKEMON_PRODUCT') {
+                          sessionStorage.setItem(`listing:${id}:quantity`, String(quantity));
+                        }
+
                         router.push(
                           `/listings/${id}/chat${
                             listing.listingType === 'POKEMON_PRODUCT'
                               ? `?quantity=${quantity}`
                               : ''
                           }`
-                        )
-                      }
+                        );
+                      }}
                       className="flex-1 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors"
                     >
                       💬 Contactar vendedor
