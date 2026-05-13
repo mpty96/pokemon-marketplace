@@ -104,9 +104,6 @@ function UserLevelBadge({
 }) {
   return (
     <div className="mt-4 sm:mt-0 sm:ml-auto text-left sm:text-right">
-      <p className="text-xs uppercase tracking-wide text-[var(--muted-2)]">
-        Nivel
-      </p>
 
       <p className="text-sm font-semibold text-[var(--foreground)] mb-2">
         {level > 0 ? `Nivel ${level}` : 'Sin nivel'}
