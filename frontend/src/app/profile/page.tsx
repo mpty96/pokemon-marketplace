@@ -51,12 +51,12 @@ const displayed =
       : asBuyer;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 text-[var(--foreground)]">
+    <div className="max-w-4xl mx-auto px-3 sm:px-4 py-5 sm:py-8 text-[var(--foreground)]">
 
       {/* Header perfil */}
-      <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-6 mb-6">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-[var(--info-bg)] overflow-hidden flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
+      <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-4 sm:p-6 mb-5 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[var(--info-bg)] overflow-hidden flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
             {user?.avatarUrl ? (
               <img src={user.avatarUrl} alt={user.username} className="w-full h-full object-cover" />
             ) : (
@@ -76,8 +76,8 @@ const displayed =
               <span className="text-xs text-[var(--muted-2)]">reputación</span>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-1">
-            <div className="flex flex-col items-end gap-1">
+          <div className="w-full sm:w-auto flex flex-col items-start sm:items-end gap-1">
+            <div className="w-full sm:w-auto flex flex-col items-start sm:items-end gap-1">
               <Link
                 href={`/usuario/${user?.username}`}
                 className="text-sm text-[var(--primary)] hover:underline"
@@ -97,10 +97,10 @@ const displayed =
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-5 bg-[var(--surface-2)] p-1 rounded-lg w-fit border border-[var(--border)]">
+      <div className="flex gap-1 mb-5 bg-[var(--surface-2)] p-1 rounded-lg w-full sm:w-fit border border-[var(--border)] overflow-x-auto mobile-scrollbar">
         <button
           onClick={() => setTab('active')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+          className={`flex-1 sm:flex-none whitespace-nowrap px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
             tab === 'active'
               ? 'bg-[var(--surface)] text-[var(--foreground)] shadow-sm'
               : 'text-[var(--muted)] hover:text-[var(--foreground)]'
@@ -111,7 +111,7 @@ const displayed =
 
         <button
           onClick={() => setTab('sold')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+          className={`flex-1 sm:flex-none whitespace-nowrap px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
             tab === 'sold'
               ? 'bg-[var(--surface)] text-[var(--foreground)] shadow-sm'
               : 'text-[var(--muted)] hover:text-[var(--foreground)]'
@@ -122,7 +122,7 @@ const displayed =
 
         <button
           onClick={() => setTab('bought')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+          className={`flex-1 sm:flex-none whitespace-nowrap px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
             tab === 'bought'
               ? 'bg-[var(--surface)] text-[var(--foreground)] shadow-sm'
               : 'text-[var(--muted)] hover:text-[var(--foreground)]'

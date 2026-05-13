@@ -66,3 +66,48 @@ body {
 body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+/* CSS RESPONSIVE */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.mobile-scrollbar {
+  scrollbar-width: none;
+}
+
+.mobile-scrollbar::-webkit-scrollbar {
+  display: none;
+}

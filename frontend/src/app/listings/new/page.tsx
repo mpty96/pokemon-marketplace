@@ -220,9 +220,9 @@ if (success) {
   if (profileComplete === null) return null;
 
   return (
-    <div className="min-h-screen bg-[var(--background)] py-8 px-4">
-      <div className="max-w-2xl mx-auto bg-[var(--surface)] rounded-xl shadow p-8 border border-[var(--border)]">
-        <h1 className="text-2xl font-bold text-[var(--foreground)] mb-6">
+    <div className="min-h-screen bg-[var(--background)] py-5 sm:py-8 px-3 sm:px-4">
+      <div className="max-w-2xl mx-auto bg-[var(--surface)] rounded-xl shadow p-4 sm:p-8 border border-[var(--border)]">
+        <h1 className="text-xl sm:text-2xl font-bold text-[var(--foreground)] mb-5 sm:mb-6">
           🎴 Nueva publicación
         </h1>
 
@@ -233,7 +233,7 @@ if (success) {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
                 Tipo de publicación *
@@ -421,7 +421,7 @@ if (success) {
               <div className="flex gap-2 mt-3 flex-wrap">
                 {previews.map((src, i) => (
                   <img key={i} src={src} alt={`preview-${i}`}
-                    className="w-20 h-20 object-cover rounded-lg border border-[var(--border)]" />
+                    className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-[var(--border)]" />
                 ))}
               </div>
             )}

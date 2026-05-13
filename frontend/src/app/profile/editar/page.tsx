@@ -101,8 +101,8 @@ export default function EditProfilePage() {
   const input = 'w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)]';
 
   return (
-    <div className="max-w-xl mx-auto py-8 px-4">
-      <div className="bg-[var(--surface)] p-6 rounded-xl border border-[var(--border)]">
+    <div className="max-w-xl mx-auto py-5 sm:py-8 px-3 sm:px-4">
+      <div className="bg-[var(--surface)] p-4 sm:p-6 rounded-xl border border-[var(--border)]">
         <div className="mb-4 p-3 text-sm rounded-lg bg-[var(--warning-bg)] text-[var(--warning-fg)]">
           ⚠️ Locación, RUT y Número de contacto no se pueden modificar después.
         </div>
@@ -114,8 +114,8 @@ export default function EditProfilePage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="w-20 h-20 rounded-full overflow-hidden bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center shrink-0">
               {avatarPreview ? (
                 <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
               ) : (

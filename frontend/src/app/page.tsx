@@ -46,8 +46,8 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 text-[var(--foreground)]">
-      <section className="relative overflow-hidden rounded-2xl mb-8 border border-[var(--border)] bg-[var(--surface)]">
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 py-5 sm:py-8 text-[var(--foreground)]">
+      <section className="relative overflow-hidden rounded-xl sm:rounded-2xl mb-7 sm:mb-8 border border-[var(--border)] bg-[var(--surface)]">
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/15 via-transparent to-[var(--primary)]/5" />
         <div
           className="absolute inset-0 opacity-30"
@@ -58,17 +58,17 @@ export default function HomePage() {
           }}
         />
 
-        <div className="relative px-6 py-10 text-center">
+        <div className="relative px-4 sm:px-6 py-8 sm:py-10 text-center">
           <div className="inline-flex items-center gap-2 bg-[var(--surface-2)] text-[var(--foreground)] text-xs font-semibold px-3 py-1 rounded-full mb-3 border border-[var(--border)]">
             Solo para Chile
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-2 tracking-tight text-[var(--foreground)]">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2 tracking-tight text-[var(--foreground)] leading-tight">
             Compra y vende cartas
             <span className="block text-[var(--primary)]">Pokémon con confianza</span>
           </h1>
 
-          <p className="text-[var(--muted)] mb-5 text-base max-w-xl mx-auto">
+          <p className="text-[var(--muted)] mb-5 text-sm sm:text-base max-w-xl mx-auto leading-6">
             Marketplace para cartas, productos Pokémon y lotes entre coleccionistas.
           </p>
 
@@ -174,14 +174,14 @@ function HorizontalListingSection({
   href?: string;
 }) {
   return (
-    <section>
-      <div className="flex items-end justify-between gap-4 mb-4">
+    <section className="min-w-0">
+      <div className="flex items-start sm:items-end justify-between gap-3 mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-[var(--foreground)]">{title}</h2>
-          <p className="text-[var(--muted)] text-sm">{description}</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-[var(--foreground)]">{title}</h2>
+          <p className="text-[var(--muted)] text-xs sm:text-sm leading-5">{description}</p>
         </div>
 
-        <Link href={href} className="text-sm text-[var(--primary)] hover:underline font-medium">
+        <Link href={href} className="text-xs sm:text-sm text-[var(--primary)] hover:underline font-medium whitespace-nowrap">
           Ver todas →
         </Link>
       </div>
@@ -191,7 +191,7 @@ function HorizontalListingSection({
           {emptyText}
         </div>
       ) : (
-        <div className="flex gap-4 overflow-x-auto pb-3 snap-x">
+        <div className="flex gap-3 sm:gap-4 overflow-x-auto mobile-scrollbar pb-3 snap-x snap-mandatory -mx-3 px-3 sm:mx-0 sm:px-0">
           {listings.map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
@@ -203,7 +203,7 @@ function HorizontalListingSection({
 
 function ListingCard({ listing }: { listing: Listing }) {
   return (
-    <div className="min-w-[230px] max-w-[230px] bg-[var(--surface)] rounded-xl shadow-sm hover:shadow-md transition-shadow border border-[var(--border)] overflow-hidden snap-start">
+    <div className="min-w-[185px] max-w-[185px] sm:min-w-[230px] sm:max-w-[230px] bg-[var(--surface)] rounded-xl shadow-sm hover:shadow-md transition-shadow border border-[var(--border)] overflow-hidden snap-start">
       <Link href={`/listings/${listing.id}`} className="block group">
         <div className="aspect-square overflow-hidden bg-[var(--surface-2)]">
           <img
@@ -213,12 +213,12 @@ function ListingCard({ listing }: { listing: Listing }) {
           />
         </div>
 
-        <div className="p-3">
+        <div className="p-2.5 sm:p-3">
           <span className="inline-flex w-fit rounded-full bg-[var(--surface-2)] border border-[var(--border)] px-2 py-0.5 text-[10px] font-semibold text-[var(--muted)] mb-2">
             {typeLabel(listing.listingType)}
           </span>
 
-          <h3 className="font-semibold text-[var(--foreground)] truncate text-sm">
+          <h3 className="font-semibold text-[var(--foreground)] truncate text-xs sm:text-sm">
             {listing.cardName}
           </h3>
 
@@ -226,7 +226,7 @@ function ListingCard({ listing }: { listing: Listing }) {
             {listing.edition}
           </p>
 
-          <div className="flex items-center justify-between mt-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mt-2">
             <span className="text-[var(--primary)] font-bold text-sm">
               ${listing.priceCLP.toLocaleString('es-CL')}
             </span>
@@ -284,12 +284,12 @@ function FeaturedSellersSection({ sellers }: { sellers: FeaturedSeller[] }) {
           Aún no hay vendedores destacados.
         </div>
       ) : (
-        <div className="flex gap-4 overflow-x-auto pb-3 snap-x">
+        <div className="flex gap-3 sm:gap-4 overflow-x-auto mobile-scrollbar pb-3 snap-x snap-mandatory -mx-3 px-3 sm:mx-0 sm:px-0">
           {sellers.map((seller) => (
             <Link
               key={seller.username}
               href={`/usuario/${seller.username}`}
-              className="min-w-[230px] max-w-[230px] rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 hover:shadow-md transition-shadow snap-start"
+              className="min-w-[185px] max-w-[185px] sm:min-w-[230px] sm:max-w-[230px] rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 sm:p-4 hover:shadow-md transition-shadow snap-start"
             >
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-[var(--info-bg)] flex items-center justify-center font-bold text-[var(--info-fg)] overflow-hidden">

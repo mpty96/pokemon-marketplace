@@ -121,29 +121,29 @@ function MarketplaceContent() {
   const inputClass = selectClass;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 text-[var(--foreground)]">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-[var(--foreground)]">Marketplace</h1>
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 py-5 sm:py-8 text-[var(--foreground)]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-[var(--foreground)]">Marketplace</h1>
         <Link
           href="/listings/new"
-          className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="w-full sm:w-auto text-center bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] text-sm font-medium px-4 py-2 rounded-lg transition-colors"
         >
           + Publicar carta
         </Link>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
         <aside className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-5 space-y-5">
+          <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-4 sm:p-5 space-y-4 sm:space-y-5">
             <div className="flex items-center justify-between">
               <h2 className="font-semibold text-[var(--foreground)]">Filtros</h2>
-              <button onClick={clearFilters} className="text-xs text-[var(--primary)] hover:underline">
+              <button onClick={clearFilters} className="text-[10px] sm:text-xs text-[var(--primary)] hover:underline">
                 Limpiar
               </button>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Tipo de publicación
               </label>
               <select
@@ -171,10 +171,10 @@ function MarketplaceContent() {
             </div>
 
             <form onSubmit={handleSearch}>
-              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Buscar
               </label>
-              <div className="flex gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 <input
                   type="text"
                   placeholder="Charizard..."
@@ -192,7 +192,7 @@ function MarketplaceContent() {
             </form>
 
             <div>
-              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Edición
               </label>
               <input
@@ -205,7 +205,7 @@ function MarketplaceContent() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Condición
               </label>
               <select
@@ -227,7 +227,7 @@ function MarketplaceContent() {
 
             {(!filters.listingType || filters.listingType === 'CARD') && (
               <div>
-                <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+                <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                   Rareza
                 </label>
                 <select
@@ -246,7 +246,7 @@ function MarketplaceContent() {
             )}
 
             <div>
-              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Idioma
               </label>
               <select
@@ -264,10 +264,10 @@ function MarketplaceContent() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
                 Precio (CLP)
               </label>
-              <div className="flex gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 <input
                   type="number"
                   placeholder="Mín"
@@ -289,7 +289,7 @@ function MarketplaceContent() {
 
         <div className="flex-1">
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
               {[...Array(9)].map((_, i) => (
                 <div key={i} className="bg-[var(--surface)] rounded-xl h-72 animate-pulse border border-[var(--border)]" />
               ))}
@@ -308,7 +308,7 @@ function MarketplaceContent() {
                 {data.pagination.total} resultado{data.pagination.total !== 1 ? 's' : ''}
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
                 {data.listings.map((listing) => (
                   <MarketplaceCard key={listing.id} listing={listing} />
                 ))}
@@ -347,7 +347,7 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
   return (
     <Link
       href={`/listings/${listing.id}`}
-      className="bg-[var(--surface)] rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-[var(--border)] group flex flex-col"
+      className="bg-[var(--surface)] rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-[var(--border)] group flex flex-col min-w-0"
     >
       <div className="aspect-square overflow-hidden bg-[var(--surface-2)]">
         <img
@@ -357,7 +357,7 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
         />
       </div>
 
-      <div className="p-4 flex flex-col flex-1">
+      <div className="p-3 sm:p-4 flex flex-col flex-1 min-w-0">
         <span className="mb-2 inline-flex w-fit rounded-full bg-[var(--surface-2)] border border-[var(--border)] px-2 py-0.5 text-[10px] font-semibold text-[var(--muted)]">
           {listing.listingType === 'CARD'
             ? 'Carta'
@@ -366,38 +366,38 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
             : 'Lote'}
         </span>
 
-        <p className="text-xs text-[var(--muted-2)] truncate mt-0.5">
+        <p className="text-[10px] sm:text-xs text-[var(--muted-2)] truncate mt-0.5">
           {listing.edition}
         </p>
         
-        <h3 className="font-semibold text-[var(--foreground)] text-sm truncate">
+        <h3 className="font-semibold text-[var(--foreground)] text-[10px] sm:text-xs sm:text-sm truncate">
           {listing.cardName}
         </h3>
 
-        <p className="text-base font-bold text-[var(--primary)] mt-1">
+        <p className="text-sm sm:text-base font-bold text-[var(--primary)] mt-1">
           ${listing.priceCLP.toLocaleString('es-CL')}
         </p>
 
         {listing.listingType === 'POKEMON_PRODUCT' && (
-          <p className="text-xs text-[var(--muted)] mt-1">
+          <p className="text-[10px] sm:text-xs text-[var(--muted)] mt-1">
             Stock disponible: {listing.stock ?? 1}
           </p>
         )}
 
-        <div className="flex gap-1.5 mt-2 flex-wrap">
+        <div className="flex gap-1 sm:gap-1.5 mt-2 flex-wrap">
           {listing.listingType === 'CARD' && (
-            <span className="text-xs bg-[var(--info-bg)] text-[var(--info-fg)] px-2 py-0.5 rounded-full">
+            <span className="text-[10px] sm:text-xs bg-[var(--info-bg)] text-[var(--info-fg)] px-2 py-0.5 rounded-full">
               {listing.rarity.replace('_', ' ')}
             </span>
           )}
 
-          <span className="text-xs bg-[var(--surface-2)] text-[var(--muted)] px-2 py-0.5 rounded-full border border-[var(--border)]">
+          <span className="text-[10px] sm:text-xs bg-[var(--surface-2)] text-[var(--muted)] px-2 py-0.5 rounded-full border border-[var(--border)]">
             {CONDITION_LABELS[listing.condition]}
           </span>
         </div>
 
-        <div className="mt-auto pt-3 flex items-center justify-between">
-          <span className="text-xs text-[var(--muted-2)]">
+        <div className="mt-auto pt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <span className="text-[10px] sm:text-xs text-[var(--muted-2)]">
             <span className="text-[#e0a800] font-semibold">
               ★ {listing.seller.profile?.reputationScore.toFixed(1) || '0.0'}
             </span>

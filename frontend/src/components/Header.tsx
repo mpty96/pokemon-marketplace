@@ -26,12 +26,12 @@ export default function Header() {
     }`;
 
   const ghostBtn =
-    'text-sm border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] px-3 py-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors';
+  'text-xs sm:text-sm border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] px-2.5 sm:px-3 py-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors whitespace-nowrap';
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--surface)]">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-[var(--primary)] hover:opacity-90">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 min-h-16 py-2 flex items-center justify-between gap-3">
+        <Link href="/" className="text-lg sm:text-xl font-bold text-[var(--primary)] hover:opacity-90 shrink-0">
           PokeMarket
         </Link>
 
@@ -57,7 +57,7 @@ export default function Header() {
           )}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
             onClick={toggle}
             className={ghostBtn}
@@ -96,7 +96,7 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="md:hidden border-t border-[var(--border)] px-4 py-2 flex gap-4 overflow-x-auto bg-[var(--surface)]">
+      <div className="md:hidden border-t border-[var(--border)] px-3 py-2 flex gap-4 overflow-x-auto mobile-scrollbar bg-[var(--surface)] text-sm">
         <Link href="/" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Inicio</Link>
         <Link href="/marketplace" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Marketplace</Link>
 

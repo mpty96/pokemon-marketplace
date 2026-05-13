@@ -157,8 +157,8 @@ export default function ListingDetailPage() {
 
 
   return (
-    <div className="min-h-screen bg-[var(--background)] py-8 px-4">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[var(--background)] py-5 sm:py-8 px-3 sm:px-4">
+      <div className="max-w-5xl mx-auto min-w-0">
         <button onClick={() => router.back()}
           className="text-[var(--primary)] hover:underline mb-6 flex items-center gap-1"
           >
@@ -169,11 +169,11 @@ export default function ListingDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
 
             {/* Imágenes */}
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <img
                 src={listing.images[activeImg]}
                 alt={listing.title}
-                className="w-full aspect-square object-contain rounded-lg bg-[var(--surface-2)]"
+                className="w-full max-h-[420px] aspect-square object-contain rounded-lg bg-[var(--surface-2)]"
               />
               {listing.images.length > 1 && (
                 <div className="flex gap-2 mt-3 flex-wrap">
@@ -189,18 +189,18 @@ export default function ListingDetailPage() {
             </div>
 
             {/* Info */}
-            <div className="p-6 flex flex-col justify-between">
+            <div className="p-4 sm:p-6 flex flex-col justify-between min-w-0">
               <div className="space-y-4">
                 <div>
                   <span className="text-xs text-[var(--muted-2)] uppercase tracking-wide">
                     Edición: {listing.edition}{listing.setNumber && ` · #${listing.setNumber}`}
                   </span>
-                  <h1 className="text-2xl font-bold text-[var(--foreground)] mt-1">
+                  <h1 className="text-xl sm:text-2xl font-bold text-[var(--foreground)] mt-1 break-words">
                     {listing.title}
                   </h1>
                 </div>
 
-                <div className="text-3xl font-bold text-[var(--primary)]">
+                <div className="text-2xl sm:text-3xl font-bold text-[var(--primary)]">
                   ${listing.priceCLP.toLocaleString('es-CL')}
                 </div>
 
@@ -215,19 +215,19 @@ export default function ListingDetailPage() {
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-[var(--muted)] w-20">Condición:</span>
+                    <span className="text-xs text-[var(--muted)] w-20 shrink-0">Condición:</span>
                     <span className="px-3 py-1 bg-[var(--success-bg)] text-[var(--success-fg)] rounded-full text-sm font-medium">
                       {CONDITION_LABELS[listing.condition]}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-[var(--muted)] w-20">Rareza:</span>
+                    <span className="text-xs text-[var(--muted)] w-20 shrink-0">Rareza:</span>
                     <span className="px-3 py-1 bg-[var(--info-bg)] text-[var(--info-fg)] rounded-full text-sm font-medium">
                       {RARITY_LABELS[listing.rarity]}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-[var(--muted)] w-20">Idioma:</span>
+                    <span className="text-xs text-[var(--muted)] w-20 shrink-0">Idioma:</span>
                     <span className="px-3 py-1 bg-[var(--surface-2)] text-[var(--foreground)] rounded-full text-sm font-medium border border-[var(--border)]">
                       {listing.language === 'ESP'
                         ? 'Español'
@@ -306,15 +306,15 @@ export default function ListingDetailPage() {
             </div>
           </div>
         </div>
-        <div className="mt-6 bg-[var(--surface)] rounded-xl border border-[var(--border)] p-4">
-          <div className="flex items-center justify-between gap-4 mb-3">
+        <div className="mt-5 sm:mt-6 bg-[var(--surface)] rounded-xl border border-[var(--border)] p-3 sm:p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-3">
             <div>
               <h2 className="text-base font-bold text-[var(--foreground)]">
                 Historial de precio
               </h2>
 
               <div className="flex items-center gap-3 mt-2">
-                <p className="text-2xl font-bold text-[var(--foreground)]">
+                <p className="text-xl sm:text-2xl font-bold text-[var(--foreground)]">
                   ${latestPrice.toLocaleString('es-CL')}
                 </p>
 
@@ -324,7 +324,7 @@ export default function ListingDetailPage() {
               </div>
             </div>
 
-            <div className="flex rounded-lg border border-[var(--border)] overflow-hidden bg-[var(--surface-2)]">
+            <div className="flex w-full sm:w-auto rounded-lg border border-[var(--border)] overflow-hidden bg-[var(--surface-2)]">
               {[
                 { value: '7d', label: '7D' },
                 { value: '1m', label: '1M' },
@@ -335,7 +335,7 @@ export default function ListingDetailPage() {
                   key={item.value}
                   type="button"
                   onClick={() => setHistoryRange(item.value as SalesHistoryRange)}
-                  className={`px-3 py-1.5 text-xs transition-colors ${
+                  className={`flex-1 sm:flex-none px-3 py-1.5 text-xs transition-colors ${
                     historyRange === item.value
                       ? 'bg-[var(--surface)] text-[var(--foreground)] font-semibold'
                       : 'text-[var(--muted)] hover:text-[var(--foreground)]'
@@ -356,14 +356,14 @@ export default function ListingDetailPage() {
               Aún no hay ventas similares en este rango.
             </div>
           ) : (
-            <div className="relative rounded-lg bg-[var(--surface-2)] border border-[var(--border)] p-3">
+            <div className="relative rounded-lg bg-[var(--surface-2)] border border-[var(--border)] p-2 sm:p-3">
               <div className="absolute left-3 top-3 bottom-8 flex flex-col justify-between text-[10px] text-[var(--muted-2)]">
                 <span>${chartMaxPrice.toLocaleString('es-CL')}</span>
                 <span>${Math.round((chartMaxPrice + chartMinPrice) / 2).toLocaleString('es-CL')}</span>
                 <span>${chartMinPrice.toLocaleString('es-CL')}</span>
               </div>
 
-              <div className="ml-14 h-56 relative">
+              <div className="ml-12 sm:ml-14 h-44 sm:h-56 relative">
                 <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
                   <defs>
                     <linearGradient id="priceAreaGradient" x1="0" y1="0" x2="0" y2="1">
@@ -438,7 +438,7 @@ export default function ListingDetailPage() {
                 </svg>
 
                 {hoveredSale && (
-                  <div className="absolute right-3 top-8 w-44 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-lg p-3 text-xs z-10">
+                  <div className="absolute right-1 sm:right-3 top-6 sm:top-8 w-40 sm:w-44 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-lg p-2.5 sm:p-3 text-xs z-10">
                     <p className="font-semibold text-[var(--foreground)] mb-2">
                       {formatFullDate(hoveredSale.completedAt)}
                     </p>
@@ -469,7 +469,7 @@ export default function ListingDetailPage() {
                 )}
               </div>
 
-              <div className="ml-14 mt-1 flex justify-between text-[10px] text-[var(--muted-2)]">
+              <div className="ml-12 sm:ml-14 mt-1 flex justify-between text-[10px] text-[var(--muted-2)]">
                 <span>{formatShortDate(salesHistory[0]?.completedAt)}</span>
                 <span>{formatShortDate(salesHistory[Math.floor(salesHistory.length / 2)]?.completedAt)}</span>
                 <span>{formatShortDate(salesHistory[salesHistory.length - 1]?.completedAt)}</span>

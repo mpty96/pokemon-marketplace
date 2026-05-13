@@ -37,9 +37,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-4">
-      <div className="w-full max-w-md bg-[var(--surface)] rounded-xl shadow p-8 border border-[var(--border)]">
-        <h1 className="text-2xl font-bold text-center mb-6 text-[var(--foreground)]">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-3 sm:px-4 py-5">
+      <div className="w-full max-w-md bg-[var(--surface)] rounded-xl shadow p-4 sm:p-8 border border-[var(--border)]">
+        <h1 className="text-xl sm:text-2xl font-bold text-center mb-5 sm:mb-6 text-[var(--foreground)]">
           Iniciar sesión
         </h1>
 

@@ -187,17 +187,17 @@ export default function ChatPage() {
 }
 
 return (
-  <div className="relative max-w-6xl mx-auto px-4 py-8 text-[var(--foreground)]">
-  <div className="max-w-3xl mx-auto space-y-4">
+  <div className="relative max-w-6xl mx-auto px-3 sm:px-4 py-5 sm:py-8 text-[var(--foreground)]">
+  <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4 min-w-0">
 
 
   {/* Header del chat */}
-  <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-4 flex items-center gap-4">
+  <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-3 sm:p-4 flex items-center gap-3 sm:gap-4 min-w-0">
   <button onClick={() => router.back()} className="text-[var(--muted-2)] hover:text-[var(--foreground)]">←</button>
   <img src={listing.images[0]} alt={listing.title}
-    className="w-12 h-12 object-contain rounded-lg bg-[var(--surface-2)]" />
+    className="w-10 h-10 sm:w-12 sm:h-12 object-contain rounded-lg bg-[var(--surface-2)] shrink-0" />
   <div className="flex-1 min-w-0">
-    <h2 className="font-semibold text-[var(--foreground)] truncate">{listing.title}</h2>
+    <h2 className="font-semibold text-[var(--foreground)] truncate text-sm sm:text-base">{listing.title}</h2>
     <p className="text-sm text-[var(--primary)] font-medium">
         ${listing.priceCLP.toLocaleString('es-CL')}
       </p>
@@ -211,7 +211,7 @@ return (
           {isSeller ? 'Ver perfil del comprador' : 'Ver perfil del vendedor'}
       </Link>
     </div>
-    <span className={`text-xs px-2 py-1 rounded-full ${
+    <span className={`text-[10px] sm:text-xs px-2 py-1 rounded-full whitespace-nowrap shrink-0 ${
         listing.status === 'ACTIVE'  ? 'bg-[var(--success-bg)] text-[var(--success-fg)]' :
         listing.status === 'PAUSED'  ? 'bg-[var(--warning-bg)] text-[var(--warning-fg)]' :
         listing.status === 'SOLD'    ? 'bg-[var(--surface-2)] text-[var(--muted)]' :
@@ -283,7 +283,7 @@ return (
       )}
 
       {/* Mensajes */}
-      <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] overflow-hidden">
+      <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-3 sm:p-4 h-[55vh] sm:h-[500px] overflow-y-auto min-w-0">
         <div className="h-[38rem] overflow-y-auto p-4 space-y-3 bg-[var(--surface-2)]">
           {messages.length === 0 && (
             <div className="text-center text-[var(--muted-2)] text-sm mt-8">
@@ -294,7 +294,7 @@ return (
             const isMe = String(msg.sender?.id) === String(user?.id);
             return (
               <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className="max-w-[75%]">
+                <div className="max-w-[82%] sm:max-w-[70%]">
                   {!isMe && (
                     <p className="text-xs text-gray-400 mb-1 ml-1">
                       {msg.sender.profile?.displayName || msg.sender.username}
@@ -386,8 +386,8 @@ return (
               </div>
             )}
 
-            <div className="flex gap-3">
-              <label className="cursor-pointer rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--surface-2)]">
+            <div className="flex gap-2 sm:gap-3 items-stretch">
+              <label className="cursor-pointer rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--surface-2)] shrink-0 flex items-center">
                 📎
 
                 <input
@@ -407,13 +407,13 @@ return (
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Escribe un mensaje..."
-                className="flex-1 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                className="min-w-0 flex-1 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm"
               />
 
               <button
                 type="submit"
                 disabled={(!input.trim() && imageFiles.length === 0) || sendingImage}
-                className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] px-4 py-2 rounded-lg"
+                className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] px-3 sm:px-4 py-2 rounded-lg text-sm shrink-0"
               >
                 {sendingImage ? 'Enviando...' : 'Enviar'}
               </button>
@@ -424,25 +424,26 @@ return (
             </div>
     </div>
 
-    <aside className="hidden xl:flex absolute top-1/2 right-4 -translate-y-1/2 flex-col items-center gap-3">
-  <button
-    type="button"
-    onClick={() => setShowSafetyTips(true)}
-    className="group flex flex-col items-center"
-  >
-    <img
-      src="/chat-safety.png"
-      alt="Consejos de seguridad"
-      className="w-32 h-auto object-contain transition-transform duration-200 group-hover:scale-105"
-    />
+      <aside className="hidden xl:flex absolute right-4 top-1/2 -translate-y-1/2 flex-col items-center gap-3">
+        <button
+          type="button"
+          onClick={() => setShowSafetyTips(true)}
+          className="group flex flex-col items-center"
+        >
+          <img
+            src="/chat-safety.png"
+            alt="Consejos de seguridad"
+            className="w-28 xl:w-32 h-auto object-contain transition-transform duration-200 group-hover:scale-105"
+          />
 
-    <div className="mt-2 rounded-full bg-[var(--surface)] px-3 py-1 shadow-sm">
-      <span className="text-[11px] font-semibold text-[var(--primary)]">
-        🛡 Consejos
-      </span>
-    </div>
-  </button>
-</aside>
+          <div className="mt-2 rounded-full bg-[var(--surface)] px-3 py-1 shadow-sm border border-[var(--border)]">
+            <span className="text-[11px] font-semibold text-[var(--primary)]">
+              Consejos
+            </span>
+          </div>
+        </button>
+      </aside>
+      
       {selectedImage && (
         <div
           className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"

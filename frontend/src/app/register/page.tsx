@@ -30,8 +30,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-4">
-      <div className="w-full max-w-md bg-[var(--surface)] rounded-xl shadow p-8 border border-[var(--border)]">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-3 sm:px-4 py-5">
+      <div className="w-full max-w-md bg-[var(--surface)] rounded-xl shadow p-4 sm:p-8 border border-[var(--border)]">
         <h1 className="text-2xl font-bold text-center mb-6 text-[var(--foreground)]">
           🎴 Crear cuenta
         </h1>
@@ -132,7 +132,7 @@ export default function RegisterPage() {
 
         {showTerms && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4">
-          <div className="max-w-2xl w-full bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6 overflow-y-auto max-h-[80vh]">
+          <div className="max-w-2xl w-full bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 sm:p-6 overflow-y-auto max-h-[85vh]">
 
             <h2 className="text-xl font-bold mb-4">
               Términos y Condiciones – PokeMarket
