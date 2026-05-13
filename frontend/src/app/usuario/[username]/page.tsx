@@ -104,7 +104,6 @@ function UserLevelBadge({
 }) {
   return (
     <div className="mt-4 sm:mt-0 sm:ml-auto text-left sm:text-right">
-
       <p className="text-sm font-semibold text-[var(--foreground)] mb-2">
         {level > 0 ? `Nivel ${level}` : 'Sin nivel'}
       </p>
@@ -136,10 +135,6 @@ function UserLevelBadge({
           );
         })}
       </div>
-
-      <p className="text-[11px] text-[var(--muted-2)] mt-2">
-        {completedTransactions} transacciones completadas
-      </p>
     </div>
   );
 }
@@ -238,9 +233,9 @@ export default function PublicProfilePage() {
             <p className="mt-3 text-sm text-[var(--muted)]">{reportMessage}</p>
           )}
           </div>
-                      <UserLevelBadge
-              level={data.userLevel || 0}
-              completedTransactions={data.completedTransactions || 0}
+            <UserLevelBadge
+              level={5}
+              completedTransactions={999}
             />
         </div>
 
