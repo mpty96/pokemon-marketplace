@@ -18,6 +18,8 @@ interface PublicProfile {
     reputationScore:    number;
     totalSales:         number;
     totalPurchases:     number;
+    strikes:            number;
+    isBanned:           boolean;
   } | null;
   ratingsReceived:      Rating[];
   ratingsAsSeller:      Rating[];
@@ -221,13 +223,19 @@ export default function PublicProfilePage() {
               <p className="text-[var(--muted-2)] text-sm">📍 {profile.location}</p>
             )}
             {isAuthenticated && currentUser?.username !== data.username && (
-            <button
-              onClick={() => setShowReportModal(true)}
-              className="mt-3 text-sm text-red-500 hover:underline"
-            >
-              Reportar usuario
-            </button>
-          )}
+              <div className="mt-3 space-y-2">
+                <button
+                  onClick={() => setShowReportModal(true)}
+                  className="text-sm text-red-500 hover:underline"
+                >
+                  Reportar usuario
+                </button>
+
+                <div className="inline-flex items-center rounded-full border border-red-300 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
+                  {(profile?.strikes || 0)}/3 Strikes
+                </div>
+              </div>
+            )}
 
           {reportMessage && (
             <p className="mt-3 text-sm text-[var(--muted)]">{reportMessage}</p>

@@ -204,7 +204,19 @@ export async function getPublicProfileByUsername(username: string) {
     where: { username },
       select: {
         username: true,
-        profile: true,
+        profile: {
+        select: {
+          displayName: true,
+          avatarUrl: true,
+          bio: true,
+          location: true,
+          reputationScore: true,
+          totalSales: true,
+          totalPurchases: true,
+          strikes: true,
+          isBanned: true,
+        },
+      },
 
         salesAsSeller: {
           where: { status: 'COMPLETED' },
