@@ -223,7 +223,7 @@ export default function PublicProfilePage() {
               <p className="text-[var(--muted-2)] text-sm">📍 {profile.location}</p>
             )}
             {isAuthenticated && currentUser?.username !== data.username && (
-              <div className="mt-3 space-y-2">
+              <div className="mt-3 flex flex-col items-start gap-2">
                 <button
                   onClick={() => setShowReportModal(true)}
                   className="text-sm text-red-500 hover:underline"
@@ -231,7 +231,7 @@ export default function PublicProfilePage() {
                   Reportar usuario
                 </button>
 
-                <div className="inline-flex items-center rounded-full border border-red-300 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
+                <div className="flex items-center rounded-full border border-red-300 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
                   {(profile?.strikes || 0)}/3 Strikes
                 </div>
               </div>
