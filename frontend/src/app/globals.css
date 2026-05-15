@@ -110,3 +110,15 @@ textarea {
 .mobile-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.beta-tester-badge {
+  color: #1f1f1f !important;
+  background: rgba(244, 63, 94, 0.16);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+}
+
+.dark .beta-tester-badge {
+  color: #d4d4d8 !important;
+  background: rgba(136, 19, 55, 0.35);
+  border-color: rgba(190, 18, 60, 0.45);
+}
