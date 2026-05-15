@@ -81,14 +81,14 @@ const displayed =
           <div className="flex flex-col items-end gap-2 text-right">
             <Link
               href={`/usuario/${user?.username}`}
-              className="text-xs sm:text-sm text-[var(--primary)] hover:underline whitespace-nowrap"
+              className="text-sm sm:text-sm text-[var(--primary)] hover:underline whitespace-nowrap"
             >
               Ver perfil público →
             </Link>
 
             <Link
               href="/profile/editar"
-              className="text-xs text-[var(--primary)] hover:underline whitespace-nowrap"
+              className="text-[11px] text-[var(--primary)] hover:underline whitespace-nowrap"
             >
               Editar mi perfil
             </Link>

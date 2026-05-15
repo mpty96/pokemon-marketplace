@@ -27,6 +27,7 @@ export default function ChatPage() {
   const [input,           setInput]           = useState('');
   const [imageFiles,      setImageFiles]      = useState<File[]>([]);
   const [sendingImage,    setSendingImage]    = useState(false);
+  const [sendingMessage, setSendingMessage] = useState(false);
   const [selectedImage,   setSelectedImage]   = useState<string | null>(null);
   const [showSafetyTips,  setShowSafetyTips]  = useState(false);
   const [loading,         setLoading]         = useState(true);
@@ -86,7 +87,13 @@ export default function ChatPage() {
 
     // Mensajes nuevos
     socket.on('new_message', (message: Message) => {
-      setMessages((prev) => [...prev, message]);
+      setMessages((prev) => {
+        if (prev.some((item) => item.id === message.id)) {
+          return prev;
+        }
+
+        return [...prev, message];
+      });
       if (message.senderId !== user?.id) {
         socket.emit('mark_read', message.conversationId);
       }
@@ -128,29 +135,32 @@ export default function ChatPage() {
 
 
   async function sendMessage(e: React.FormEvent) {
-    e.preventDefault();
-    if ((!input.trim() && imageFiles.length === 0) || !socket) return;
+  e.preventDefault();
 
-    try {
+  if ((!input.trim() && imageFiles.length === 0) || sendingMessage) return;
+
+  setSendingMessage(true);
+
+  try {
     let imageUrls: string[] = [];
 
-      if (imageFiles.length > 0) {
-        setSendingImage(true);
+    if (imageFiles.length > 0) {
+      setSendingImage(true);
 
-        const formData = new FormData();
+      const formData = new FormData();
 
-        imageFiles.slice(0, 4).forEach((file) => {
-          formData.append('images', file);
-        });
+      imageFiles.slice(0, 4).forEach((file) => {
+        formData.append('images', file);
+      });
 
-        const { data } = await api.post(`/api/chat/${id}/images`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+      const { data } = await api.post(`/api/chat/${id}/images`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-        imageUrls = data.imageUrls || [];
-      }
+      imageUrls = data.imageUrls || [];
+    }
 
-      let contentToSend = input.trim();
+    let contentToSend = input.trim();
 
     if (
       listing?.listingType === 'POKEMON_PRODUCT' &&
@@ -168,21 +178,34 @@ export default function ChatPage() {
       }
     }
 
-    socket.emit('send_message', {
-      listingId: id,
+    const { data: savedMessage } = await api.post(`/api/chat/${id}/messages`, {
       content: contentToSend,
       imageUrls,
     });
 
-      setInput('');
-      setImageFiles([]);
-    } catch (err: any) {
-      console.error('SEND MESSAGE ERROR:', err);
-      alert(err.response?.data?.error || 'Error al enviar imagen o mensaje');
-    } finally {
-      setSendingImage(false);
-    }
+    setMessages((prev) => {
+      if (prev.some((message) => message.id === savedMessage.id)) {
+        return prev;
+      }
+
+      return [...prev, savedMessage];
+    });
+
+    socket?.emit('send_message_broadcast_only', {
+      listingId: id,
+      message: savedMessage,
+    });
+
+    setInput('');
+    setImageFiles([]);
+  } catch (err: any) {
+    console.error('SEND MESSAGE ERROR:', err);
+    alert(err.response?.data?.error || 'Error al enviar mensaje');
+  } finally {
+    setSendingImage(false);
+    setSendingMessage(false);
   }
+}
 
 
   function handleSaleUpdate(updatedSale: Sale | null) {
@@ -462,15 +485,15 @@ return (
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Escribe un mensaje..."
-                className="min-w-0 flex-1 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm"
+                className="flex-1 border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] text-[16px] sm:text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
               />
 
               <button
                 type="submit"
-                disabled={(!input.trim() && imageFiles.length === 0) || sendingImage}
+                disabled={(!input.trim() && imageFiles.length === 0) || sendingImage || sendingMessage}
                 className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] px-3 sm:px-4 py-2 rounded-lg text-sm shrink-0"
               >
-                {sendingImage ? 'Enviando...' : 'Enviar'}
+                {sendingImage || sendingMessage ? 'Enviando...' : 'Enviar'}
               </button>
             </div>
           </form>

@@ -5,6 +5,7 @@ import {
   getUserConversations,
   getUnreadCount,
   uploadChatImages,
+  sendChatMessage,
 } from '../services/chat.service';
 
 export async function getChat(req: AuthRequest, res: Response): Promise<void> {
@@ -61,5 +62,30 @@ export async function uploadChatImageController(req: AuthRequest, res: Response)
   } catch (error) {
     console.error('UPLOAD CHAT IMAGES ERROR:', error);
     res.status(500).json({ error: 'Error al subir imágenes del chat' });
+  }
+}
+
+export async function sendChatMessageController(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const listingId = req.params.listingId as string;
+    const userId = req.user!.userId;
+    const { content, imageUrls = [] } = req.body;
+
+    const message = await sendChatMessage(listingId, userId, content, imageUrls);
+
+    res.status(201).json(message);
+  } catch (error: any) {
+    if (error.message === 'LISTING_NOT_FOUND') {
+      res.status(404).json({ error: 'Publicación no encontrada' });
+      return;
+    }
+
+    if (error.message === 'EMPTY_MESSAGE') {
+      res.status(400).json({ error: 'El mensaje está vacío' });
+      return;
+    }
+
+    console.error('SEND CHAT MESSAGE ERROR:', error);
+    res.status(500).json({ error: 'Error al enviar mensaje' });
   }
 }

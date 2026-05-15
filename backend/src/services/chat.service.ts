@@ -162,3 +162,53 @@ export async function getUnreadCount(userId: string): Promise<number> {
 export async function uploadChatImages(buffers: Buffer[]) {
   return Promise.all(buffers.map((buffer) => uploadImage(buffer, 'chat')));
 }
+
+
+export async function sendChatMessage(
+  listingId: string,
+  senderId: string,
+  content?: string,
+  imageUrls: string[] = []
+) {
+  const cleanContent = content?.trim() || '';
+  const cleanImageUrls = imageUrls.filter(Boolean).slice(0, 4);
+
+  if (!cleanContent && cleanImageUrls.length === 0) {
+    throw new Error('EMPTY_MESSAGE');
+  }
+
+  const listing = await prisma.listing.findUnique({
+    where: { id: listingId },
+    select: { id: true, sellerId: true },
+  });
+
+  if (!listing) throw new Error('LISTING_NOT_FOUND');
+
+  let conversation = await prisma.conversation.findUnique({
+    where: { listingId },
+  });
+
+  if (!conversation) {
+    conversation = await prisma.conversation.create({
+      data: { listingId },
+    });
+  }
+
+  return prisma.message.create({
+    data: {
+      conversationId: conversation.id,
+      senderId,
+      content: cleanContent,
+      imageUrls: cleanImageUrls,
+    },
+    include: {
+      sender: {
+        select: {
+          id: true,
+          username: true,
+          profile: { select: { displayName: true, avatarUrl: true } },
+        },
+      },
+    },
+  });
+}

@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import app from './app';
 import prisma from './lib/prisma';
 import { verifyAccessToken } from './utils/jwt';
+import { sendChatMessage } from './services/chat.service';
 
 const PORT = process.env.PORT || 4000;
 
@@ -67,43 +68,12 @@ async function main() {
       try {
         const { listingId, content, imageUrls = [] } = data;
 
-        const cleanContent = content?.trim() || '';
-        const cleanImageUrls = imageUrls.filter(Boolean).slice(0, 4);
-
-        if (!cleanContent && cleanImageUrls.length === 0) return;
-
-        const listing = await prisma.listing.findUnique({
-          where: { id: listingId },
-        });
-        if (!listing) return;
-
-        let conversation = await prisma.conversation.findUnique({
-          where: { listingId },
-        });
-
-        if (!conversation) {
-          conversation = await prisma.conversation.create({
-            data: { listingId },
-          });
-        }
-
-        const message = await prisma.message.create({
-          data: {
-            conversationId: conversation.id,
-            senderId: user.userId,
-            content: cleanContent,
-            imageUrls: cleanImageUrls,
-          },
-          include: {
-            sender: {
-              select: {
-                id: true,
-                username: true,
-                profile: { select: { displayName: true, avatarUrl: true } },
-              },
-            },
-          },
-        });
+        const message = await sendChatMessage(
+          listingId,
+          user.userId,
+          content,
+          imageUrls
+        );
 
         io.to(`listing:${listingId}`).emit('new_message', message);
       } catch (error) {
