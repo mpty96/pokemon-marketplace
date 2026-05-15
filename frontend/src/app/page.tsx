@@ -63,13 +63,16 @@ export default function HomePage() {
             Solo para Chile
           </div>
 
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2 tracking-tight text-[var(--foreground)] leading-tight">
-            Compra y vende cartas
-            <span className="block text-[var(--primary)]">Pokémon con confianza</span>
-          </h1>
+          <div className="mb-3 flex justify-center">
+            <img
+              src="/logo-footer.png"
+              alt="Compra y vende cartas Pokémon con confianza"
+              className="h-16 sm:h-20 md:h-24 w-auto object-contain"
+            />
+          </div>
 
           <p className="text-[var(--muted)] mb-5 text-sm sm:text-base max-w-xl mx-auto leading-6">
-            Marketplace para cartas, productos Pokémon y lotes entre coleccionistas.
+            Compra y venta dedicada para el coleccionista de articulos Pokémon.
           </p>
 
           <div className="flex gap-2 justify-center flex-wrap">

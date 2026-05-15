@@ -12,9 +12,11 @@ export default function Footer() {
     <>
       <footer className="mt-16 border-t border-[var(--border)] bg-[var(--surface)]">
         <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-          <p className="text-sm font-semibold text-[var(--foreground)]">
-            PokeMarket Chile
-          </p>
+          <img
+            src="/logo-footer.png"
+            alt="PokeMarket Chile"
+            className="h-8 w-auto object-contain mx-auto"
+          />
 
           <p className="text-sm text-[var(--muted)] mt-2 leading-6">
             Marketplace dedicado a los coleccionistas de Pokémon en Chile. 
