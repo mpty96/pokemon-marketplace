@@ -215,6 +215,7 @@ export async function getPublicProfileByUsername(username: string) {
           totalPurchases: true,
           strikes: true,
           isBanned: true,
+          isBetaTester: true,
         },
       },
 

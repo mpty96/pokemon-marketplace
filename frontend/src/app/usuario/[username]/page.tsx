@@ -20,6 +20,7 @@ interface PublicProfile {
     totalPurchases:     number;
     strikes:            number;
     isBanned:           boolean;
+    isBetaTester:       boolean;
   } | null;
   ratingsReceived:      Rating[];
   ratingsAsSeller:      Rating[];
@@ -219,6 +220,11 @@ export default function PublicProfilePage() {
               {profile?.displayName || data.username}
             </h1>
             <p className="text-[var(--muted)] text-sm">@{data.username}</p>
+            {profile?.isBetaTester && (
+              <span className="inline-flex mt-1 rounded-full border border-blue-300 bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300">
+                beta_tester
+              </span>
+            )}
             {profile?.location && (
               <p className="text-[var(--muted-2)] text-sm">📍 {profile.location}</p>
             )}
