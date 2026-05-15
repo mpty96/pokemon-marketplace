@@ -102,9 +102,11 @@ const USER_LEVELS = [
 function UserLevelBadge({
   level,
   completedTransactions,
+  strikes,
 }: {
   level: number;
   completedTransactions: number;
+  strikes?: number;
 }) {
   return (
     <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto text-right">
@@ -135,10 +137,19 @@ function UserLevelBadge({
               ) : (
                 <span className="w-3 h-3 rounded-full border border-[var(--muted-2)]" />
               )}
+              
             </div>
+            
           );
         })}
       </div>
+      {(strikes || 0) > 0 && (
+        <div className="mt-3 flex justify-end">
+          <div className="rounded-full border border-red-300 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
+            {strikes}/3 Strikes
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -237,12 +248,6 @@ export default function PublicProfilePage() {
                 >
                   Reportar usuario
                 </button>
-
-                {(profile?.strikes || 0) > 0 && (
-                  <div className="flex items-center rounded-full border border-red-300 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
-                    {profile?.strikes}/3 Strikes
-                  </div>
-                )}
               </div>
             )}
 
@@ -251,8 +256,9 @@ export default function PublicProfilePage() {
           )}
           </div>
             <UserLevelBadge
-              level={data.userLevel || 0}
-              completedTransactions={data.completedTransactions || 0}
+              level={data.userLevel}
+              completedTransactions={data.completedTransactions}
+              strikes={profile?.strikes}
             />
         </div>
 
