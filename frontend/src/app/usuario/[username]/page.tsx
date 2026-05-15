@@ -221,14 +221,7 @@ export default function PublicProfilePage() {
             </h1>
             <p className="text-[var(--muted)] text-sm">@{data.username}</p>
             {profile?.isBetaTester && (
-              <span
-                className="inline-flex mt-1 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300"
-                style={{
-                  border: '1px solid rgba(14, 165, 233, 0.22)',
-                  backgroundColor: 'rgba(14, 165, 233, 0.08)',
-                  color: 'rgba(3, 105, 161, 0.72)',
-                }}
-              >
+              <span className="inline-flex mt-1 rounded-full border border-sky-300/40 bg-sky-100/40 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-sky-700 dark:border-sky-700/40 dark:bg-sky-900/30 dark:text-sky-300">
                 beta_tester
               </span>
             )}
