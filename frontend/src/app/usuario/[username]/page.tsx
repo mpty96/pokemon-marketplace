@@ -238,9 +238,11 @@ export default function PublicProfilePage() {
                   Reportar usuario
                 </button>
 
-                <div className="flex items-center rounded-full border border-red-300 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
-                  {(profile?.strikes || 0)}/3 Strikes
-                </div>
+                {(profile?.strikes || 0) > 0 && (
+                  <div className="flex items-center rounded-full border border-red-300 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
+                    {profile?.strikes}/3 Strikes
+                  </div>
+                )}
               </div>
             )}
 
