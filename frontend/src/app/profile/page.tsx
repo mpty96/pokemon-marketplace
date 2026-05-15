@@ -65,10 +65,10 @@ const displayed =
           </div>
 
           <div className="min-w-0">
-            <h1 className="text-xl font-bold text-[var(--foreground)] truncate">
+            <h1 className="text-base sm:text-xl font-bold text-[var(--foreground)] truncate">
               {user?.username}
             </h1>
-            <p className="text-[var(--muted)] text-sm truncate">{user?.email}</p>
+          <p className="text-[var(--muted)] text-xs sm:text-sm truncate">{user?.email}</p>
             <div className="flex items-center gap-1 mt-1">
               <span className="text-[#e0a800] text-sm">★</span>
               <span className="text-sm font-medium text-[var(--foreground)]">
@@ -81,7 +81,7 @@ const displayed =
           <div className="flex flex-col items-end gap-2 text-right">
             <Link
               href={`/usuario/${user?.username}`}
-              className="text-sm text-[var(--primary)] hover:underline whitespace-nowrap"
+              className="text-xs sm:text-sm text-[var(--primary)] hover:underline whitespace-nowrap"
             >
               Ver perfil público →
             </Link>
