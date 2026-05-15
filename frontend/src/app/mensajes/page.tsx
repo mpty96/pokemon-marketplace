@@ -12,6 +12,10 @@ export default function MensajesPage() {
   const { isAuthenticated, user } = useAuthStore();
   const [conversations, setConversations] = useState<ConversationPreview[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -26,11 +30,82 @@ export default function MensajesPage() {
 
   if (!isAuthenticated) return null;
 
+  function toggleSelected(id: string) {
+  setSelectedIds((prev) =>
+    prev.includes(id)
+      ? prev.filter((item) => item !== id)
+      : [...prev, id]
+  );
+}
+
+function cancelSelection() {
+  setSelectionMode(false);
+  setSelectedIds([]);
+}
+
+async function confirmDeleteChats() {
+  if (selectedIds.length === 0) return;
+
+  setDeleting(true);
+
+  try {
+    await api.delete('/api/chat/conversations/bulk', {
+      data: { conversationIds: selectedIds },
+    });
+
+    setConversations((prev) =>
+      prev.filter((conv) => !selectedIds.includes(conv.id))
+    );
+
+    setShowDeleteConfirm(false);
+    cancelSelection();
+  } catch (err: any) {
+    alert(err.response?.data?.error || 'Error al eliminar conversaciones');
+  } finally {
+    setDeleting(false);
+  }
+}
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 text-[var(--foreground)]">
-      <h1 className="text-2xl font-bold text-[var(--foreground)] mb-6">
-        💬 Mis mensajes
-      </h1>
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <h1 className="text-2xl font-bold text-[var(--foreground)]">
+          💬 Mis mensajes
+        </h1>
+
+        {conversations.length > 0 && (
+          <div className="flex items-center gap-2">
+            {selectionMode ? (
+              <>
+                <button
+                  type="button"
+                  onClick={cancelSelection}
+                  className="text-xs text-[var(--muted)] hover:text-[var(--foreground)]"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="button"
+                  disabled={selectedIds.length === 0}
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50"
+                >
+                  Eliminar ({selectedIds.length})
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setSelectionMode(true)}
+                className="text-xs text-[var(--primary)] hover:underline"
+              >
+                Seleccionar
+              </button>
+            )}
+          </div>
+        )}
+      </div>
 
       {loading ? (
         <div className="space-y-3">
@@ -49,8 +124,48 @@ export default function MensajesPage() {
       ) : (
         <div className="space-y-2">
           {conversations.map((conv) => (
-            <ConversationCard key={conv.id} conv={conv} currentUserId={user?.id || ''} />
+            <ConversationCard
+              key={conv.id}
+              conv={conv}
+              currentUserId={user?.id || ''}
+              selectionMode={selectionMode}
+              selected={selectedIds.includes(conv.id)}
+              onToggle={() => toggleSelected(conv.id)}
+            />
           ))}
+        </div>
+      )}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-md rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-xl">
+            <h2 className="text-lg font-bold text-[var(--foreground)]">
+              Eliminar conversaciones
+            </h2>
+
+            <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+              Esta acción eliminará definitivamente los chats seleccionados y todos sus mensajes de la base de datos. No podrás recuperarlos después.
+            </p>
+
+            <div className="mt-5 flex gap-3">
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={() => setShowDeleteConfirm(false)}
+                className="flex-1 rounded-lg border border-[var(--border)] py-2 text-sm text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={confirmDeleteChats}
+                className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-medium text-white disabled:opacity-60"
+              >
+                {deleting ? 'Eliminando...' : 'Confirmar'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -60,9 +175,15 @@ export default function MensajesPage() {
 function ConversationCard({
   conv,
   currentUserId,
+  selectionMode,
+  selected,
+  onToggle,
 }: {
   conv: ConversationPreview;
   currentUserId: string;
+  selectionMode: boolean;
+  selected: boolean;
+  onToggle: () => void;
 }) {
   const isSeller = conv.isSeller;
   const otherPerson = isSeller
@@ -89,9 +210,20 @@ function ConversationCard({
       : 'bg-[var(--danger-bg)] text-[var(--danger-fg)]';
 
   return (
+    <div className="flex items-center gap-2">
+    {selectionMode && (
+      <input
+        type="checkbox"
+        checked={selected}
+        onClick={(e) => e.stopPropagation()}
+        onChange={onToggle}
+        className="h-4 w-4 accent-[var(--primary)]"
+      />
+    )}
+
     <Link
       href={`/listings/${conv.listingId}/chat`}
-      className={`flex items-center gap-4 rounded-xl p-4 border hover:shadow-sm transition-shadow ${
+      className={`flex-1 min-w-0 flex items-center gap-4 rounded-xl p-4 border hover:shadow-sm transition-shadow ${
         (conv.unreadCount || 0) > 0
           ? 'bg-[var(--info-bg)]/35 border-[var(--primary)]'
           : 'bg-[var(--surface)] border-[var(--border)]'
@@ -153,7 +285,10 @@ function ConversationCard({
             ✅ Venta completada
           </div>
         )}
+
+        
       </div>
     </Link>
+  </div>
   );
 }

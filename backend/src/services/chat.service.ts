@@ -212,3 +212,62 @@ export async function sendChatMessage(
     },
   });
 }
+
+
+export async function deleteUserConversations(userId: string, conversationIds: string[]) {
+  const cleanIds = [...new Set(conversationIds.filter(Boolean))];
+
+  if (cleanIds.length === 0) {
+    throw new Error('NO_CONVERSATIONS_SELECTED');
+  }
+
+  const conversations = await prisma.conversation.findMany({
+    where: {
+      id: { in: cleanIds },
+      OR: [
+        { listing: { sellerId: userId } },
+        { messages: { some: { senderId: userId } } },
+      ],
+    },
+    include: {
+      listing: {
+        include: {
+          sale: true,
+        },
+      },
+    },
+  });
+
+  if (conversations.length === 0) {
+    throw new Error('CONVERSATIONS_NOT_FOUND');
+  }
+
+  const hasActiveSale = conversations.some((conv) => {
+    const status = conv.listing.sale?.status;
+    return status && status !== 'COMPLETED' && status !== 'CANCELLED';
+  });
+
+  if (hasActiveSale) {
+    throw new Error('ACTIVE_SALE_CONVERSATION');
+  }
+
+  const allowedIds = conversations.map((conv) => conv.id);
+
+  await prisma.$transaction([
+    prisma.message.deleteMany({
+      where: {
+        conversationId: { in: allowedIds },
+      },
+    }),
+
+    prisma.conversation.deleteMany({
+      where: {
+        id: { in: allowedIds },
+      },
+    }),
+  ]);
+
+  return {
+    deletedCount: allowedIds.length,
+  };
+}

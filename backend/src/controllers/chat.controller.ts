@@ -6,6 +6,7 @@ import {
   getUnreadCount,
   uploadChatImages,
   sendChatMessage,
+  deleteUserConversations,
 } from '../services/chat.service';
 
 export async function getChat(req: AuthRequest, res: Response): Promise<void> {
@@ -87,5 +88,37 @@ export async function sendChatMessageController(req: AuthRequest, res: Response)
 
     console.error('SEND CHAT MESSAGE ERROR:', error);
     res.status(500).json({ error: 'Error al enviar mensaje' });
+  }
+}
+
+
+export async function deleteConversationsController(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const userId = req.user!.userId;
+    const { conversationIds } = req.body;
+
+    const result = await deleteUserConversations(userId, conversationIds || []);
+
+    res.json(result);
+  } catch (error: any) {
+    if (error.message === 'NO_CONVERSATIONS_SELECTED') {
+      res.status(400).json({ error: 'No seleccionaste conversaciones' });
+      return;
+    }
+
+    if (error.message === 'CONVERSATIONS_NOT_FOUND') {
+      res.status(404).json({ error: 'No se encontraron conversaciones válidas' });
+      return;
+    }
+
+    if (error.message === 'ACTIVE_SALE_CONVERSATION') {
+      res.status(400).json({
+        error: 'No puedes eliminar chats con una venta activa o pendiente',
+      });
+      return;
+    }
+
+    console.error('DELETE CONVERSATIONS ERROR:', error);
+    res.status(500).json({ error: 'Error al eliminar conversaciones' });
   }
 }
