@@ -35,7 +35,7 @@ export default function Header() {
           <img
             src="/logo-header.png"
             alt="PokeMarket"
-            className="h-7 sm:h-8 w-auto object-contain"
+            className="h-9 sm:h-11 w-auto object-contain"
           />
         </Link>
 
