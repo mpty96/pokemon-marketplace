@@ -112,8 +112,8 @@ textarea {
 }
 
 .beta-tester-badge {
-  color: #1f1f1f !important;
-  background: rgba(244, 63, 94, 0.16);
+  color: #302f2f !important;
+  background: rgba(153, 6, 31, 0.644);
   border: 1px solid rgba(244, 63, 94, 0.35);
 }
 
