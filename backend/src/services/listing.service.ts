@@ -28,6 +28,7 @@ interface CreateListingInput {
 interface ListingFilters {
   search?:      string;
   listingType?: ListingType;
+  seller?: string;
   edition?:     string;
   condition?:   CardCondition;
   rarity?:      CardRarity;
@@ -68,7 +69,7 @@ export async function createListing(input: CreateListingInput) {
 
 export async function getListings(filters: ListingFilters) {
   const {
-    search, edition, condition, rarity, language, listingType,
+    search, edition, condition, rarity, language, listingType, seller,
     minPrice, maxPrice, page = 1, limit = 12,
   } = filters;
 
@@ -92,6 +93,14 @@ export async function getListings(filters: ListingFilters) {
   if (rarity)    where.rarity    = rarity;
   if (language)  where.language  = language;
   if (listingType) where.listingType = listingType;
+  if (seller) {
+    where.seller = {
+      username: {
+        equals: seller,
+        mode: 'insensitive',
+      },
+    };
+  }
   if (minPrice || maxPrice) {
     where.priceCLP = {};
     if (minPrice) where.priceCLP = { ...where.priceCLP as object, gte: minPrice };

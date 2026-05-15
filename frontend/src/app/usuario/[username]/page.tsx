@@ -26,6 +26,7 @@ interface PublicProfile {
   ratingsAsSeller:      Rating[];
   ratingsAsBuyer:       Rating[];
   activeListings?:      Listing[];
+  activeListingsCount:  number;
   userLevel:            number;
   completedTransactions:number;
 }
@@ -342,7 +343,7 @@ export default function PublicProfilePage() {
             </button>
           </div>
 
-          <div className="max-h-[500px] overflow-y-auto pr-1 space-y-3">
+          <div className="max-h-[390px] overflow-y-auto pr-1 space-y-3">
             {(ratingTab === 'all'
               ? data.ratingsReceived
               : ratingTab === 'seller'
@@ -364,9 +365,20 @@ export default function PublicProfilePage() {
             </h2>
           </div>
 
-          <span className="text-sm text-[var(--muted)]">
-            {data.activeListings?.length || 0} activas
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-[var(--muted)]">
+              {data.activeListingsCount || 0} activas
+            </span>
+
+            {(data.activeListingsCount || 0) > 4 && (
+              <Link
+                href={`/marketplace?seller=${data.username}`}
+                className="text-sm font-medium text-[var(--primary)] hover:underline"
+              >
+                Ver todas
+              </Link>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">

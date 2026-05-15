@@ -84,13 +84,14 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
 export async function list(req: AuthRequest, res: Response): Promise<void> {
   try {
     const {
-      search, edition, condition, rarity, language, listingType,
+      search, edition, condition, rarity, language, listingType, seller,
       minPrice, maxPrice, page, limit,
     } = req.query;
 
     const result = await getListings({
       search:    search    as string,
       listingType: listingType as any,
+      seller:    seller as string,
       edition:   edition   as string,
       condition: condition as CardCondition,
       rarity:    rarity    as CardRarity,

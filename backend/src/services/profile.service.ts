@@ -254,7 +254,7 @@ export async function getPublicProfileByUsername(username: string) {
         orderBy: {
           createdAt: 'desc',
         },
-        take: 12,
+        take: 4,
         select: {
           id: true,
           listingType: true,
@@ -267,6 +267,16 @@ export async function getPublicProfileByUsername(username: string) {
           images: true,
           createdAt: true,
           views: true,
+        },
+      },
+      _count: {
+        select: {
+          listings: {
+            where: {
+              status: 'ACTIVE',
+              deletedAt: null,
+            },
+          },
         },
       },
       ratingsGiven: {
@@ -310,6 +320,7 @@ export async function getPublicProfileByUsername(username: string) {
     ratingsAsSeller,
     ratingsAsBuyer,
     activeListings: user.listings,
+    activeListingsCount: user._count.listings,
     userLevel: getUserLevel(totalCompletedTransactions),
     completedTransactions: totalCompletedTransactions,
   };

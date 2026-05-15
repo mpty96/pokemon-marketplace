@@ -65,6 +65,7 @@ function MarketplaceContent() {
 
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
+    seller: searchParams.get('seller') || '',
     listingType: searchParams.get('listingType') || '',
     edition: searchParams.get('edition') || '',
     condition: searchParams.get('condition') || '',
@@ -105,6 +106,7 @@ function MarketplaceContent() {
   function clearFilters() {
     setFilters({
       search: '',
+      seller: '',
       listingType: '',
       edition: '',
       condition: '',
@@ -190,6 +192,19 @@ function MarketplaceContent() {
                 </button>
               </div>
             </form>
+
+            <div>
+              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+                Usuario vendedor
+              </label>
+              <input
+                type="text"
+                placeholder="nombreusuario"
+                value={filters.seller}
+                onChange={(e) => handleFilterChange('seller', e.target.value)}
+                className={inputClass}
+              />
+            </div>
 
             <div>
               <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
