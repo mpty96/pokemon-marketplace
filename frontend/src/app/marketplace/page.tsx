@@ -134,226 +134,251 @@ function MarketplaceContent() {
         </Link>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
-        <aside className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-4 sm:p-5 space-y-4 sm:space-y-5">
-            <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-[var(--foreground)]">Filtros</h2>
-              <button onClick={clearFilters} className="text-[10px] sm:text-xs text-[var(--primary)] hover:underline">
-                Limpiar
-              </button>
-            </div>
+<div className="space-y-5">
+  <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-4 sm:p-5">
+    <div className="flex items-center justify-between gap-3 mb-4">
+      <h2 className="font-semibold text-[var(--foreground)]">
+        Filtros de búsqueda
+      </h2>
 
-            <div>
-              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
-                Tipo de publicación
-              </label>
-              <select
-                value={filters.listingType}
-                onChange={(e) => {
-                  const nextType = e.target.value;
+      <button
+        onClick={clearFilters}
+        className="text-xs text-[var(--primary)] hover:underline"
+      >
+        Limpiar
+      </button>
+    </div>
 
-                  setFilters((prev) => ({
-                    ...prev,
-                    listingType: nextType,
-                    condition: '',
-                    rarity: '',
-                    page: 1,
-                  }));
-                }}
-                className={selectClass}
-              >
-                <option value="">Todos</option>
-                {LISTING_TYPES.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <form onSubmit={handleSearch} className="lg:col-span-2">
+        <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+          Buscar
+        </label>
 
-            <form onSubmit={handleSearch}>
-              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
-                Buscar
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                <input
-                  type="text"
-                  placeholder="Charizard..."
-                  value={filters.search}
-                  onChange={(e) => handleFilterChange('search', e.target.value)}
-                  className={inputClass}
-                />
-                <button
-                  type="submit"
-                  className="bg-[var(--primary)] text-[var(--primary-foreground)] px-3 rounded-lg hover:bg-[var(--primary-hover)] text-sm"
-                >
-                  →
-                </button>
-              </div>
-            </form>
+        <div className="grid grid-cols-[1fr_auto] gap-2">
+          <input
+            type="text"
+            placeholder="Charizard..."
+            value={filters.search}
+            onChange={(e) => handleFilterChange('search', e.target.value)}
+            className={inputClass}
+          />
 
-            <div>
-              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
-                Usuario vendedor
-              </label>
-              <input
-                type="text"
-                placeholder="nombreusuario"
-                value={filters.seller}
-                onChange={(e) => handleFilterChange('seller', e.target.value)}
-                className={inputClass}
-              />
-            </div>
+          <button
+            type="submit"
+            className="bg-[var(--primary)] text-[var(--primary-foreground)] px-4 rounded-lg hover:bg-[var(--primary-hover)] text-sm"
+          >
+            →
+          </button>
+        </div>
+      </form>
 
-            <div>
-              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
-                Edición
-              </label>
-              <input
-                type="text"
-                placeholder="Base Set, Jungle..."
-                value={filters.edition}
-                onChange={(e) => handleFilterChange('edition', e.target.value)}
-                className={inputClass}
-              />
-            </div>
+      <div>
+        <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+          Tipo de publicación
+        </label>
 
-            <div>
-              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
-                Condición
-              </label>
-              <select
-                value={filters.condition}
-                onChange={(e) => handleFilterChange('condition', e.target.value)}
-                className={selectClass}
-              >
-                <option value="">Todas</option>
-                {(filters.listingType === 'CARD' || !filters.listingType
-                  ? CONDITIONS
-                  : NON_CARD_CONDITIONS
-                ).map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <select
+          value={filters.listingType}
+          onChange={(e) => {
+            const nextType = e.target.value;
 
-            {(!filters.listingType || filters.listingType === 'CARD') && (
-              <div>
-                <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
-                  Rareza
-                </label>
-                <select
-                  value={filters.rarity}
-                  onChange={(e) => handleFilterChange('rarity', e.target.value)}
-                  className={selectClass}
-                >
-                  <option value="">Todas</option>
-                  {RARITIES.map((r) => (
-                    <option key={r.value} value={r.value}>
-                      {r.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+            setFilters((prev) => ({
+              ...prev,
+              listingType: nextType,
+              condition: '',
+              rarity: '',
+              page: 1,
+            }));
+          }}
+          className={selectClass}
+        >
+          <option value="">Todos</option>
+          {LISTING_TYPES.map((type) => (
+            <option key={type.value} value={type.value}>
+              {type.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
-            <div>
-              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
-                Idioma
-              </label>
-              <select
-                value={filters.language}
-                onChange={(e) => handleFilterChange('language', e.target.value)}
-                className={selectClass}
-              >
-                <option value="">Todos</option>
-                {LANGUAGES.map((l) => (
-                  <option key={l.value} value={l.value}>
-                    {l.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+      <div>
+        <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+          Usuario
+        </label>
 
-            <div>
-              <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
-                Precio (CLP)
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                <input
-                  type="number"
-                  placeholder="Mín"
-                  value={filters.minPrice}
-                  onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-                  className={inputClass}
-                />
-                <input
-                  type="number"
-                  placeholder="Máx"
-                  value={filters.maxPrice}
-                  onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
-                  className={inputClass}
-                />
-              </div>
-            </div>
-          </div>
-        </aside>
+        <input
+          type="text"
+          placeholder="usuario o nombre visible"
+          value={filters.seller}
+          onChange={(e) => handleFilterChange('seller', e.target.value)}
+          className={inputClass}
+        />
+      </div>
 
-        <div className="flex-1">
-          {loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-              {[...Array(9)].map((_, i) => (
-                <div key={i} className="bg-[var(--surface)] rounded-xl h-72 animate-pulse border border-[var(--border)]" />
-              ))}
-            </div>
-          ) : !data || data.listings.length === 0 ? (
-            <div className="text-center py-20 text-[var(--muted-2)]">
-              <p className="text-5xl mb-4">🔍</p>
-              <p className="text-lg">No se encontraron publicaciones</p>
-              <button onClick={clearFilters} className="mt-4 text-[var(--primary)] hover:underline text-sm">
-                Limpiar filtros
-              </button>
-            </div>
-          ) : (
-            <>
-              <p className="text-sm text-[var(--muted)] mb-4">
-                {data.pagination.total} resultado{data.pagination.total !== 1 ? 's' : ''}
-              </p>
+      <div>
+        <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+          Edición
+        </label>
 
-              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-                {data.listings.map((listing) => (
-                  <MarketplaceCard key={listing.id} listing={listing} />
-                ))}
-              </div>
+        <input
+          type="text"
+          placeholder="Base Set, Jungle..."
+          value={filters.edition}
+          onChange={(e) => handleFilterChange('edition', e.target.value)}
+          className={inputClass}
+        />
+      </div>
 
-              {data.pagination.totalPages > 1 && (
-                <div className="flex justify-center gap-2 mt-8">
-                  <button
-                    disabled={filters.page <= 1}
-                    onClick={() => setFilters((p) => ({ ...p, page: p.page - 1 }))}
-                    className="px-4 py-2 border border-[var(--border)] rounded-lg text-sm disabled:opacity-40 hover:bg-[var(--surface-2)] bg-[var(--surface)] text-[var(--foreground)]"
-                  >
-                    ← Anterior
-                  </button>
-                  <span className="px-4 py-2 text-sm text-[var(--muted)]">
-                    {filters.page} / {data.pagination.totalPages}
-                  </span>
-                  <button
-                    disabled={filters.page >= data.pagination.totalPages}
-                    onClick={() => setFilters((p) => ({ ...p, page: p.page + 1 }))}
-                    className="px-4 py-2 border border-[var(--border)] rounded-lg text-sm disabled:opacity-40 hover:bg-[var(--surface-2)] bg-[var(--surface)] text-[var(--foreground)]"
-                  >
-                    Siguiente →
-                  </button>
-                </div>
-              )}
-            </>
-          )}
+      <div>
+        <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+          Condición
+        </label>
+
+        <select
+          value={filters.condition}
+          onChange={(e) => handleFilterChange('condition', e.target.value)}
+          className={selectClass}
+        >
+          <option value="">Todas</option>
+          {(filters.listingType === 'CARD' || !filters.listingType
+            ? CONDITIONS
+            : NON_CARD_CONDITIONS
+          ).map((c) => (
+            <option key={c.value} value={c.value}>
+              {c.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {(!filters.listingType || filters.listingType === 'CARD') && (
+        <div>
+          <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+            Rareza
+          </label>
+
+          <select
+            value={filters.rarity}
+            onChange={(e) => handleFilterChange('rarity', e.target.value)}
+            className={selectClass}
+          >
+            <option value="">Todas</option>
+            {RARITIES.map((r) => (
+              <option key={r.value} value={r.value}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div>
+        <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+          Idioma
+        </label>
+
+        <select
+          value={filters.language}
+          onChange={(e) => handleFilterChange('language', e.target.value)}
+          className={selectClass}
+        >
+          <option value="">Todos</option>
+          {LANGUAGES.map((l) => (
+            <option key={l.value} value={l.value}>
+              {l.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
+          Precio (CLP)
+        </label>
+
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            type="number"
+            placeholder="Mín"
+            value={filters.minPrice}
+            onChange={(e) => handleFilterChange('minPrice', e.target.value)}
+            className={inputClass}
+          />
+
+          <input
+            type="number"
+            placeholder="Máx"
+            value={filters.maxPrice}
+            onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+            className={inputClass}
+          />
         </div>
       </div>
+    </div>
+  </div>
+
+  <div>
+    {loading ? (
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={i}
+            className="bg-[var(--surface)] rounded-xl h-72 animate-pulse border border-[var(--border)]"
+          />
+        ))}
+      </div>
+    ) : !data || data.listings.length === 0 ? (
+      <div className="text-center py-20 text-[var(--muted-2)]">
+        <p className="text-5xl mb-4">🔍</p>
+        <p className="text-lg">No se encontraron publicaciones</p>
+
+        <button
+          onClick={clearFilters}
+          className="mt-4 text-[var(--primary)] hover:underline text-sm"
+        >
+          Limpiar filtros
+        </button>
+      </div>
+    ) : (
+      <>
+        <p className="text-sm text-[var(--muted)] mb-4">
+          {data.pagination.total} resultado{data.pagination.total !== 1 ? 's' : ''}
+        </p>
+
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+          {data.listings.map((listing) => (
+            <MarketplaceCard key={listing.id} listing={listing} />
+          ))}
+        </div>
+
+        {data.pagination.totalPages > 1 && (
+          <div className="flex justify-center gap-2 mt-8">
+            <button
+              disabled={filters.page <= 1}
+              onClick={() => setFilters((p) => ({ ...p, page: p.page - 1 }))}
+              className="px-4 py-2 border border-[var(--border)] rounded-lg text-sm disabled:opacity-40 hover:bg-[var(--surface-2)] bg-[var(--surface)] text-[var(--foreground)]"
+            >
+              ← Anterior
+            </button>
+
+            <span className="px-4 py-2 text-sm text-[var(--muted)]">
+              {filters.page} / {data.pagination.totalPages}
+            </span>
+
+            <button
+              disabled={filters.page >= data.pagination.totalPages}
+              onClick={() => setFilters((p) => ({ ...p, page: p.page + 1 }))}
+              className="px-4 py-2 border border-[var(--border)] rounded-lg text-sm disabled:opacity-40 hover:bg-[var(--surface-2)] bg-[var(--surface)] text-[var(--foreground)]"
+            >
+              Siguiente →
+            </button>
+          </div>
+        )}
+      </>
+    )}
+  </div>
+</div>
     </div>
   );
 }

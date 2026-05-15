@@ -95,10 +95,22 @@ export async function getListings(filters: ListingFilters) {
   if (listingType) where.listingType = listingType;
   if (seller) {
     where.seller = {
-      username: {
-        equals: seller,
-        mode: 'insensitive',
-      },
+      OR: [
+        {
+          username: {
+            contains: seller,
+            mode: 'insensitive',
+          },
+        },
+        {
+          profile: {
+            displayName: {
+              contains: seller,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ],
     };
   }
   if (minPrice || maxPrice) {
