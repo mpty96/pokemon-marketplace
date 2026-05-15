@@ -209,7 +209,7 @@ function MarketplaceContent() {
 
         <input
           type="text"
-          placeholder="usuario o nombre visible"
+          placeholder="nombre_usuario"
           value={filters.seller}
           onChange={(e) => handleFilterChange('seller', e.target.value)}
           className={inputClass}
