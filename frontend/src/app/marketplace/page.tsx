@@ -149,8 +149,8 @@ function MarketplaceContent() {
       </button>
     </div>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-      <form onSubmit={handleSearch} className="lg:col-span-2">
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+      <form onSubmit={handleSearch} className="col-span-2 lg:col-span-2">
         <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
           Buscar
         </label>
@@ -173,7 +173,7 @@ function MarketplaceContent() {
         </div>
       </form>
 
-      <div>
+      <div className="col-span-2 sm:col-span-1">
         <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
           Tipo de publicación
         </label>
@@ -202,7 +202,7 @@ function MarketplaceContent() {
         </select>
       </div>
 
-      <div>
+      <div className="col-span-2 sm:col-span-1">
         <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
           Usuario
         </label>
@@ -216,7 +216,7 @@ function MarketplaceContent() {
         />
       </div>
 
-      <div>
+      <div className="col-span-2 sm:col-span-1">
         <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
           Edición
         </label>
@@ -230,7 +230,7 @@ function MarketplaceContent() {
         />
       </div>
 
-      <div>
+      <div className="col-span-2 sm:col-span-1">
         <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
           Condición
         </label>
@@ -253,7 +253,7 @@ function MarketplaceContent() {
       </div>
 
       {(!filters.listingType || filters.listingType === 'CARD') && (
-        <div>
+        <div className="col-span-2 sm:col-span-1">
           <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
             Rareza
           </label>
@@ -273,7 +273,7 @@ function MarketplaceContent() {
         </div>
       )}
 
-      <div>
+      <div className="col-span-2 sm:col-span-1">
         <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
           Idioma
         </label>
@@ -292,7 +292,7 @@ function MarketplaceContent() {
         </select>
       </div>
 
-      <div>
+      <div className="col-span-2 sm:col-span-1">
         <label className="block text-[10px] sm:text-xs font-medium text-[var(--muted)] mb-1 uppercase tracking-wide">
           Precio (CLP)
         </label>
@@ -320,7 +320,7 @@ function MarketplaceContent() {
 
   <div>
     {loading ? (
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4">
         {[...Array(8)].map((_, i) => (
           <div
             key={i}
@@ -346,7 +346,7 @@ function MarketplaceContent() {
           {data.pagination.total} resultado{data.pagination.total !== 1 ? 's' : ''}
         </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4">
           {data.listings.map((listing) => (
             <MarketplaceCard key={listing.id} listing={listing} />
           ))}
