@@ -221,7 +221,7 @@ export default function PublicProfilePage() {
             </h1>
             <p className="text-[var(--muted)] text-sm">@{data.username}</p>
             {profile?.isBetaTester && (
-              <span className="inline-flex mt-1 rounded-full border border-sky-300/40 bg-sky-100/40 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-sky-700 dark:border-sky-700/40 dark:bg-sky-900/30 dark:text-sky-300">
+              <span className="inline-flex mt-1 rounded-full border border-sky-300/40 bg-sky-100/40 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-sky-800 dark:border-sky-700/40 dark:bg-sky-900/30 dark:text-sky-300">
                 beta_tester
               </span>
             )}
