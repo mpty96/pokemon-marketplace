@@ -55,7 +55,7 @@ const displayed =
 
       {/* Header perfil */}
       <div className="bg-[var(--surface)] rounded-xl shadow-sm border border-[var(--border)] p-4 sm:p-6 mb-5 sm:mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 sm:gap-4">
           <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[var(--info-bg)] overflow-hidden flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
             {user?.avatarUrl ? (
               <img src={user.avatarUrl} alt={user.username} className="w-full h-full object-cover" />
@@ -63,11 +63,12 @@ const displayed =
               user?.username?.[0]?.toUpperCase()
             )}
           </div>
-          <div className="flex-1">
-            <h1 className="text-xl font-bold text-[var(--foreground)]">
+
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold text-[var(--foreground)] truncate">
               {user?.username}
             </h1>
-            <p className="text-[var(--muted)] text-sm">{user?.email}</p>
+            <p className="text-[var(--muted)] text-sm truncate">{user?.email}</p>
             <div className="flex items-center gap-1 mt-1">
               <span className="text-[#e0a800] text-sm">★</span>
               <span className="text-sm font-medium text-[var(--foreground)]">
@@ -76,22 +77,21 @@ const displayed =
               <span className="text-xs text-[var(--muted-2)]">reputación</span>
             </div>
           </div>
-          <div className="w-full sm:w-auto flex flex-col items-start sm:items-end gap-3 sm:ml-auto">
-            <div className="w-full sm:w-auto flex flex-col items-start sm:items-end gap-3 sm:ml-auto">
-              <Link
-                href={`/usuario/${user?.username}`}
-                className="text-sm text-[var(--primary)] hover:underline"
-              >
-                Ver perfil público →
-              </Link>
 
-              <Link
-                href="/profile/editar"
-                className="text-xs text-[var(--primary)] hover:underline"
-              >
-                Editar mi perfil
-              </Link>
-            </div>
+          <div className="flex flex-col items-end gap-2 text-right">
+            <Link
+              href={`/usuario/${user?.username}`}
+              className="text-sm text-[var(--primary)] hover:underline whitespace-nowrap"
+            >
+              Ver perfil público →
+            </Link>
+
+            <Link
+              href="/profile/editar"
+              className="text-xs text-[var(--primary)] hover:underline whitespace-nowrap"
+            >
+              Editar mi perfil
+            </Link>
           </div>
         </div>
       </div>

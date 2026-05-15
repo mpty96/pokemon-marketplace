@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
 import { CardCondition, CardLanguage } from '@/types';
@@ -26,6 +27,8 @@ const CONDITIONS: { value: CardCondition; label: string }[] = [
 
 export default function CardPriceAssistant() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const pathname = usePathname();
+  const allowedMobilePaths = pathname === '/' || pathname === '/marketplace';
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
@@ -59,9 +62,10 @@ export default function CardPriceAssistant() {
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
-        className="fixed bottom-20 sm:bottom-5 right-4 sm:right-5 z-50 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] px-4 sm:px-5 py-2.5 sm:py-3 shadow-lg hover:bg-[var(--primary-hover)] transition-colors text-xs sm:text-sm font-semibold"
-      >
+          onClick={() => setOpen(true)}
+            className={`fixed bottom-20 sm:bottom-5 right-4 sm:right-5 z-50 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] px-4 sm:px-5 py-2.5 sm:py-3 shadow-lg hover:bg-[var(--primary-hover)] transition-colors text-xs sm:text-sm font-semibold ${
+          allowedMobilePaths ? 'block' : 'hidden sm:block'
+        }`}>
         Valorar carta
       </button>
 

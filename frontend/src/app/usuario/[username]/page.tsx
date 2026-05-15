@@ -109,12 +109,12 @@ function UserLevelBadge({
   strikes?: number;
 }) {
   return (
-    <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto text-right">
+    <div className="w-full sm:w-auto mt-1 sm:mt-0 text-left sm:text-right">
       <p className="text-sm font-semibold text-[var(--foreground)] mb-2">
         {level > 0 ? `Nivel ${level}` : 'Sin nivel'}
       </p>
 
-      <div className="flex justify-end gap-1.5 sm:gap-2 flex-wrap">
+      <div className="flex justify-start sm:justify-end gap-1.5 sm:gap-2 flex-wrap">
         {USER_LEVELS.map((item) => {
           const unlocked = level >= item.level;
 
@@ -218,7 +218,7 @@ export default function PublicProfilePage() {
   return (
     <div className="max-w-2xl mx-auto px-3 sm:px-4 py-5 sm:py-8 space-y-5 sm:space-y-6 text-[var(--foreground)]">
       <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-4 sm:p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4 min-w-0">
+        <div className="grid grid-cols-[auto_1fr] sm:flex sm:items-center gap-4 min-w-0">
           <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[var(--info-bg)] overflow-hidden flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
             {profile?.avatarUrl ? (
               <img src={profile.avatarUrl} alt={data.username} className="w-full h-full object-cover" />
@@ -255,11 +255,13 @@ export default function PublicProfilePage() {
             <p className="mt-3 text-sm text-[var(--muted)]">{reportMessage}</p>
           )}
           </div>
-            <UserLevelBadge
-              level={data.userLevel}
-              completedTransactions={data.completedTransactions}
-              strikes={profile?.strikes}
-            />
+            <div className="col-span-2 sm:col-span-1 sm:ml-auto">
+              <UserLevelBadge
+                level={data.userLevel || 0}
+                completedTransactions={data.completedTransactions || 0}
+                strikes={profile?.strikes}
+              />
+            </div>
         </div>
 
         {profile?.bio && (

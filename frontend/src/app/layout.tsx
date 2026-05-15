@@ -17,10 +17,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      <body className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col overflow-x-hidden">
         <ThemeInitializer />
-          <Header />
-          <main>{children}</main>
+        <Header />
+        <main className="flex-1">
+          {children}
+        </main>
         <Footer />
         <CardPriceAssistant />
       </body>
