@@ -105,7 +105,7 @@ export default function Header() {
       </div>
 
       <div className="md:hidden border-t border-[var(--border)] px-2 py-2 bg-[var(--surface)]">
-        <nav className="flex items-center justify-between gap-2 text-center">
+        <nav className="flex items-center justify-center gap-3 text-center">
           <Link href="/" className="text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
             Inicio
           </Link>
