@@ -1,59 +1,59 @@
 @import "tailwindcss";
 
 :root {
-  --background: #edf3fb;
-  --foreground: #142033;
+  --background: #f4f7ff;
+  --foreground: #111827;
 
   --surface: #ffffff;
-  --surface-2: #e8eef8;
-  --border: #cfd9ea;
+  --surface-2: #eaf0ff;
+  --border: #ccd7f2;
 
-  --muted: #5f6f86;
-  --muted-2: #8b9ab1;
+  --muted: #5b6475;
+  --muted-2: #8791a3;
 
-  --primary: #155bb8;
-  --primary-hover: #0f4594;
+  --primary: #3b4cca;
+  --primary-hover: #2536a8;
   --primary-foreground: #ffffff;
 
   --success-bg: #dcfce7;
   --success-fg: #166534;
 
-  --warning-bg: #fff4cc;
-  --warning-fg: #8b5a00;
+  --warning-bg: #fff4b8;
+  --warning-fg: #7a6500;
 
   --danger-bg: #ffe4e6;
-  --danger-fg: #be123c;
+  --danger-fg: #cc0000;
 
-  --info-bg: #dbeafe;
-  --info-fg: #1d4ed8;
+  --info-bg: #e5eaff;
+  --info-fg: #3b4cca;
 }
 
 .dark {
-  --background: #060b16;
-  --foreground: #f8fbff;
+  --background: #070914;
+  --foreground: #f8fafc;
 
-  --surface: #101a2d;
-  --surface-2: #17253b;
-  --border: #2f4363;
+  --surface: #101525;
+  --surface-2: #18213a;
+  --border: #2d3a63;
 
-  --muted: #b8c4d9;
-  --muted-2: #91a0ba;
+  --muted: #c3cad8;
+  --muted-2: #909bb0;
 
-  --primary: #64a8ff;
-  --primary-hover: #8fc0ff;
-  --primary-foreground: #07111f;
+  --primary: #7f91ff;
+  --primary-hover: #a5b1ff;
+  --primary-foreground: #080b16;
 
   --success-bg: rgba(34, 197, 94, 0.15);
   --success-fg: #86efac;
 
-  --warning-bg: rgba(255, 212, 71, 0.14);
-  --warning-fg: #ffd447;
+  --warning-bg: rgba(255, 222, 0, 0.14);
+  --warning-fg: #ffde00;
 
-  --danger-bg: rgba(244, 63, 94, 0.15);
-  --danger-fg: #fda4af;
+  --danger-bg: rgba(255, 0, 0, 0.14);
+  --danger-fg: #ff6b6b;
 
-  --info-bg: rgba(96, 165, 250, 0.16);
-  --info-fg: #9fc5ff;
+  --info-bg: rgba(59, 76, 202, 0.22);
+  --info-fg: #a5b1ff;
 }
 
 html,
@@ -70,8 +70,9 @@ body {
 
 body {
   background:
-    radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 28rem),
-    radial-gradient(circle at top right, rgba(255, 212, 71, 0.10), transparent 26rem),
+    radial-gradient(circle at top left, rgba(59, 76, 202, 0.12), transparent 30rem),
+    radial-gradient(circle at top right, rgba(255, 222, 0, 0.12), transparent 28rem),
+    radial-gradient(circle at bottom left, rgba(255, 0, 0, 0.05), transparent 24rem),
     var(--background);
 
   transition:
@@ -81,8 +82,9 @@ body {
 
 .dark body {
   background:
-    radial-gradient(circle at top left, rgba(59, 130, 246, 0.12), transparent 30rem),
-    radial-gradient(circle at top right, rgba(255, 212, 71, 0.10), transparent 26rem),
+    radial-gradient(circle at top left, rgba(59, 76, 202, 0.22), transparent 34rem),
+    radial-gradient(circle at top right, rgba(255, 222, 0, 0.10), transparent 28rem),
+    radial-gradient(circle at bottom left, rgba(255, 0, 0, 0.10), transparent 26rem),
     var(--background);
 }
 

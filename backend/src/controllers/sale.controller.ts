@@ -150,7 +150,18 @@ export async function getRecentTransactions(req: Request, res: Response): Promis
       orderBy: { completedAt: 'desc' },
       take:    20,
       include: {
-        listing: { select: { id: true, title: true, cardName: true, images: true, priceCLP: true } },
+        listing: {
+          select: {
+            id: true,
+            title: true,
+            cardName: true,
+            images: true,
+            priceCLP: true,
+            listingType: true,
+            status: true,
+            stock: true,
+          },
+        },
         buyer:   { select: { id: true, username: true } },
         seller:  { select: { id: true, username: true } },
       },
@@ -165,6 +176,9 @@ export async function getRecentTransactions(req: Request, res: Response): Promis
       completedAt: s.completedAt,
       buyer:       s.buyer,
       seller:      s.seller,
+      listingType: s.listing.listingType,
+      listingStatus: s.listing.status,
+      stock:       s.listing.stock,
     })));
   } catch {
     res.status(500).json({ error: 'Error al obtener transacciones recientes' });

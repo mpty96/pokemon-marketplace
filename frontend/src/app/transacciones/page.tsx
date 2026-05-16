@@ -9,6 +9,9 @@ import { useAuthStore } from '@/store/auth.store';
 interface Transaction {
   id: string;
   listingId: string;
+  listingType: 'CARD' | 'POKEMON_PRODUCT' | 'BULK_LOT';
+  listingStatus: string;
+  stock: number | null;
   title: string;
   image: string | null;
   priceCLP: number;
@@ -97,28 +100,52 @@ export default function TransaccionesPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {transactions.map((tx) => (
-            <div
-              key={tx.id}
+          {transactions.map((tx) => {
+            const canOpenListing =
+              tx.listingType === 'POKEMON_PRODUCT' &&
+              tx.listingStatus === 'ACTIVE' &&
+              (tx.stock || 0) > 0;
+
+            return (
+              <div
+                key={tx.id}
               className="flex items-center gap-4 bg-[var(--surface)] rounded-xl p-4 border border-[var(--border)] hover:shadow-sm transition-shadow"
             >
-              <Link href={`/listings/${tx.listingId}`} className="flex-shrink-0">
-                <div className="w-14 h-14 rounded-lg overflow-hidden bg-[var(--surface-2)]">
-                  {tx.image ? (
-                    <img src={tx.image} alt={tx.title} className="w-full h-full object-contain" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-2xl">🎴</div>
-                  )}
+              {canOpenListing ? (
+                <Link href={`/listings/${tx.listingId}`} className="flex-shrink-0">
+                  <div className="w-14 h-14 rounded-lg overflow-hidden bg-[var(--surface-2)]">
+                    {tx.image ? (
+                      <img src={tx.image} alt={tx.title} className="w-full h-full object-contain" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-2xl">🎴</div>
+                    )}
+                  </div>
+                </Link>
+              ) : (
+                <div className="flex-shrink-0 opacity-60 cursor-not-allowed">
+                  <div className="w-14 h-14 rounded-lg overflow-hidden bg-[var(--surface-2)]">
+                    {tx.image ? (
+                      <img src={tx.image} alt={tx.title} className="w-full h-full object-contain" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-2xl">🎴</div>
+                    )}
+                  </div>
                 </div>
-              </Link>
+              )}
 
               <div className="flex-1 min-w-0">
-                <Link
-                  href={`/listings/${tx.listingId}`}
-                  className="font-semibold text-[var(--foreground)] text-sm hover:text-[var(--primary)] truncate block"
-                >
-                  {tx.title}
-                </Link>
+                {canOpenListing ? (
+                  <Link
+                    href={`/listings/${tx.listingId}`}
+                    className="font-semibold text-[var(--foreground)] text-sm hover:text-[var(--primary)] truncate block"
+                  >
+                    {tx.title}
+                  </Link>
+                ) : (
+                  <p className="font-semibold text-[var(--foreground)] text-sm truncate block">
+                    {tx.title}
+                  </p>
+                )}
 
                 <p className="text-sm text-[var(--primary)] font-medium">
                   ${tx.priceCLP.toLocaleString('es-CL')}
@@ -163,7 +190,8 @@ export default function TransaccionesPage() {
                 )}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
