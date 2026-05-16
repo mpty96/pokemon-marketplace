@@ -93,6 +93,20 @@ export async function sendChatMessageController(req: AuthRequest, res: Response)
       return;
     }
 
+    if (error.message === 'SELLER_CANNOT_START_CHAT') {
+      res.status(403).json({
+        error: 'No puedes iniciar un chat con tu propia publicación.',
+      });
+      return;
+    }
+
+    if (error.message === 'LISTING_NOT_AVAILABLE_FOR_CHAT') {
+      res.status(400).json({
+        error: 'Esta publicación ya no está disponible para iniciar conversación.',
+      });
+      return;
+    }
+
     console.error('SEND CHAT MESSAGE ERROR:', error);
     res.status(500).json({ error: 'Error al enviar mensaje' });
   }

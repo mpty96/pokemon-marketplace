@@ -19,6 +19,19 @@ export async function createUserReport(
   if (!reportedUser) throw new Error('USER_NOT_FOUND');
   if (reportedUser.id === reporterId) throw new Error('CANNOT_REPORT_SELF');
 
+  const recentReportsCount = await prisma.report.count({
+    where: {
+      reporterId,
+      createdAt: {
+        gte: new Date(Date.now() - 60 * 60 * 1000),
+      },
+    },
+  });
+
+  if (recentReportsCount >= 5) {
+    throw new Error('REPORT_RATE_LIMIT');
+  }
+
   const existingPending = await prisma.report.findFirst({
     where: {
       reporterId,

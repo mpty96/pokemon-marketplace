@@ -35,6 +35,13 @@ export async function createReportController(req: AuthRequest, res: Response): P
       return;
     }
 
+    if (error.message === 'REPORT_RATE_LIMIT') {
+      res.status(429).json({
+        error: 'Has enviado demasiados reportes recientemente. Intenta más tarde.',
+      });
+      return;
+    }
+
     res.status(400).json({ error: error.message || 'Error al crear reporte' });
   }
 }

@@ -200,10 +200,28 @@ export async function sendChatMessage(
 
   const listing = await prisma.listing.findUnique({
     where: { id: listingId },
-    select: { id: true, sellerId: true },
+    select: {
+      id: true,
+      sellerId: true,
+      status: true,
+    },
   });
 
   if (!listing) throw new Error('LISTING_NOT_FOUND');
+  if (listing.sellerId === senderId) {
+  const existingConversation = await prisma.conversation.findUnique({
+    where: { listingId },
+    select: { id: true },
+  });
+
+  if (!existingConversation) {
+    throw new Error('SELLER_CANNOT_START_CHAT');
+  }
+}
+
+if (listing.status === 'SOLD' || listing.status === 'CANCELLED') {
+  throw new Error('LISTING_NOT_AVAILABLE_FOR_CHAT');
+}
 
   let conversation = await prisma.conversation.findUnique({
     where: { listingId },

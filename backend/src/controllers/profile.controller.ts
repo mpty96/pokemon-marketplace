@@ -55,6 +55,16 @@ export async function updateMyProfileController(req: AuthRequest, res: Response)
       return;
     }
 
+    if (error.message === 'DISPLAY_NAME_TOO_LONG') {
+      res.status(400).json({ error: 'El nombre visible no puede superar 32 caracteres' });
+      return;
+    }
+
+    if (error.message === 'BIO_TOO_LONG') {
+      res.status(400).json({ error: 'La biografía no puede superar 300 caracteres' });
+      return;
+    }
+
     res.status(500).json({ error: 'Error al actualizar perfil' });
   }
 }

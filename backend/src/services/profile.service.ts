@@ -157,9 +157,21 @@ export async function upsertMyProfile(userId: string, data: UpdateProfileInput) 
     existingProfile?.avatarUrl ||
     null;
 
+  const displayName = data.displayName?.trim() || null;
+  const bio = data.bio?.trim() || null;
+
+    if (displayName && displayName.length > 32) {
+      throw new Error('DISPLAY_NAME_TOO_LONG');
+    }
+
+    if (bio && bio.length > 300) {
+      throw new Error('BIO_TOO_LONG');
+    }
+
+
   const profileData = {
-    displayName: data.displayName?.trim() || null,
-    bio: data.bio?.trim() || null,
+    displayName,
+    bio,
     avatarUrl: finalAvatarUrl,
     location: existingProfile?.location || data.location?.trim() || null,
     rut: existingProfile?.rut || normalizedRut,
