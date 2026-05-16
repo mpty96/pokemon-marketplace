@@ -19,7 +19,7 @@ export default function Header() {
   }
 
   const linkClass = (href: string) =>
-    `text-sm font-medium transition-colors ${
+    `text-sm font-bold transition-colors ${
       pathname === href
         ? 'text-[var(--primary)]'
         : 'text-[var(--muted)] hover:text-[var(--primary)]'
@@ -30,7 +30,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--surface)]">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 min-h-16 py-2 flex items-center justify-between gap-3">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 min-h-16 py-2 grid grid-cols-[auto_1fr_auto] items-center gap-3">
         <Link href="/" className="shrink-0 hover:opacity-90 transition-opacity">
           <img
             src="/logo-header.png"
@@ -39,7 +39,7 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center justify-center gap-6">
           <Link href="/" className={linkClass('/')}>Inicio</Link>
           <Link href="/marketplace" className={linkClass('/marketplace')}>Marketplace</Link>
 
@@ -105,8 +105,8 @@ export default function Header() {
       </div>
 
       <div className="md:hidden border-t border-[var(--border)] px-3 py-2 flex gap-4 overflow-x-auto mobile-scrollbar bg-[var(--surface)] text-sm">
-        <Link href="/" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Inicio</Link>
-        <Link href="/marketplace" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Marketplace</Link>
+        <Link href="/" className="text-sm font-bold text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Inicio</Link>
+        <Link href="/marketplace" className="text-sm font-bold text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Marketplace</Link>
 
         {isAuthenticated && (
           <>
@@ -119,7 +119,7 @@ export default function Header() {
               )}
             </Link>
 
-            <Link href="/transacciones" className="text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
+            <Link href="/transacciones" className="text-sm font-bold text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
               Transacciones
             </Link>
 

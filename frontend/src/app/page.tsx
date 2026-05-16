@@ -225,12 +225,12 @@ function ListingCard({ listing }: { listing: Listing }) {
             {listing.edition}
           </p>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mt-2">
+          <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between gap-1 mt-2">
             <span className="text-[var(--primary)] font-bold text-sm">
               ${listing.priceCLP.toLocaleString('es-CL')}
             </span>
 
-            <span className="text-xs text-[var(--muted)] bg-[var(--surface-2)] px-2 py-0.5 rounded-full border border-[var(--border)]">
+            <span className="inline-flex w-auto max-w-fit self-start text-xs text-[var(--muted)] bg-[var(--surface-2)] px-2 py-0.5 rounded-full border border-[var(--border)]">
               {CONDITION_LABELS[listing.condition]}
             </span>
           </div>
