@@ -19,11 +19,10 @@ export default function ConsejosPage() {
             </h1>
 
             <p className="text-sm sm:text-base text-[var(--muted)] leading-6 mb-5">
-              Antes de comprar o vender, revisa cuidadosamente la información de la publicación.
+              Antes de comprar o vender, toma todas las precauciones posibles.
               Echa un vistazo al perfil del usuario, junto con sus calificaciones recibidas.
-              Analiza el grafico de ventas ubicado en la parte inferior de la publicación para 
-              que te des una idea de un precio justo o excesivo.
-							Siempre elige lugares publicos y que te brinden confianza. Como extra y si puedes, asiste acompañado.
+              Analiza el grafico de ventas ubicado en la parte inferior de la publicación.
+							Siempre elige lugares publicos y que te brinden confianza, ojalá siempre acompañado.
             </p>
 
             <div className="space-y-4 text-sm text-[var(--muted)] leading-6">

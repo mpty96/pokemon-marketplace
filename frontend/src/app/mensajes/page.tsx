@@ -279,13 +279,13 @@ function ConversationCard({
 
         {pendingAction && (
           <div className="mt-2 inline-flex items-center gap-1 text-xs bg-[var(--warning-bg)] text-[var(--warning-fg)] px-2 py-1 rounded-full">
-            ⏳ Pendiente: {pendingAction}
+            Pendiente: {pendingAction}
           </div>
         )}
 
         {saleStatus === 'COMPLETED' && (
           <div className="mt-2 inline-flex items-center gap-1 text-xs bg-[var(--success-bg)] text-[var(--success-fg)] px-2 py-1 rounded-full">
-            ✅ Venta completada
+            Venta completada
           </div>
         )}
 
