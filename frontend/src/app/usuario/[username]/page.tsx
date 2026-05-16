@@ -424,7 +424,7 @@ export default function PublicProfilePage() {
                     ${listing.priceCLP.toLocaleString('es-CL')}
                   </span>
 
-                  <span className="text-xs bg-[var(--surface)] border border-[var(--border)] rounded-full px-2 py-0.5 text-[var(--muted)]">
+                  <span className="inline-flex w-fit self-start text-xs bg-[var(--surface)] border border-[var(--border)] rounded-full px-2 py-0.5 text-[var(--muted)]">
                     {conditionLabel(listing.condition)}
                   </span>
                 </div>

@@ -475,15 +475,31 @@ export default function ListingDetailPage() {
                           />
                         )}
 
-                        <circle
-                          cx={x}
-                          cy={y}
-                          r={active ? 3 : 2}
-                          fill="currentColor"
-                          className="text-[var(--primary)] cursor-pointer"
+                        <g
                           onMouseEnter={() => setHoveredPoint(index)}
                           onMouseLeave={() => setHoveredPoint(null)}
-                        />
+                          onClick={() => setHoveredPoint(active ? null : index)}
+                          onTouchStart={(e) => {
+                            e.preventDefault();
+                            setHoveredPoint(active ? null : index);
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <circle
+                            cx={x}
+                            cy={y}
+                            r="7"
+                            fill="transparent"
+                          />
+
+                          <circle
+                            cx={x}
+                            cy={y}
+                            r={active ? 3.5 : 2.4}
+                            fill="currentColor"
+                            className="text-[var(--primary)]"
+                          />
+                        </g>
                       </g>
                     );
                   })}
