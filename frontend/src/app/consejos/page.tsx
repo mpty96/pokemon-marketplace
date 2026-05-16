@@ -22,7 +22,7 @@ export default function ConsejosPage() {
               Antes de comprar o vender, toma todas las precauciones posibles.
               Echa un vistazo al perfil del usuario, junto con sus calificaciones recibidas.
               Analiza el grafico de ventas ubicado en la parte inferior de la publicación.
-							Siempre elige lugares publicos y que te brinden confianza, ojalá siempre acompañado.
+							Siempre elige lugares publicos y que te brinden confianza, ojalá siempre ir acompañado.
             </p>
 
             <div className="space-y-4 text-sm text-[var(--muted)] leading-6">

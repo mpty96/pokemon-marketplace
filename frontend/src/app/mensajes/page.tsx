@@ -70,7 +70,7 @@ async function confirmDeleteChats() {
 }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 text-[var(--foreground)]">
+    <div className="min-h-[calc(100vh-180px)] max-w-6xl mx-auto px-4 py-8 flex flex-col">
       <div className="flex items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-[var(--foreground)]">
           Mis mensajes
