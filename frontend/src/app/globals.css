@@ -1,55 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f4ee;
-  --foreground: #172033;
+  --background: #edf3fb;
+  --foreground: #142033;
 
-  --surface: #fffdf8;
-  --surface-2: #f1eadf;
-  --border: #ded3c2;
+  --surface: #ffffff;
+  --surface-2: #e8eef8;
+  --border: #cfd9ea;
 
-  --muted: #667085;
-  --muted-2: #98a2b3;
+  --muted: #5f6f86;
+  --muted-2: #8b9ab1;
 
-  --primary: #d9a21b;
-  --primary-hover: #b87f0f;
-  --primary-foreground: #171717;
+  --primary: #f2c230;
+  --primary-hover: #ddb01f;
+  --primary-foreground: #172033;
 
   --success-bg: #dcfce7;
   --success-fg: #166534;
 
-  --warning-bg: #fff1c2;
-  --warning-fg: #8a4b00;
+  --warning-bg: #fff4cc;
+  --warning-fg: #8b5a00;
 
   --danger-bg: #ffe4e6;
   --danger-fg: #be123c;
 
-  --info-bg: #e5edff;
-  --info-fg: #2546a0;
+  --info-bg: #dbeafe;
+  --info-fg: #1d4ed8;
 }
 
 .dark {
-  --background: #070b17;
-  --foreground: #f4f6fb;
+  --background: #060b16;
+  --foreground: #f8fbff;
 
-  --surface: #101827;
-  --surface-2: #172235;
-  --border: #2b3850;
+  --surface: #101a2d;
+  --surface-2: #17253b;
+  --border: #2f4363;
 
-  --muted: #b8c0cc;
-  --muted-2: #8792a3;
+  --muted: #b8c4d9;
+  --muted-2: #91a0ba;
 
-  --primary: #f2c14e;
-  --primary-hover: #ffd978;
-  --primary-foreground: #111827;
+  --primary: #ffd447;
+  --primary-hover: #ffe27a;
+  --primary-foreground: #0f172a;
 
   --success-bg: rgba(34, 197, 94, 0.15);
   --success-fg: #86efac;
 
-  --warning-bg: rgba(242, 193, 78, 0.16);
-  --warning-fg: #f8d978;
+  --warning-bg: rgba(255, 212, 71, 0.14);
+  --warning-fg: #ffd447;
 
-  --danger-bg: rgba(244, 63, 94, 0.16);
+  --danger-bg: rgba(244, 63, 94, 0.15);
   --danger-fg: #fda4af;
 
   --info-bg: rgba(96, 165, 250, 0.16);
@@ -70,15 +70,19 @@ body {
 
 body {
   background:
-    radial-gradient(circle at top left, rgba(217, 162, 27, 0.14), transparent 32rem),
-    radial-gradient(circle at top right, rgba(37, 70, 160, 0.08), transparent 28rem),
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 28rem),
+    radial-gradient(circle at top right, rgba(255, 212, 71, 0.10), transparent 26rem),
     var(--background);
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .dark body {
   background:
-    radial-gradient(circle at top left, rgba(242, 193, 78, 0.11), transparent 34rem),
-    radial-gradient(circle at top right, rgba(96, 165, 250, 0.08), transparent 30rem),
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.12), transparent 30rem),
+    radial-gradient(circle at top right, rgba(255, 212, 71, 0.10), transparent 26rem),
     var(--background);
 }
 
