@@ -39,9 +39,6 @@ api.interceptors.response.use(
       } catch {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        if (typeof window !== 'undefined') {
-          console.log(location.href);
-        }
       }
     }
 

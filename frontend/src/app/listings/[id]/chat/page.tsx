@@ -118,7 +118,7 @@ export default function ChatPage() {
       } catch {
         // silencioso
       }
-    }, 5000);
+    }, 15000);
 
     return () => {
       socket.emit('leave_conversation', id);
@@ -209,18 +209,40 @@ export default function ChatPage() {
 }
 
 
-  function handleSaleUpdate(updatedSale: Sale | null) {
-    setSale(updatedSale);
-    // Actualizar el status del listing localmente
-    if (updatedSale) {
-      setListing((prev) => prev
-        ? { ...prev, status: updatedSale.status === 'COMPLETED' ? 'SOLD' : 'PAUSED' }
+async function handleSaleUpdate(updatedSale: Sale | null) {
+  setSale(updatedSale);
+
+  if (updatedSale) {
+    setListing((prev) =>
+      prev
+        ? {
+            ...prev,
+            status:
+              updatedSale.status === 'COMPLETED'
+                ? 'SOLD'
+                : 'ACTIVE',
+          }
         : prev
-      );
-    } else {
-      setListing((prev) => prev ? { ...prev, status: 'ACTIVE' } : prev);
+    );
+
+    // Cargar rating inmediatamente al completarse
+    if (updatedSale.status === 'COMPLETED') {
+      try {
+        const ratingRes = await api.get(
+          `/api/ratings/sale/${updatedSale.id}`
+        );
+
+        setRatingData(ratingRes.data);
+      } catch {
+        // silencioso
+      }
     }
+  } else {
+    setListing((prev) =>
+      prev ? { ...prev, status: 'ACTIVE' } : prev
+    );
   }
+}
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
