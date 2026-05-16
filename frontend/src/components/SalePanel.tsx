@@ -81,7 +81,7 @@ export default function SalePanel({
           onClick={handleInitiate}
           disabled={loading}
           className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors">
-          {loading ? 'Iniciando...' : '🤝 Finalizar venta'}
+          {loading ? 'Iniciando...' : 'Finalizar venta'}
         </button>
       </div>
     );
@@ -110,7 +110,7 @@ export default function SalePanel({
   return (
     <div className="border border-[var(--border)] rounded-xl p-4 bg-[var(--surface)] space-y-4">
       <h3 className="font-semibold text-[var(--foreground)]">
-        🔄 Venta en proceso
+        Venta en proceso
       </h3>
 
       <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-3 text-sm">
@@ -168,11 +168,11 @@ export default function SalePanel({
             ? 'Confirmando...'
             : isBuyer
             ? listingType === 'POKEMON_PRODUCT'
-              ? '✅ Confirmar: Recibí mi producto'
+              ? 'Confirmar: Recibí mi producto'
               : listingType === 'BULK_LOT'
-                ? '✅ Confirmar: Recibí mi lote'
-                : '✅ Confirmar: Recibí mi carta'
-            : '✅ Confirmar: Recibí el pago'}
+                ? 'Confirmar: Recibí mi lote'
+                : 'Confirmar: Recibí mi carta'
+            : 'Confirmar: Recibí el pago'}
         </button>
       )}
 

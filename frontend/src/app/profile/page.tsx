@@ -189,8 +189,8 @@ const displayed =
                     {listing.sale?.status === 'COMPLETED' && (
                     <p className="text-xs text-[var(--success-fg)] mt-0.5">
                       {tab === 'bought'
-                        ? `🛒 Compraste a ${(listing.sale as any).seller?.username || listing.seller?.username || ''}`
-                        : `✅ Vendida a ${(listing.sale as any).buyer?.username || listing.buyer?.username || ''}`
+                        ? `Compraste a ${(listing.sale as any).seller?.username || listing.seller?.username || ''}`
+                        : `Vendida a ${(listing.sale as any).buyer?.username || listing.buyer?.username || ''}`
                       }
                       {listing.sale.completedAt &&
                         ` · ${new Date(listing.sale.completedAt).toLocaleDateString('es-CL')}`

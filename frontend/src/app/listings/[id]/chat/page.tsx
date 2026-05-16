@@ -52,20 +52,17 @@ export default function ChatPage() {
       clearUnread();
 
       // Cargar venta si existe
-      if (listingRes.data.status === 'SOLD') {
+      if (listingRes.data.status === 'ACTIVE' || listingRes.data.status === 'SOLD') {
         try {
           const saleRes = await api.get(`/api/sales/${id}`);
           setSale(saleRes.data);
+
           if (saleRes.data.status === 'COMPLETED') {
-            try {
-              const ratingRes = await api.get(`/api/ratings/sale/${saleRes.data.id}`);
-              setRatingData(ratingRes.data);
-            } catch {
-              // sin ratings aún
-            }
+            const ratingRes = await api.get(`/api/ratings/sale/${saleRes.data.id}`);
+            setRatingData(ratingRes.data);
           }
         } catch {
-          // No hay venta aún
+          setSale(null);
         }
       }
     }).finally(() => setLoading(false));
@@ -106,7 +103,7 @@ export default function ChatPage() {
         const listingRes = await api.get(`/api/listings/${id}`);
         setListing(listingRes.data);
 
-        if (listingRes.data.status === 'SOLD') {
+        if (listingRes.data.status === 'ACTIVE' || listingRes.data.status === 'SOLD') {
           const saleRes = await api.get(`/api/sales/${id}`);
           setSale(saleRes.data);
 

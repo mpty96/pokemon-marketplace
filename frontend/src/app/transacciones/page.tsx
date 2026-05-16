@@ -54,7 +54,7 @@ export default function TransaccionesPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 text-[var(--foreground)]">
       <h1 className="text-2xl font-bold text-[var(--foreground)] mb-6">
-        📦 Transacciones
+        Transacciones
       </h1>
 
       <div className="mb-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
@@ -131,12 +131,12 @@ export default function TransaccionesPage() {
                 )}
 
                 <p className="text-xs text-[var(--muted-2)] mt-0.5">
-                  🏪 Vendida por:{' '}
+                  Vendida por:{' '}
                   <Link href={`/usuario/${tx.seller.username}`} className="text-[var(--primary)] hover:underline font-medium">
                     {tx.seller.username}
                   </Link>
                   {' → '}
-                  🛒 Comprada por:{' '}
+                  Comprada por:{' '}
                   <Link href={`/usuario/${tx.buyer.username}`} className="text-[var(--primary)] hover:underline font-medium">
                     {tx.buyer.username}
                   </Link>
@@ -145,7 +145,7 @@ export default function TransaccionesPage() {
 
               <div className="flex-shrink-0 text-right">
                 <span className="text-xs px-2 py-1 rounded-full bg-[var(--success-bg)] text-[var(--success-fg)]">
-                  ✅ Completada
+                  Completada
                 </span>
 
                 {tx.completedAt && (
