@@ -19,7 +19,7 @@ export default function Header() {
   }
 
   const linkClass = (href: string) =>
-    `text-sm font-bold transition-colors ${
+    `text-sm md:text-[15px] font-bold tracking-[0.01em] transition-colors ${
       pathname === href
         ? 'text-[var(--primary)]'
         : 'text-[var(--muted)] hover:text-[var(--primary)]'
@@ -30,7 +30,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--surface)]">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 min-h-16 py-2 grid grid-cols-[auto_1fr_auto] items-center gap-3">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 min-h-16 py-2 flex md:grid md:grid-cols-[auto_1fr_auto] items-center justify-between gap-3">
         <Link href="/" className="shrink-0 hover:opacity-90 transition-opacity">
           <img
             src="/logo-header.png"
@@ -58,7 +58,7 @@ export default function Header() {
                 Transacciones
               </Link>
 
-              <Link href="/consejos" className={linkClass('/consejos')}>
+              <Link href="/consejos" className="text-sm font-bold text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
                 Consejos
               </Link>
             </>
@@ -110,7 +110,7 @@ export default function Header() {
 
         {isAuthenticated && (
           <>
-            <Link href="/mensajes" className="relative text-sm text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
+            <Link href="/mensajes" className="text-sm font-bold text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
               Mensajes
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-3 bg-red-500 text-white text-xs font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">
