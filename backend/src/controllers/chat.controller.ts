@@ -86,6 +86,13 @@ export async function sendChatMessageController(req: AuthRequest, res: Response)
       return;
     }
 
+    if (error.message === 'MESSAGE_RATE_LIMIT') {
+      res.status(429).json({
+        error: 'Estás enviando mensajes demasiado rápido. Espera unos segundos antes de continuar.',
+      });
+      return;
+    }
+
     console.error('SEND CHAT MESSAGE ERROR:', error);
     res.status(500).json({ error: 'Error al enviar mensaje' });
   }

@@ -96,9 +96,9 @@ export default function ChatPage() {
         return [...prev, message];
       });
       if (message.senderId !== user?.id) {
-        socket.emit('mark_read', message.conversationId);
       }
     });
+    
 
     // Polling para estado de venta y ratings (cada 5s)
     const interval = setInterval(async () => {
@@ -185,10 +185,6 @@ export default function ChatPage() {
     });
 
     setMessages((prev) => {
-      socket?.emit('message_created', {
-        listingId: id,
-        message: savedMessage,
-      });
       if (prev.some((message) => message.id === savedMessage.id)) {
         return prev;
       }

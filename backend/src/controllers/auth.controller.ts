@@ -91,6 +91,8 @@ export async function login(req: Request, res: Response): Promise<void> {
       res.status(401).json({ error: 'Credenciales incorrectas' });
     } else if (error.message === 'EMAIL_NOT_VERIFIED') {
       res.status(403).json({ error: 'Debes verificar tu email antes de iniciar sesión' });
+    } else if (error.message === 'USER_BANNED') {
+      res.status(403).json({ error: 'Tu cuenta está suspendida. Contacta al soporte de PokeMarket.' });
     } else {
       res.status(500).json({ error: 'Error interno del servidor' });
     }
@@ -107,6 +109,12 @@ export async function refresh(req: Request, res: Response): Promise<void> {
     }
 
     const payload = verifyRefreshToken(refreshToken);
+    const user = await getMe(payload.userId);
+
+    if (user.profile?.isBanned) {
+      res.status(403).json({ error: 'Cuenta suspendida' });
+      return;
+    }
     const accessToken = generateAccessToken({
       userId: payload.userId,
       email: payload.email,

@@ -80,10 +80,6 @@ export async function loginUser(email: string, password: string) {
     
   });
 
-  console.log("LOGIN EMAIL:", email);
-  console.log("USER FOUND:", user);
-  console.log("JWT_SECRET:", process.env.JWT_SECRET);
-
   if (!user) throw new Error('INVALID_CREDENTIALS');
   if (user.profile?.isBanned) throw new Error('USER_BANNED');
 

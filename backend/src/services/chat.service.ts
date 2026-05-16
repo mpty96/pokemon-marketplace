@@ -2,6 +2,26 @@ import prisma from '../lib/prisma';
 import { uploadImage } from '../utils/cloudinary';
 
 
+const MESSAGE_LIMIT_WINDOW_MS = 10_000;
+const MESSAGE_LIMIT_COUNT = 5;
+
+const messageRateMap = new Map<string, number[]>();
+
+function assertCanSendMessage(userId: string) {
+  const now = Date.now();
+  const recent = (messageRateMap.get(userId) || []).filter(
+    (timestamp) => now - timestamp < MESSAGE_LIMIT_WINDOW_MS
+  );
+
+  if (recent.length >= MESSAGE_LIMIT_COUNT) {
+    throw new Error('MESSAGE_RATE_LIMIT');
+  }
+
+  recent.push(now);
+  messageRateMap.set(userId, recent);
+}
+
+
 export async function getConversation(listingId: string, userId: string) {
   const listing = await prisma.listing.findUnique({
     where: { id: listingId },
@@ -172,6 +192,7 @@ export async function sendChatMessage(
 ) {
   const cleanContent = content?.trim() || '';
   const cleanImageUrls = imageUrls.filter(Boolean).slice(0, 4);
+  assertCanSendMessage(senderId);
 
   if (!cleanContent && cleanImageUrls.length === 0) {
     throw new Error('EMPTY_MESSAGE');
