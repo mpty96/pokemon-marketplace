@@ -37,6 +37,7 @@ export default function AdminReportsPage() {
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const hasHydrated = useAuthStore((s) => s.hasHydrated);
 
   const [reports, setReports] = useState<AdminReport[]>([]);
   const [selected, setSelected] = useState<AdminReport | null>(null);
@@ -46,7 +47,12 @@ export default function AdminReportsPage() {
   const [actionLoading, setActionLoading] = useState(false);
 
 useEffect(() => {
-  if (!user) return;
+  if (!hasHydrated) return;
+
+  if (!isAuthenticated || !user) {
+    router.push('/');
+    return;
+  }
 
   if (user.role !== 'ADMIN') {
     router.push('/');
@@ -54,7 +60,7 @@ useEffect(() => {
   }
 
   fetchReports();
-}, [user, statusFilter]);
+  }, [hasHydrated, isAuthenticated, user, statusFilter]);
 
   async function fetchReports() {
     setLoading(true);
@@ -96,7 +102,7 @@ useEffect(() => {
     }
   }
 
-if (!user || loading) {
+if (!hasHydrated || !user || loading) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-8">
         <p className="text-[var(--muted)]">Cargando reportes...</p>

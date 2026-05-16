@@ -80,6 +80,11 @@ export async function resolveAdminReportController(req: AuthRequest, res: Respon
       return;
     }
 
+    if (error.message === 'REPORT_ALREADY_RESOLVED') {
+      res.status(400).json({ error: 'Este reporte ya fue resuelto' });
+      return;
+    }
+
     res.status(500).json({ error: 'Error al resolver reporte' });
   }
 }

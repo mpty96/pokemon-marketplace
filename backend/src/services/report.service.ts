@@ -130,6 +130,11 @@ export async function resolveAdminReport(
   });
 
   if (!report) throw new Error('REPORT_NOT_FOUND');
+  
+
+  if (report.status !== 'PENDING') {
+    throw new Error('REPORT_ALREADY_RESOLVED');
+  }
 
   return prisma.$transaction(async (tx) => {
     let newStrikes = report.reported.profile?.strikes || 0;
