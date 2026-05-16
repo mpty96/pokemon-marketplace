@@ -52,7 +52,7 @@ export default function ChatPage() {
       clearUnread();
 
       // Cargar venta si existe
-      if (listingRes.data.status === 'PAUSED' || listingRes.data.status === 'SOLD') {
+      if (listingRes.data.status === 'SOLD') {
         try {
           const saleRes = await api.get(`/api/sales/${id}`);
           setSale(saleRes.data);
@@ -106,7 +106,7 @@ export default function ChatPage() {
         const listingRes = await api.get(`/api/listings/${id}`);
         setListing(listingRes.data);
 
-        if (listingRes.data.status === 'PAUSED' || listingRes.data.status === 'SOLD') {
+        if (listingRes.data.status === 'SOLD') {
           const saleRes = await api.get(`/api/sales/${id}`);
           setSale(saleRes.data);
 

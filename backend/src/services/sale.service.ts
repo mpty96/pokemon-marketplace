@@ -44,7 +44,8 @@ export async function initiateSale(listingId: string, sellerId: string, quantity
 
   if (
     existingSale &&
-    ['PENDING', 'BUYER_CONFIRMED', 'SELLER_CONFIRMED', 'COMPLETED'].includes(existingSale.status)
+    existingSale.buyerId === buyerId &&
+    ['PENDING', 'BUYER_CONFIRMED', 'SELLER_CONFIRMED'].includes(existingSale.status)
   ) {
     throw new Error('SALE_ALREADY_EXISTS');
   }
@@ -86,12 +87,6 @@ export async function initiateSale(listingId: string, sellerId: string, quantity
             seller: { select: { id: true, username: true } },
           },
         });
-
-    await tx.listing.update({
-      where: { id: listingId },
-      data: { status: 'PAUSED' },
-    });
-
     return nextSale;
   });
 
