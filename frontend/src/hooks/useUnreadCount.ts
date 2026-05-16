@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
+import { useSocket } from '@/hooks/useSocket';
 
 let globalCount = 0;
 let silenced    = false;
@@ -18,6 +19,7 @@ export function clearUnread() {
 
 export function useUnreadCount() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const socket = useSocket();
   const [count, setCount] = useState(globalCount);
 
   useEffect(() => {
@@ -43,6 +45,22 @@ export function useUnreadCount() {
     const interval = setInterval(refresh, 30000);
     return () => clearInterval(interval);
   }, [refresh]);
+
+
+  useEffect(() => {
+  if (!socket) return;
+
+  function handleUnreadUpdate(payload: { count: number }) {
+    silenced = false;
+    notifyListeners(payload.count);
+  }
+
+  socket.on('unread_count_updated', handleUnreadUpdate);
+
+  return () => {
+    socket.off('unread_count_updated', handleUnreadUpdate);
+  };
+}, [socket]);
 
   return count;
 }

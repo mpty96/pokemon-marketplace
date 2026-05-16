@@ -88,6 +88,7 @@ export default function ChatPage() {
     // Mensajes nuevos
     socket.on('new_message', (message: Message) => {
       setMessages((prev) => {
+        
         if (prev.some((item) => item.id === message.id)) {
           return prev;
         }
@@ -184,6 +185,10 @@ export default function ChatPage() {
     });
 
     setMessages((prev) => {
+      socket?.emit('message_created', {
+        listingId: id,
+        message: savedMessage,
+      });
       if (prev.some((message) => message.id === savedMessage.id)) {
         return prev;
       }
@@ -191,7 +196,7 @@ export default function ChatPage() {
       return [...prev, savedMessage];
     });
 
-    socket?.emit('send_message_broadcast_only', {
+    socket?.emit('message_created', {
       listingId: id,
       message: savedMessage,
     });

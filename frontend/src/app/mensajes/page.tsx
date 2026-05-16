@@ -9,7 +9,7 @@ import { ConversationPreview } from '@/types';
 
 export default function MensajesPage() {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, hasHydrated } = useAuthStore();
   const [conversations, setConversations] = useState<ConversationPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -18,6 +18,8 @@ export default function MensajesPage() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
+    if (!hasHydrated) return;
+
     if (!isAuthenticated) {
       router.push('/login');
       return;
@@ -28,6 +30,7 @@ export default function MensajesPage() {
       .finally(() => setLoading(false));
   }, [isAuthenticated]);
 
+  if (!hasHydrated) return null;
   if (!isAuthenticated) return null;
 
   function toggleSelected(id: string) {

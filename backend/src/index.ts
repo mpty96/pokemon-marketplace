@@ -54,7 +54,61 @@ async function main() {
 
   io.on('connection', (socket) => {
     const user = socket.data.user;
+    socket.join(`user:${user.userId}`);
     console.log(`🔌 Conectado: ${user.userId}`);
+
+    socket.on('message_created', async (data: { listingId: string; message: any }) => {
+      try {
+        const { listingId, message } = data;
+
+        io.to(`listing:${listingId}`).emit('new_message', message);
+
+        const listing = await prisma.listing.findUnique({
+          where: { id: listingId },
+          select: { sellerId: true },
+        });
+
+        if (!listing) return;
+
+        const conversation = await prisma.conversation.findUnique({
+          where: { listingId },
+          select: {
+            id: true,
+            messages: {
+              select: { senderId: true },
+            },
+          },
+        });
+
+        if (!conversation) return;
+
+        const participantIds = new Set<string>();
+
+        participantIds.add(listing.sellerId);
+
+        conversation.messages.forEach((msg) => {
+          participantIds.add(msg.senderId);
+        });
+
+        participantIds.delete(user.userId);
+
+        for (const participantId of participantIds) {
+          const unreadCount = await prisma.message.count({
+            where: {
+              conversationId: conversation.id,
+              senderId: { not: participantId },
+              read: false,
+            },
+          });
+
+          io.to(`user:${participantId}`).emit('unread_count_updated', {
+            count: unreadCount,
+          });
+        }
+      } catch (error) {
+        console.error('MESSAGE CREATED BROADCAST ERROR:', error);
+      }
+    });
 
     socket.on('join_conversation', (listingId: string) => {
       socket.join(`listing:${listingId}`);
