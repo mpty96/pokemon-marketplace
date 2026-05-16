@@ -104,9 +104,9 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="md:hidden border-t border-[var(--border)] px-2 py-2 grid grid-cols-5 gap-1 bg-[var(--surface)]">
-        <Link href="/" className="text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Inicio</Link>
-        <Link href="/marketplace" className="text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Marketplace</Link>
+      <div className="md:hidden border-t border-[var(--border)] px-1.5 py-2 grid grid-cols-5 gap-0 bg-[var(--surface)]">
+        <Link href="/" className="text-[11.5px] font-bold text-center leading-tight text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Inicio</Link>
+        <Link href="/marketplace" className="text-[11.5px] font-bold text-center leading-tight text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Marketplace</Link>
 
         {isAuthenticated && (
           <>
@@ -119,11 +119,11 @@ export default function Header() {
               )}
             </Link>
 
-            <Link href="/transacciones" className="text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
+            <Link href="/transacciones" className="relative text-[11.5px] font-bold text-center leading-tight text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
               Transacciones
             </Link>
 
-            <Link href="/consejos" className="text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
+            <Link href="/consejos" className={linkClass('/consejos')}>
               Consejos
             </Link>
           </>
