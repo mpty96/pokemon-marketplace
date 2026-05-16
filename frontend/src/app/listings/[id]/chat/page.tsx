@@ -592,11 +592,11 @@ return (
           </h3>
 
           <ul className="list-disc ml-5 mt-2 space-y-1 text-[var(--muted)]">
-            <li>Fotos del frente y reverso</li>
-            <li>Puntas y esquinas</li>
-            <li>Rayones y dobleces</li>
-            <li>Fotos con buena iluminación</li>
-            <li>Imágenes sin filtros</li>
+            <li>Fotos del frente y reverso.</li>
+            <li>Puntas y esquinas en ambas caras.</li>
+            <li>Rayones y dobleces.</li>
+            <li>Fotos con buena iluminación.</li>
+            <li>Imágenes sin filtros.</li>
           </ul>
         </div>
 
@@ -606,10 +606,10 @@ return (
           </h3>
 
           <ul className="list-disc ml-5 space-y-1 text-[var(--muted)]">
-            <li>Compara colores y tipografía</li>
-            <li>Desconfía de precios muy bajos</li>
-            <li>Solicita videos si tienes dudas</li>
-            <li>Revisa reputación del usuario</li>
+            <li>Compara colores y tipografía.</li>
+            <li>Desconfía de precios muy bajos.</li>
+            <li>Solicita videos si tienes dudas.</li>
+            <li>Revisa reputación del usuario.</li>
           </ul>
         </div>
 
@@ -619,10 +619,10 @@ return (
           </h3>
 
           <ul className="list-disc ml-5 space-y-1 text-[var(--muted)]">
-            <li>No compartas contraseñas</li>
-            <li>No compartas códigos OTP</li>
-            <li>Evita pagos sospechosos</li>
-            <li>Prefiere lugares públicos</li>
+            <li>No compartas contraseñas.</li>
+            <li>No compartas códigos de verificación.</li>
+            <li>Evita pagos sospechosos.</li>
+            <li>Prefiere lugares públicos y seguros.</li>
           </ul>
         </div>
 

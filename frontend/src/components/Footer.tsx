@@ -54,7 +54,7 @@ export default function Footer() {
       >
         <Section title="Antes de comprar">
           <p>
-            Antes de concretar una compra, revisa cuidadosamente la publicación,
+            Revisa cuidadosamente la publicación,
             la descripción, las fotografías disponibles, la reputación del vendedor
             y las calificaciones recibidas. No realices pagos si tienes dudas sobre
             la autenticidad, el estado del producto o la seriedad del usuario.
