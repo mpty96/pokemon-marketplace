@@ -58,7 +58,7 @@ export default function Header() {
                 Transacciones
               </Link>
 
-              <Link href="/consejos" className="text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
+              <Link href="/consejos" className={linkClass('/consejos')}>
                 Consejos
               </Link>
             </>
