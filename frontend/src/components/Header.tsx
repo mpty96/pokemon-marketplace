@@ -105,31 +105,31 @@ export default function Header() {
       </div>
 
       <div className="md:hidden border-t border-[var(--border)] px-2 py-2 bg-[var(--surface)]">
-        <nav className="grid grid-cols-5 items-center text-center">
-          <Link href="/" className="text-[10.5px] font-bold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+        <nav className="flex items-center justify-between gap-2 text-center">
+          <Link href="/" className="text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
             Inicio
           </Link>
 
-          <Link href="/marketplace" className="text-[10.5px] font-bold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+          <Link href="/marketplace" className="text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
             Marketplace
           </Link>
 
           {isAuthenticated && (
             <>
-              <Link href="/mensajes" className="relative text-[10.5px] font-bold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+              <Link href="/mensajes" className="relative text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
                 Mensajes
                 {unreadCount > 0 && (
-                  <span className="absolute -top-2 right-1 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[15px] h-[15px] flex items-center justify-center px-0.5">
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[15px] h-[15px] flex items-center justify-center px-0.5">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
               </Link>
 
-              <Link href="/transacciones" className="text-[10.5px] font-bold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+              <Link href="/transacciones" className="text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
                 Transacciones
               </Link>
 
-              <Link href="/consejos" className="text-[10.5px] font-bold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+              <Link href="/consejos" className="text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
                 Consejos
               </Link>
             </>
