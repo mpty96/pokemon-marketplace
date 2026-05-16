@@ -58,7 +58,7 @@ export default function Header() {
                 Transacciones
               </Link>
 
-              <Link href="/consejos" className="text-sm font-bold text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
+              <Link href="/consejos" className="text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
                 Consejos
               </Link>
             </>
@@ -104,13 +104,13 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="md:hidden border-t border-[var(--border)] px-3 py-2 flex gap-4 overflow-x-auto mobile-scrollbar bg-[var(--surface)] text-sm">
-        <Link href="/" className="text-sm font-bold text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Inicio</Link>
-        <Link href="/marketplace" className="text-sm font-bold text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Marketplace</Link>
+      <div className="md:hidden border-t border-[var(--border)] px-2 py-2 grid grid-cols-5 gap-1 bg-[var(--surface)]">
+        <Link href="/" className="text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Inicio</Link>
+        <Link href="/marketplace" className="text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">Marketplace</Link>
 
         {isAuthenticated && (
           <>
-            <Link href="/mensajes" className="text-sm font-bold text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
+            <Link href="/mensajes" className="relative text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
               Mensajes
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-3 bg-red-500 text-white text-xs font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">
@@ -119,11 +119,11 @@ export default function Header() {
               )}
             </Link>
 
-            <Link href="/transacciones" className="text-sm font-bold text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
+            <Link href="/transacciones" className="text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
               Transacciones
             </Link>
 
-            <Link href="/consejos" className={linkClass('/consejos')}>
+            <Link href="/consejos" className="text-[11px] font-bold text-center text-[var(--muted)] whitespace-nowrap hover:text-[var(--primary)]">
               Consejos
             </Link>
           </>
