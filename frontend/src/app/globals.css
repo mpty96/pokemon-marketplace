@@ -11,9 +11,9 @@
   --muted: #5f6f86;
   --muted-2: #8b9ab1;
 
-  --primary: #f2c230;
-  --primary-hover: #ddb01f;
-  --primary-foreground: #172033;
+  --primary: #155bb8;
+  --primary-hover: #0f4594;
+  --primary-foreground: #ffffff;
 
   --success-bg: #dcfce7;
   --success-fg: #166534;
@@ -39,9 +39,9 @@
   --muted: #b8c4d9;
   --muted-2: #91a0ba;
 
-  --primary: #ffd447;
-  --primary-hover: #ffe27a;
-  --primary-foreground: #0f172a;
+  --primary: #64a8ff;
+  --primary-hover: #8fc0ff;
+  --primary-foreground: #07111f;
 
   --success-bg: rgba(34, 197, 94, 0.15);
   --success-fg: #86efac;
