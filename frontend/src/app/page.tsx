@@ -59,11 +59,6 @@ export default function HomePage() {
         />
 
         <div className="relative px-4 sm:px-6 py-8 sm:py-10 text-center">
-          <div className="inline-flex items-center gap-2 bg-[var(--surface-2)] text-[var(--foreground)] text-xs font-semibold px-3 py-1 rounded-full mb-3 border border-[var(--border)]">
-            Solo para Chile
-          </div>
-
-        <div className="relative px-4 sm:px-6 py-8 sm:py-10 text-center">
           <div className="mb-3 flex justify-center">
             <img
               src="/logo-footer.png"
@@ -90,7 +85,6 @@ export default function HomePage() {
             >
               Publicar
             </Link>
-          </div>
           </div>
         </div>
       </section>
