@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/axios';
 import { RatingCard } from '@/components/RatingCard';
-import { Rating, Listing } from '@/types';
+import { Rating, Listing, WantedCard } from '@/types';
 import { useAuthStore } from '@/store/auth.store';
 
 interface PublicProfile {
@@ -159,6 +159,7 @@ export default function PublicProfilePage() {
   const [data, setData] = useState<PublicProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [wantedCards, setWantedCards] = useState<WantedCard[]>([]);
   const [ratingTab, setRatingTab] = useState<'all' | 'seller' | 'buyer'>('all');
   const currentUser = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -170,8 +171,14 @@ export default function PublicProfilePage() {
   const [reportMessage, setReportMessage] = useState('');
 
   useEffect(() => {
-    api.get(`/api/profile/public/${username}`)
-      .then(({ data }) => setData(data))
+    Promise.all([
+      api.get(`/api/profile/public/${username}`),
+      api.get(`/api/wanted-cards/user/${username}`),
+    ])
+      .then(([profileRes, wantedRes]) => {
+        setData(profileRes.data);
+        setWantedCards(wantedRes.data || []);
+      })
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
   }, [username]);
@@ -361,6 +368,64 @@ export default function PublicProfilePage() {
               : data.ratingsAsBuyer
             )?.map((rating: Rating) => (
               <RatingCard key={rating.id} rating={rating} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {wantedCards.length > 0 && (
+        <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-bold text-[var(--foreground)]">
+                Cartas de mi Interés
+              </h2>
+              <p className="text-xs sm:text-sm text-[var(--muted-2)] mt-1">
+                Cartas que este usuario está buscando o le interesa conseguir.
+              </p>
+            </div>
+
+            <span className="text-sm text-[var(--muted)]">
+              {wantedCards.length}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {wantedCards.map((card) => (
+              <div
+                key={card.id}
+                className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-3 flex gap-3"
+              >
+                <div className="w-16 h-16 rounded-lg bg-[var(--surface)] border border-[var(--border)] overflow-hidden flex-shrink-0 flex items-center justify-center">
+                  {card.imageUrl ? (
+                    <img
+                      src={card.imageUrl}
+                      alt={card.name}
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <span className="text-2xl">🃏</span>
+                  )}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-[var(--foreground)] truncate text-sm">
+                    {card.name}
+                  </h3>
+
+                  {card.edition && (
+                    <p className="text-xs text-[var(--muted-2)] truncate mt-0.5">
+                      {card.edition}
+                    </p>
+                  )}
+
+                  {card.setNumber && (
+                    <p className="text-xs text-[var(--muted-2)] mt-1">
+                      Nº {card.setNumber}
+                    </p>
+                  )}
+                </div>
+              </div>
             ))}
           </div>
         </div>
