@@ -91,21 +91,26 @@ export default function ConsejosPage() {
                 <div className="space-y-3">
                   <p>
                     La sección <span className="font-medium text-[var(--foreground)]">Transacciones</span>
-                    permite visualizar ventas completadas públicamente dentro de la plataforma.
-                    Esto ayuda a generar transparencia entre usuarios y demostrar movimiento real dentro del marketplace.
+                    permite visualizar ventas completadas públicamente dentro de la plataforma,
+                    ayudando a generar transparencia y demostrar movimiento real dentro del marketplace.
                   </p>
 
-                  <p>
-                    Las transacciones visibles muestran:
-                  </p>
-
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>Vendedor</li>
-                    <li>Comprador</li>
-                    <li>Carta o producto vendido</li>
-                    <li>Precio final</li>
-                    <li>Fecha de venta</li>
-                  </ul>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {[
+                      'Vendedor',
+                      'Comprador',
+                      'Carta o producto',
+                      'Precio final',
+                      'Fecha de venta',
+                    ].map((item) => (
+                      <span
+                        key={item}
+                        className="px-2 py-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted)]"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
 
                   <p>
                     Las interacciones entre usuarios siguen ocurriendo únicamente mediante publicaciones activas
@@ -122,29 +127,28 @@ export default function ConsejosPage() {
                 <div className="space-y-3">
                   <p>
                     La sección <span className="font-medium text-[var(--foreground)]">Cartas de mi Interés</span>
-                    permite que cada usuario pueda mostrar públicamente qué cartas está buscando
-                    o cuáles le interesa conseguir en el futuro.
+                    permite mostrar públicamente qué cartas busca o le interesa conseguir a cada usuario.
                   </p>
 
-                  <p>
-                    Esta función:
-                  </p>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {[
+                      'No crea publicaciones',
+                      'No genera chats',
+                      'No permite contacto directo',
+                      'No representa compra inmediata',
+                    ].map((item) => (
+                      <span
+                        key={item}
+                        className="px-2 py-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted)]"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
 
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>No crea publicaciones</li>
-                    <li>No genera chats automáticos</li>
-                    <li>No permite contacto directo entre usuarios</li>
-                    <li>No representa intención inmediata de compra</li>
-                  </ul>
-
                   <p>
-                    Su propósito es únicamente visual e informativo para la comunidad.
-                  </p>
-
-                  <p>
-                    En el futuro, los usuarios con una suscripción activa podrán habilitar
-                    notificaciones instantáneas por correo electrónico cuando alguien publique
-                    una carta que coincida con sus intereses dentro del marketplace.
+                    En el futuro, usuarios con suscripción activa podrán recibir notificaciones instantáneas
+                    vía correo electrónico cuando alguien publique una carta relacionada con sus intereses.
                   </p>
                 </div>
               </section>
