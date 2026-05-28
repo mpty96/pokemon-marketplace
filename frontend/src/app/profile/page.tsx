@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
-import { Listing } from '@/types';
+import { Listing, WantedCard } from '@/types';
 
 type Tab = 'active' | 'history';
 
@@ -19,12 +19,18 @@ const STATUS_LABEL: Record<string, { label: string; color: string }> = {
 export default function ProfilePage() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
-  const [tab,       setTab]       = useState<'active' | 'sold' | 'bought'>('active');
+  const [tab, setTab] = useState<'active' | 'sold' | 'bought' | 'wanted'>('active');
   const [active,   setActive]   = useState<Listing[]>([]);
   const [asSeller,  setAsSeller]  = useState<Listing[]>([]);
   const [asBuyer,   setAsBuyer]   = useState<Listing[]>([]);
   const [history,  setHistory]  = useState<Listing[]>([]);
   const [loading,  setLoading]  = useState(true);
+  const [wantedCards, setWantedCards] = useState<WantedCard[]>([]);
+  const [wantedLoading, setWantedLoading] = useState(false);
+  const [wantedName, setWantedName] = useState('');
+  const [wantedEdition, setWantedEdition] = useState('');
+  const [wantedSetNumber, setWantedSetNumber] = useState('');
+  const [wantedImage, setWantedImage] = useState<File | null>(null);
 
 useEffect(() => {
   if (!isAuthenticated) return;
@@ -32,12 +38,12 @@ useEffect(() => {
   Promise.all([
     api.get('/api/listings/my'),
     api.get('/api/listings/history'),
-  ]).then(([activeRes, historyRes]) => {
-
+    api.get('/api/wanted-cards/me'),
+  ]).then(([activeRes, historyRes, wantedRes]) => {
     setActive(activeRes.data);
     setAsSeller(historyRes.data.asseller || []);
     setAsBuyer(historyRes.data.asbuyer || []);
-
+    setWantedCards(wantedRes.data || []);
   }).finally(() => setLoading(false));
 }, [isAuthenticated]);
 
@@ -49,6 +55,54 @@ const displayed =
     : tab === 'sold'
       ? asSeller
       : asBuyer;
+
+async function handleCreateWantedCard(e: React.FormEvent) {
+  e.preventDefault();
+
+  if (!wantedName.trim()) return;
+
+  setWantedLoading(true);
+
+  try {
+    const formData = new FormData();
+    formData.append('name', wantedName.trim());
+
+    if (wantedEdition.trim()) {
+      formData.append('edition', wantedEdition.trim());
+    }
+
+    if (wantedSetNumber.trim()) {
+      formData.append('setNumber', wantedSetNumber.trim());
+    }
+
+    if (wantedImage) {
+      formData.append('image', wantedImage);
+    }
+
+    const { data } = await api.post('/api/wanted-cards', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    setWantedCards((prev) => [data, ...prev]);
+    setWantedName('');
+    setWantedEdition('');
+    setWantedSetNumber('');
+    setWantedImage(null);
+  } finally {
+    setWantedLoading(false);
+  }
+}
+
+async function handleDeleteWantedCard(id: string) {
+  const confirmed = window.confirm('¿Eliminar esta carta de tu lista de interés?');
+  if (!confirmed) return;
+
+  await api.delete(`/api/wanted-cards/${id}`);
+  setWantedCards((prev) => prev.filter((card) => card.id !== id));
+}
+
 
   return (
     <div className="max-w-4xl mx-auto px-3 sm:px-4 py-5 sm:py-8 text-[var(--foreground)]">
@@ -130,6 +184,17 @@ const displayed =
         >
           Compradas ({asBuyer.length})
         </button>
+
+        <button
+          onClick={() => setTab('wanted')}
+          className={`flex-1 sm:flex-none whitespace-nowrap px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
+            tab === 'wanted'
+              ? 'bg-[var(--surface)] text-[var(--foreground)] shadow-sm'
+              : 'text-[var(--muted)] hover:text-[var(--foreground)]'
+          }`}
+        >
+          Cartas de mi Interés ({wantedCards.length})
+        </button>
       </div>
 
       {/* Lista */}
@@ -141,6 +206,137 @@ const displayed =
               className="bg-[var(--surface)] rounded-xl h-20 animate-pulse border border-[var(--border)]"
             />
           ))}
+        </div>
+      ) : tab === 'wanted' ? (
+        <div className="space-y-5">
+          <form
+            onSubmit={handleCreateWantedCard}
+            className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-4 sm:p-5 space-y-4"
+          >
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
+                Agregar carta de interés
+              </h2>
+              <p className="text-xs sm:text-sm text-[var(--muted-2)] mt-1">
+                Estas cartas serán visibles en tu perfil público. Más adelante podrás activar avisos por correo cuando alguien publique una carta similar.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-[var(--muted)] mb-1">
+                  Nombre de carta *
+                </label>
+                <input
+                  value={wantedName}
+                  onChange={(e) => setWantedName(e.target.value)}
+                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--primary)]"
+                  placeholder="Charizard"
+                  maxLength={80}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-[var(--muted)] mb-1">
+                  Edición
+                </label>
+                <input
+                  value={wantedEdition}
+                  onChange={(e) => setWantedEdition(e.target.value)}
+                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--primary)]"
+                  placeholder="Base Set"
+                  maxLength={80}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-[var(--muted)] mb-1">
+                  Nº en el set
+                </label>
+                <input
+                  value={wantedSetNumber}
+                  onChange={(e) => setWantedSetNumber(e.target.value)}
+                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--primary)]"
+                  placeholder="4/102"
+                  maxLength={30}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-[var(--muted)] mb-1">
+                Imagen opcional
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setWantedImage(e.target.files?.[0] || null)}
+                className="block w-full text-sm text-[var(--muted)] file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--primary)] file:px-4 file:py-2 file:text-sm file:font-medium file:text-[var(--primary-foreground)]"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={wantedLoading || !wantedName.trim()}
+              className="w-full sm:w-auto bg-[var(--primary)] disabled:opacity-60 text-[var(--primary-foreground)] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[var(--primary-hover)]"
+            >
+              {wantedLoading ? 'Agregando...' : 'Agregar carta'}
+            </button>
+          </form>
+
+          {wantedCards.length === 0 ? (
+            <div className="text-center py-12 text-[var(--muted-2)] bg-[var(--surface)] rounded-xl border border-[var(--border)]">
+              <p className="text-4xl mb-3">⭐</p>
+              <p>No has agregado cartas de interés</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {wantedCards.map((card) => (
+                <div
+                  key={card.id}
+                  className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-4 flex gap-4"
+                >
+                  <div className="w-16 h-16 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] overflow-hidden flex-shrink-0 flex items-center justify-center">
+                    {card.imageUrl ? (
+                      <img
+                        src={card.imageUrl}
+                        alt={card.name}
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-2xl">🃏</span>
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-[var(--foreground)] truncate">
+                      {card.name}
+                    </h3>
+
+                    {card.edition && (
+                      <p className="text-sm text-[var(--muted-2)] truncate">
+                        {card.edition}
+                      </p>
+                    )}
+
+                    {card.setNumber && (
+                      <p className="text-xs text-[var(--muted-2)]">
+                        Nº {card.setNumber}
+                      </p>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteWantedCard(card.id)}
+                      className="mt-2 text-xs text-red-500 hover:underline"
+                    >
+                      Quitar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ) : displayed.length === 0 ? (
         <div className="text-center py-12 text-[var(--muted-2)]">

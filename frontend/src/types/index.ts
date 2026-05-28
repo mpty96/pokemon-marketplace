@@ -166,3 +166,15 @@ export interface UserLevelInfo {
   level: number;
   completedTransactions: number;
 }
+
+export interface WantedCard {
+  id: string;
+  userId: string;
+  name: string;
+  edition: string | null;
+  setNumber: string | null;
+  imageUrl: string | null;
+  notifyEnabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
