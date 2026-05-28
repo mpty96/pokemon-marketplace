@@ -9,6 +9,9 @@ dist/
 .env
 .env.local
 .env.production
+backend/backups/*.sql
+*.backup
+*.dump
 
 # Logs
 *.log
