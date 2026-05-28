@@ -120,7 +120,7 @@ export default function ConsejosPage() {
               </section>
 
               <section>
-                <h2 className="font-semibold text-[var(--foreground)] mb-2">
+                <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
                   Cartas de mi Interés
                 </h2>
 
