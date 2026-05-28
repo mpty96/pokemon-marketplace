@@ -31,6 +31,3 @@ export function verifyAccessToken(token: string): JwtPayload {
 export function verifyRefreshToken(token: string): JwtPayload {
   return (jwt as any).verify(token, JWT_REFRESH_SECRET) as JwtPayload;
 }
-
-console.log("ACCESS SECRET:", JWT_SECRET);
-console.log("REFRESH SECRET:", JWT_REFRESH_SECRET);
