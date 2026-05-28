@@ -34,10 +34,6 @@ export default function ListingDetailPage() {
   const [historyRange, setHistoryRange] = useState<SalesHistoryRange>('1m');
   const [salesHistory, setSalesHistory] = useState<ListingSalesHistoryItem[]>([]);
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
-  const [showEditPrice, setShowEditPrice] = useState(false);
-  const [editPrice, setEditPrice] = useState('');
-  const [savingPrice, setSavingPrice] = useState(false);
-  const [priceError, setPriceError] = useState('');
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -69,44 +65,6 @@ export default function ListingDetailPage() {
     if (!confirm('¿Eliminar esta publicación?')) return;
     await api.delete(`/api/listings/${id}`);
     router.push('/marketplace');
-  }
-
-  async function handleUpdatePrice(e: React.FormEvent) {
-  e.preventDefault();
-
-  if (!listing) return;
-
-  const cleanPrice = Number(editPrice.replace(/\./g, '').replace(/,/g, ''));
-
-  if (!cleanPrice || cleanPrice <= 0) {
-    setPriceError('Ingresa un precio válido');
-    return;
-  }
-
-  setSavingPrice(true);
-  setPriceError('');
-
-    try {
-      const { data } = await api.put(`/api/listings/${listing.id}`, {
-        priceCLP: cleanPrice,
-      });
-
-      setListing((prev) => {
-      if (!prev) return data;
-
-      return {
-        ...prev,
-        priceCLP: data.priceCLP,
-      };
-    });
-
-      setShowEditPrice(false);
-      setEditPrice('');
-    } catch (err: any) {
-      setPriceError(err.response?.data?.error || 'Error al actualizar precio');
-    } finally {
-      setSavingPrice(false);
-    }
   }
 
   if (loading) return (
@@ -283,17 +241,6 @@ export default function ListingDetailPage() {
               <div className="mt-6 space-y-3">
                 {isOwner ? (
                   <>
-                    <button
-                      onClick={() => {
-                        setEditPrice(String(listing.priceCLP));
-                        setPriceError('');
-                        setShowEditPrice(true);
-                      }}
-                      className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors"
-                    >
-                      Editar precio
-                    </button>
-
                     <button
                       onClick={handleDelete}
                       className="w-full border border-[var(--danger-fg)] text-[var(--danger-fg)] hover:bg-[var(--danger-bg)] font-medium py-2 rounded-lg transition-colors"
@@ -570,70 +517,6 @@ export default function ListingDetailPage() {
           )}
         </div>
       </div>
-      {showEditPrice && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center px-4"
-          onClick={() => setShowEditPrice(false)}
-        >
-          <div
-            className="w-full max-w-sm rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-xl p-5"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-lg font-bold text-[var(--foreground)] mb-2">
-              Editar precio
-            </h2>
-
-            <p className="text-sm text-[var(--muted)] mb-4">
-              Solo puedes modificar el precio de esta publicación.
-            </p>
-
-            <form onSubmit={handleUpdatePrice} className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                  Nuevo precio (CLP)
-                </label>
-
-                <input
-                  required
-                  type="text"
-                  inputMode="numeric"
-                  value={editPrice}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/[^\d.,]/g, '');
-                    setEditPrice(value);
-                  }}
-                  className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                  placeholder="20.000"
-                />
-              </div>
-
-              {priceError && (
-                <p className="text-sm text-[var(--danger-fg)] bg-[var(--danger-bg)] border border-[var(--border)] rounded-lg p-2">
-                  {priceError}
-                </p>
-              )}
-
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowEditPrice(false)}
-                  className="flex-1 border border-[var(--border)] text-[var(--foreground)] rounded-lg py-2 hover:bg-[var(--surface-2)]"
-                >
-                  Cancelar
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={savingPrice}
-                  className="flex-1 bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] rounded-lg py-2"
-                >
-                  {savingPrice ? 'Guardando...' : 'Guardar'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

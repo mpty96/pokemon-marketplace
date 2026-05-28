@@ -160,6 +160,7 @@ export default function PublicProfilePage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [wantedCards, setWantedCards] = useState<WantedCard[]>([]);
+  const [showAllWantedCards, setShowAllWantedCards] = useState(false);
   const [ratingTab, setRatingTab] = useState<'all' | 'seller' | 'buyer'>('all');
   const currentUser = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -385,13 +386,25 @@ export default function PublicProfilePage() {
               </p>
             </div>
 
-            <span className="text-sm text-[var(--muted)]">
-              {wantedCards.length}
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-[var(--muted)]">
+                {wantedCards.length}
+              </span>
+
+              {wantedCards.length > 4 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllWantedCards((prev) => !prev)}
+                  className="text-sm font-medium text-[var(--primary)] hover:underline whitespace-nowrap"
+                >
+                  {showAllWantedCards ? 'Ver menos' : 'Ver todas →'}
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {wantedCards.map((card) => (
+            {(showAllWantedCards ? wantedCards : wantedCards.slice(0, 4)).map((card) => (
               <div
                 key={card.id}
                 className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-3 flex gap-3"

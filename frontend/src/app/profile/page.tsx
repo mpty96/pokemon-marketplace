@@ -56,6 +56,47 @@ const displayed =
       ? asSeller
       : asBuyer;
 
+
+
+async function compressWantedImage(file: File): Promise<File> {
+  const maxSize = 900;
+  const quality = 0.78;
+
+  const imageBitmap = await createImageBitmap(file);
+
+  const scale = Math.min(
+    1,
+    maxSize / Math.max(imageBitmap.width, imageBitmap.height)
+  );
+
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.round(imageBitmap.width * scale);
+  canvas.height = Math.round(imageBitmap.height * scale);
+
+  const ctx = canvas.getContext('2d');
+
+  if (!ctx) {
+    return file;
+  }
+
+  ctx.drawImage(imageBitmap, 0, 0, canvas.width, canvas.height);
+
+  const blob = await new Promise<Blob | null>((resolve) => {
+    canvas.toBlob(resolve, 'image/webp', quality);
+  });
+
+  if (!blob) {
+    return file;
+  }
+
+  return new File(
+    [blob],
+    file.name.replace(/\.[^/.]+$/, '.webp'),
+    { type: 'image/webp' }
+  );
+}
+
+
 async function handleCreateWantedCard(e: React.FormEvent) {
   e.preventDefault();
 
@@ -76,7 +117,8 @@ async function handleCreateWantedCard(e: React.FormEvent) {
     }
 
     if (wantedImage) {
-      formData.append('image', wantedImage);
+      const compressedImage = await compressWantedImage(wantedImage);
+      formData.append('image', compressedImage);
     }
 
     const { data } = await api.post('/api/wanted-cards', formData, {

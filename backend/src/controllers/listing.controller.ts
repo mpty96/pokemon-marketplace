@@ -123,31 +123,9 @@ export async function getOne(req: AuthRequest, res: Response): Promise<void> {
 }
 
 export async function update(req: AuthRequest, res: Response): Promise<void> {
-  try {
-    const id       = req.params.id as string;
-    const sellerId = req.user!.userId;
-    const { priceCLP } = req.body;
-
-    if (!priceCLP || Number(priceCLP) <= 0) {
-      res.status(400).json({ error: 'Precio inválido' });
-      return;
-    }
-
-    const listing = await updateListing(id, sellerId, {
-      priceCLP: Number(priceCLP),
-    });
-    res.json(listing);
-  } catch (error: any) {
-    if (error.message === 'LISTING_NOT_FOUND') {
-      res.status(404).json({ error: 'Publicación no encontrada' });
-    } else if (error.message === 'UNAUTHORIZED') {
-      res.status(403).json({ error: 'No autorizado' });
-    } else if (error.message === 'LISTING_NOT_EDITABLE') {
-      res.status(400).json({ error: 'La publicación no se puede editar en este estado' });
-    } else {
-      res.status(500).json({ error: 'Error al actualizar' });
-    }
-  }
+  res.status(405).json({
+    error: 'La edición de publicaciones no está disponible',
+  });
 }
 
 export async function remove(req: AuthRequest, res: Response): Promise<void> {
