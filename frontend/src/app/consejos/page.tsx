@@ -40,7 +40,7 @@ export default function ConsejosPage() {
 
             <div className="space-y-4 text-sm text-[var(--muted)] leading-6">
               <section>
-                <h2 className="font-semibold text-[var(--foreground)] mb-1">
+                <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
                   Verifica la carta o producto
                 </h2>
                 <p>
@@ -52,7 +52,7 @@ export default function ConsejosPage() {
               </section>
 
               <section>
-                <h2 className="font-semibold text-[var(--foreground)] mb-1">
+                <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
                   Cuida tu información personal
                 </h2>
                 <p>
@@ -62,7 +62,7 @@ export default function ConsejosPage() {
               </section>
 
               <section>
-                <h2 className="font-semibold text-[var(--foreground)] mb-1">
+                <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
                   Desconfía de señales sospechosas
                 </h2>
                 <p>
@@ -72,7 +72,7 @@ export default function ConsejosPage() {
               </section>
 
               <section>
-                <h2 className="font-semibold text-[var(--foreground)] mb-1">
+                <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
                   Usa reputación y reportes
                 </h2>
                 <p>
@@ -84,7 +84,7 @@ export default function ConsejosPage() {
               </section>
 
               <section>
-                <h2 className="font-semibold text-[var(--foreground)] mb-2">
+                <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
                   Transparencia de la plataforma
                 </h2>
 
@@ -133,7 +133,6 @@ export default function ConsejosPage() {
                   <div className="flex flex-wrap gap-2 text-xs">
                     {[
                       'No crea publicaciones',
-                      'No genera chats',
                       'No permite contacto directo',
                       'No representa compra inmediata',
                     ].map((item) => (
