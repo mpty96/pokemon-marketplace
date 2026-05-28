@@ -10,6 +10,7 @@ import ratingRoutes  from './routes/rating.routes';
 import profileRoutes from './routes/profile.routes';
 import reportRoutes from './routes/report.routes';
 import cardPricingRoutes from './routes/cardPricing.routes';
+import wantedCardRoutes from './routes/wantedCard.routes';
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use('/api/listings', listingRoutes);
 app.use('/api/chat',     chatRoutes);
 app.use('/api/sales',    saleRoutes);
 app.use('/api/ratings',  ratingRoutes);
+app.use('/api/wanted-cards', wantedCardRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/card-pricing', cardPricingRoutes);
