@@ -15,14 +15,18 @@ export default function ConsejosPage() {
 
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] mb-3">
-              Consejos para evitar estafas
+              Bienvenido a PokeMarket Chile
             </h1>
 
             <p className="text-sm sm:text-base text-[var(--muted)] leading-6 mb-5">
-              Antes de comprar o vender, toma todas las precauciones posibles.
-              Echa un vistazo al perfil del usuario, junto con sus calificaciones recibidas.
-              Analiza el grafico de ventas ubicado en la parte inferior de la publicación.
-							Siempre elige lugares publicos y que te brinden confianza, ojalá siempre ir acompañado.
+              PokeMarket nace como un proyecto enfocado exclusivamente en la comunidad de Pokémon TCG Chile. 
+              La idea principal es construir un espacio moderno, seguro, transparente y profesional para coleccionistas, vendedores y personas que recién comienzan en el mundo de Pokémon TCG.
+
+              Actualmente nos encontramos en una fase de beta cerrada, donde buscamos personas interesadas en formar parte del crecimiento inicial de la plataforma. 
+              El objetivo de esta etapa es probar sistemas, detectar mejoras, optimizar la seguridad y construir una experiencia realmente confiable para toda la comunidad.
+
+              PokeMarket no busca convertirse en una simple página de compra y venta. La idea es fomentar una comunidad responsable, honesta y enfocada en el respeto por el coleccionismo. 
+              Muchas de las funciones actuales fueron diseñadas pensando tanto en coleccionistas avanzados como en personas que recién comienzan y necesitan una experiencia más segura y guiada.
             </p>
 
             <div className="space-y-4 text-sm text-[var(--muted)] leading-6">
@@ -54,7 +58,7 @@ export default function ConsejosPage() {
                 </h2>
                 <p>
                   Ten cuidado con precios demasiado bajos, presión para pagar rápido,
-                  usuarios que evitan enviar fotos adicionales o que no quieren un lugar público.
+                  usuarios que evitan enviar fotos adicionales o que no quieren juntarse en un lugar público.
                 </p>
               </section>
 
@@ -67,6 +71,40 @@ export default function ConsejosPage() {
 									Utiliza la sección Transacciones para buscar las compras y ventas realizadas por un usuario.
                   Si detectas actividad sospechosa o las cosas no resultaron seguras para ti,
 									inspira poca confianza, o dañaron tu integridad personal, utiliza el sistema de reportes.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="font-semibold text-[var(--foreground)] mb-1">
+                  Transparencia de la plataforma
+                </h2>
+                <p>
+                  La sección Transacciones permite visualizar ventas completadas públicamente dentro de la plataforma. 
+                  Esto ayuda a generar transparencia entre usuarios y demostrar movimiento real dentro del marketplace.
+                  Las transacciones visibles muestran:
+                  -Vendedor
+                  -Comprador
+                  -Carta o producto vendido
+                  -Precio final
+                  -Fecha de venta
+                  Sin embargo, las interacciones entre usuarios siguen ocurriendo únicamente mediante publicaciones activas y el botón de Contactar Vendedor.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="font-semibold text-[var(--foreground)] mb-1">
+                  Cartas de mi Interés
+                </h2>
+                <p>
+                  La sección Cartas de mi Interés permite que cada usuario pueda mostrar públicamente qué cartas está buscando o cuáles le interesa conseguir en el futuro.
+                  Esta función:
+                  -NO crea una publicación.
+                  -NO genera chats automáticos.
+                  -NO permite contacto directo entre usuarios.
+                  -NO representa intención inmediata de compra.
+                  Su propósito es únicamente visual e informativo para la comunidad.
+                  En el futuro, los usuarios que cuenten con una suscripción activa podrán habilitar notificaciones instantáneas por correo electrónico 
+                  para recibir avisos automáticos cuando alguien publique una carta que coincida con sus intereses dentro del marketplace.
                 </p>
               </section>
             </div>

@@ -40,15 +40,12 @@ export default function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center justify-center gap-6">
-          <Link href="/" className={linkClass('/')}>Inicio</Link>
-          <Link href="/marketplace" className={linkClass('/marketplace')}>Marketplace</Link>
-
-          <Link href="/transacciones" className={linkClass('/transacciones')}>
-            Transacciones
+          <Link href="/" className={linkClass('/')}>
+            Inicio
           </Link>
 
-          <Link href="/consejos" className={linkClass('/consejos')}>
-            Consejos
+          <Link href="/marketplace" className={linkClass('/marketplace')}>
+            Marketplace
           </Link>
 
           {isAuthenticated && (
@@ -61,6 +58,14 @@ export default function Header() {
               )}
             </Link>
           )}
+
+          <Link href="/transacciones" className={linkClass('/transacciones')}>
+            Transacciones
+          </Link>
+
+          <Link href="/consejos" className={linkClass('/consejos')}>
+            Consejos
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -112,14 +117,6 @@ export default function Header() {
             Marketplace
           </Link>
 
-          <Link href="/transacciones" className="text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
-            Transacciones
-          </Link>
-
-          <Link href="/consejos" className="text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
-            Consejos
-          </Link>
-
           {isAuthenticated && (
             <Link href="/mensajes" className="relative text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
               Mensajes
@@ -130,6 +127,14 @@ export default function Header() {
               )}
             </Link>
           )}
+
+          <Link href="/transacciones" className="text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+            Transacciones
+          </Link>
+
+          <Link href="/consejos" className="text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+            Consejos
+          </Link>
         </nav>
       </div>
     </header>
