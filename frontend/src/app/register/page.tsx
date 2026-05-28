@@ -12,7 +12,6 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [showTerms, setShowTerms] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -104,13 +103,12 @@ export default function RegisterPage() {
 
               <p className="text-sm text-[var(--muted)]">
                 Acepto los{' '}
-                <button
-                  type="button"
-                  onClick={() => setShowTerms(true)}
+                <Link
+                  href="/terminos"
                   className="text-[var(--primary)] underline"
                 >
                   Términos y condiciones
-                </button>
+                </Link>
               </p>
             </div>
 
@@ -129,64 +127,6 @@ export default function RegisterPage() {
             </p>
           </form>
         )}
-
-        {showTerms && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4">
-          <div className="max-w-2xl w-full bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 sm:p-6 overflow-y-auto max-h-[85vh]">
-
-            <h2 className="text-xl font-bold mb-4">
-              Términos y Condiciones – PokeMarket
-            </h2>
-
-            <div className="text-sm space-y-4 text-[var(--muted)]">
-
-              <p>
-                Al registrarte en PokeMarket, aceptas utilizar la plataforma de forma responsable,
-                respetando a otros usuarios y cumpliendo con las normas establecidas.
-              </p>
-
-              <h3 className="font-semibold text-[var(--foreground)]">Uso de la plataforma</h3>
-              <p>
-                PokeMarket es un marketplace entre usuarios. Cada usuario es responsable de
-                la veracidad de sus publicaciones y comportamiento.
-              </p>
-
-              <h3 className="font-semibold text-[var(--foreground)]">Sistema de reportes</h3>
-              <p>
-                Los usuarios pueden reportar conductas indebidas. Cada reporte será evaluado
-                por el equipo de administración.
-              </p>
-
-              <h3 className="font-semibold text-[var(--foreground)]">Sistema de strikes</h3>
-              <p>
-                Un usuario puede recibir "strikes" por comportamientos indebidos. Al acumular
-                3 strikes, su cuenta puede ser suspendida o baneada permanentemente.
-              </p>
-
-              <h3 className="font-semibold text-[var(--foreground)]">Identidad y veracidad</h3>
-              <p>
-                El usuario se compromete a proporcionar información real, incluyendo RUT y
-                número de contacto, los cuales son únicos dentro de la plataforma.
-              </p>
-
-              <h3 className="font-semibold text-[var(--foreground)]">Sanciones</h3>
-              <p>
-                PokeMarket se reserva el derecho de suspender o eliminar cuentas que incumplan
-                estos términos.
-              </p>
-
-            </div>
-
-            <button
-              onClick={() => setShowTerms(false)}
-              className="mt-6 w-full bg-[var(--primary)] text-white py-2 rounded-lg"
-            >
-              Cerrar
-            </button>
-
-          </div>
-        </div>
-      )}
       </div>
     </div>
   );
