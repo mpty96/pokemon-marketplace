@@ -118,39 +118,6 @@ export default function ConsejosPage() {
                   </p>
                 </div>
               </section>
-
-              <section>
-                <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
-                  Cartas de mi Interés
-                </h2>
-
-                <div className="space-y-3">
-                  <p>
-                    La sección <span className="font-medium text-[var(--foreground)]">Cartas de mi Interés</span>
-                    permite mostrar públicamente qué cartas busca o le interesa conseguir a cada usuario.
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    {[
-                      'No crea publicaciones',
-                      'No permite contacto directo',
-                      'No representa compra inmediata',
-                    ].map((item) => (
-                      <span
-                        key={item}
-                        className="px-2 py-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted)]"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-
-                  <p>
-                    En el futuro, usuarios con suscripción activa podrán recibir notificaciones instantáneas
-                    vía correo electrónico cuando alguien publique una carta relacionada con sus intereses.
-                  </p>
-                </div>
-              </section>
             </div>
 
             <Link
@@ -159,6 +126,7 @@ export default function ConsejosPage() {
             >
               Ir al marketplace
             </Link>
+            
           </div>
         </div>
       </div>

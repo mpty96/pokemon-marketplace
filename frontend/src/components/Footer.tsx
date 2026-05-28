@@ -286,9 +286,42 @@ export default function Footer() {
 
         <Section title="Valorar carta e historial de precios">
           <p>
-            Algunas publicaciones pueden mostrar información referencial basada en ventas completadas dentro de
-            PokeMarket. El gráfico de precios busca entregar contexto histórico, pero no representa una tasación oficial
-            ni garantiza el valor real de mercado de una carta o producto.
+            PokeMarket incorpora un sistema de <span className="font-medium text-[var(--foreground)]">Valorar carta</span>
+            que busca ayudar a los usuarios a tener una referencia aproximada del valor de mercado de una carta
+            utilizando información histórica disponible dentro de la plataforma.
+          </p>
+
+          <p>
+            El sistema puede considerar factores como:
+          </p>
+
+          <div className="flex flex-wrap gap-2 text-xs">
+            {[
+              'Ventas completadas',
+              'Historial de precios',
+              'Edición',
+              'Idioma',
+              'Rareza',
+              'Condición',
+              'Tendencias internas',
+            ].map((item) => (
+              <span
+                key={item}
+                className="px-2 py-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted)]"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+
+          <p>
+            Algunas publicaciones también pueden mostrar gráficos de precios basados en transacciones
+            registradas dentro de PokeMarket para entregar mayor contexto histórico a compradores y vendedores.
+          </p>
+
+          <p>
+            Estas herramientas son únicamente referenciales y no representan una tasación oficial,
+            garantía de valor futuro ni confirmación absoluta del precio real de mercado de una carta o producto.
           </p>
         </Section>
 
