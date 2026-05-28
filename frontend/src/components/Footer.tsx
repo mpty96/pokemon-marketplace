@@ -188,43 +188,6 @@ export default function Footer() {
       </FooterModal>
 
       <FooterModal
-        open={activeModal === 'terms'}
-        title="Términos y condiciones"
-        onClose={() => setActiveModal(null)}
-      >
-        <Section title="Uso de la plataforma">
-          <p>
-            PokeMarket funciona como una plataforma de publicación y contacto entre
-            usuarios. Las compras, ventas, acuerdos, pagos, entregas y verificaciones
-            finales son responsabilidad directa de las personas involucradas en cada
-            transacción.
-          </p>
-        </Section>
-
-        <Section title="Responsabilidad del usuario">
-          <p>
-            Cada usuario debe publicar información real, clara y honesta. Las fotografías,
-            descripciones, precios, condiciones y detalles del producto deben representar
-            fielmente lo ofrecido.
-          </p>
-
-          <p>
-            Está prohibido intentar engañar a otros usuarios, ocultar daños relevantes,
-            publicar productos falsos como auténticos, manipular información o utilizar
-            la plataforma con fines fraudulentos.
-          </p>
-        </Section>
-
-        <Section title="Estado beta">
-          <p>
-            PokeMarket se encuentra en desarrollo continuo. Algunas funciones pueden
-            cambiar, mejorar o ajustarse con el tiempo. El uso de la plataforma implica
-            aceptar que pueden existir modificaciones técnicas, visuales o funcionales.
-          </p>
-        </Section>
-      </FooterModal>
-
-      <FooterModal
         open={activeModal === 'info'}
         title="Información general"
         onClose={() => setActiveModal(null)}
