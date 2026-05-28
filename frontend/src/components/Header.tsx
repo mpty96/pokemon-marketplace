@@ -43,25 +43,23 @@ export default function Header() {
           <Link href="/" className={linkClass('/')}>Inicio</Link>
           <Link href="/marketplace" className={linkClass('/marketplace')}>Marketplace</Link>
 
+          <Link href="/transacciones" className={linkClass('/transacciones')}>
+            Transacciones
+          </Link>
+
+          <Link href="/consejos" className={linkClass('/consejos')}>
+            Consejos
+          </Link>
+
           {isAuthenticated && (
-            <>
-              <Link href="/mensajes" className={`${linkClass('/mensajes')} relative`}>
-                Mensajes
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1.5 -right-4 bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
-                    {unreadCount > 99 ? '99+' : unreadCount}
-                  </span>
-                )}
-              </Link>
-
-              <Link href="/transacciones" className={linkClass('/transacciones')}>
-                Transacciones
-              </Link>
-
-              <Link href="/consejos" className={linkClass('/consejos')}>
-                Consejos
-              </Link>
-            </>
+            <Link href="/mensajes" className={`${linkClass('/mensajes')} relative`}>
+              Mensajes
+              {unreadCount > 0 && (
+                <span className="absolute -top-1.5 -right-4 bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
+            </Link>
           )}
         </nav>
 
@@ -106,33 +104,31 @@ export default function Header() {
 
       <div className="md:hidden border-t border-[var(--border)] px-2 py-2 bg-[var(--surface)]">
         <nav className="flex items-center justify-center gap-3.5 text-center">
-          <Link href="/" className="text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+          <Link href="/" className="text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
             Inicio
           </Link>
 
-          <Link href="/marketplace" className="text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+          <Link href="/marketplace" className="text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
             Marketplace
           </Link>
 
+          <Link href="/transacciones" className="text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+            Transacciones
+          </Link>
+
+          <Link href="/consejos" className="text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+            Consejos
+          </Link>
+
           {isAuthenticated && (
-            <>
-              <Link href="/mensajes" className="relative text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
-                Mensajes
-                {unreadCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[15px] h-[15px] flex items-center justify-center px-0.5">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </Link>
-
-              <Link href="/transacciones" className="text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
-                Transacciones
-              </Link>
-
-              <Link href="/consejos" className="text-[11.5px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
-                Consejos
-              </Link>
-            </>
+            <Link href="/mensajes" className="relative text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
+              Mensajes
+              {unreadCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[15px] h-[15px] flex items-center justify-center px-0.5">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </Link>
           )}
         </nav>
       </div>

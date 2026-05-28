@@ -1,10 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/axios';
-import { useAuthStore } from '@/store/auth.store';
 
 interface Transaction {
   id: string;
@@ -22,37 +20,30 @@ interface Transaction {
 }
 
 export default function TransaccionesPage() {
-  const router = useRouter();
-  const { isAuthenticated } = useAuthStore();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-  if (!isAuthenticated) {
-    router.push('/login');
-    return;
-  }
+    const fetchTransactions = () => {
+      const params = new URLSearchParams();
+      params.set('ts', String(Date.now()));
 
-  const fetchTransactions = () => {
-    const params = new URLSearchParams();
-    params.set('ts', String(Date.now()));
+      if (search.trim()) {
+        params.set('search', search.trim());
+      }
 
-    if (search.trim()) {
-      params.set('search', search.trim());
-    }
+      api.get(`/api/sales/recent?${params.toString()}`)
+        .then(({ data }) => setTransactions(data))
+        .finally(() => setLoading(false));
+    };
 
-    api.get(`/api/sales/recent?${params.toString()}`)
-      .then(({ data }) => setTransactions(data))
-      .finally(() => setLoading(false));
-  };
+    fetchTransactions();
 
-  fetchTransactions();
+    const interval = setInterval(fetchTransactions, 30000);
 
-  const interval = setInterval(fetchTransactions, 30000);
-
-  return () => clearInterval(interval);
-}, [isAuthenticated, search]);
+    return () => clearInterval(interval);
+  }, [search]);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 text-[var(--foreground)]">
