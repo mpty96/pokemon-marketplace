@@ -16,6 +16,7 @@ export default function MensajesPage() {
   const [selectionMode, setSelectionMode] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     if (!hasHydrated) return;
@@ -69,6 +70,28 @@ async function confirmDeleteChats() {
   }
 }
 
+
+const filteredConversations = conversations.filter((conv) => {
+  const term = search.trim().toLowerCase();
+
+  if (!term) return true;
+
+  const sellerName =
+    conv.seller.profile?.displayName ||
+    conv.seller.username ||
+    '';
+
+  const lastSender =
+    conv.lastMessage?.sender.username || '';
+
+  return (
+    conv.listingTitle.toLowerCase().includes(term) ||
+    sellerName.toLowerCase().includes(term) ||
+    lastSender.toLowerCase().includes(term)
+  );
+});
+
+
   return (
     <div className="min-h-[calc(100vh-180px)] max-w-3xl mx-auto px-4 py-8 flex flex-col">
       <div className="flex items-center justify-between gap-3 mb-6">
@@ -110,6 +133,30 @@ async function confirmDeleteChats() {
         )}
       </div>
 
+      <div className="mb-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 sm:p-4">
+        <label className="block text-xs font-medium text-[var(--muted)] mb-1">
+          Buscar conversación
+        </label>
+
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar por publicación o usuario..."
+          className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+        />
+
+        {search.trim() && (
+          <button
+            type="button"
+            onClick={() => setSearch('')}
+            className="mt-2 text-xs text-[var(--primary)] hover:underline"
+          >
+            Limpiar búsqueda
+          </button>
+        )}
+      </div>
+
       {loading ? (
         <div className="space-y-3">
           {[...Array(4)].map((_, i) => (
@@ -124,9 +171,14 @@ async function confirmDeleteChats() {
             Explorar marketplace
           </Link>
         </div>
+      ) : filteredConversations.length === 0 ? (
+        <div className="text-center py-12 text-[var(--muted-2)]">
+          <p className="text-3xl mb-3">🔎</p>
+          <p>No se encontraron conversaciones con esa búsqueda</p>
+        </div>
       ) : (
         <div className="space-y-2">
-          {conversations.map((conv) => (
+          {filteredConversations.map((conv) => (
             <ConversationCard
               key={conv.id}
               conv={conv}
