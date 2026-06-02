@@ -97,10 +97,10 @@ export default function Footer() {
       >
         <Section title="Naturaleza de la plataforma">
           <p>
-            PokeMarket es una plataforma tecnológica que permite publicar, buscar y contactar usuarios
-            interesados en comprar o vender cartas Pokémon, productos Pokémon y lotes coleccionables.
+            PokeMarket es una plataforma que permite publicar, buscar y contactar usuarios
+            interesados en comprar o vender todo lo conlleva al mundo TCG de Pokémon.
             PokeMarket no es parte directa de los acuerdos económicos entre usuarios, no actúa como
-            escrow, no custodia pagos y no garantiza el resultado final de cada transacción.
+            escrow, no custodia pagos, no tiene comisiones y no garantiza el resultado final de cada transacción.
           </p>
         </Section>
 

@@ -2,6 +2,101 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const APP_NAME = 'PokeMarket Chile';
+const LOGO_URL = process.env.EMAIL_LOGO_URL || '';
+const EMAIL_FROM = process.env.EMAIL_FROM || 'no-reply@tcgpokemarket.cl';
+
+function baseEmailTemplate({
+  title,
+  description,
+  buttonText,
+  buttonUrl,
+  footerNote,
+}: {
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonUrl: string;
+  footerNote: string;
+}) {
+  return `
+    <!DOCTYPE html>
+    <html lang="es">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>${title}</title>
+      </head>
+
+      <body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7fb;padding:24px 12px;">
+          <tr>
+            <td align="center">
+              <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;">
+                <tr>
+                  <td align="center" style="padding:28px 24px 18px 24px;background:#ffffff;">
+                    ${
+                      LOGO_URL
+                        ? `<img src="${LOGO_URL}" alt="${APP_NAME}" style="max-width:180px;height:auto;display:block;margin:0 auto;" />`
+                        : `<h1 style="margin:0;color:#1d4ed8;font-size:24px;">${APP_NAME}</h1>`
+                    }
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:22px 28px 8px 28px;">
+                    <h2 style="margin:0 0 12px 0;color:#111827;font-size:22px;line-height:1.3;">
+                      ${title}
+                    </h2>
+
+                    <p style="margin:0;color:#4b5563;font-size:15px;line-height:1.7;">
+                      ${description}
+                    </p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td align="center" style="padding:28px 28px 24px 28px;">
+                    <a
+                      href="${buttonUrl}"
+                      style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 28px;border-radius:10px;"
+                    >
+                      ${buttonText}
+                    </a>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:0 28px 24px 28px;">
+                    <div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;">
+                      <p style="margin:0;color:#64748b;font-size:13px;line-height:1.6;">
+                        ${footerNote}
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:18px 28px;background:#0f172a;text-align:center;">
+                    <p style="margin:0;color:#cbd5e1;font-size:12px;line-height:1.6;">
+                      ${APP_NAME}<br />
+                      Marketplace chileno para coleccionistas de Pokémon TCG.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="max-width:600px;margin:14px auto 0 auto;color:#94a3b8;font-size:11px;line-height:1.5;text-align:center;">
+                Este correo fue enviado automáticamente. No respondas a este mensaje.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </body>
+    </html>
+  `;
+}
+
 export async function sendVerificationEmail(
   email: string,
   token: string
@@ -9,69 +104,39 @@ export async function sendVerificationEmail(
   const verifyUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
 
   await resend.emails.send({
-    from: `"PokeMarket Chile" <${process.env.EMAIL_FROM}>`,
+    from: `"${APP_NAME}" <${EMAIL_FROM}>`,
     to: email,
     subject: 'Verifica tu cuenta en PokeMarket Chile',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #2563eb;">🎴 PokeMarket Chile</h1>
-        </div>
-        <h2 style="color: #1f2937;">¡Bienvenido!</h2>
-        <p style="color: #4b5563;">
-          Gracias por registrarte. Haz clic en el botón para verificar tu cuenta:
-        </p>
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${verifyUrl}"
-            style="background:#2563eb;color:white;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">
-            Verificar mi cuenta
-          </a>
-        </div>
-        <p style="color: #9ca3af; font-size: 14px;">
-          Si no creaste esta cuenta, ignora este email.<br/>
-          El enlace expira en 24 horas.
-        </p>
-        <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0;"/>
-        <p style="color: #9ca3af; font-size: 12px; text-align: center;">
-          PokeMarket Chile — Marketplace de cartas Pokémon
-        </p>
-      </body>
-      </html>
-    `,
+    html: baseEmailTemplate({
+      title: 'Verifica tu cuenta',
+      description:
+        'Gracias por registrarte en PokeMarket Chile. Para activar tu cuenta y comenzar a utilizar la plataforma, confirma tu correo electrónico mediante el siguiente botón.',
+      buttonText: 'Verificar mi cuenta',
+      buttonUrl: verifyUrl,
+      footerNote:
+        'Si no creaste una cuenta en PokeMarket Chile, puedes ignorar este correo. El enlace de verificación es personal y no debe ser compartido.',
+    }),
   });
 }
 
-  export async function sendPasswordResetEmail(
-    email: string,
-    token: string
-  ): Promise<void> {
-    const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+export async function sendPasswordResetEmail(
+  email: string,
+  token: string
+): Promise<void> {
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
-    await resend.emails.send({
-    from: `"PokeMarket Chile" <${process.env.EMAIL_FROM}>`,
+  await resend.emails.send({
+    from: `"${APP_NAME}" <${EMAIL_FROM}>`,
     to: email,
     subject: 'Restablecer contraseña — PokeMarket Chile',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #2563eb;">🎴 PokeMarket Chile</h1>
-        <h2 style="color: #1f2937;">Restablecer contraseña</h2>
-        <p style="color: #4b5563;">Haz clic en el botón para restablecer tu contraseña:</p>
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${resetUrl}"
-            style="background:#2563eb;color:white;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">
-            Restablecer contraseña
-          </a>
-        </div>
-        <p style="color: #9ca3af; font-size: 14px;">
-          El enlace expira en 1 hora.<br/>
-          Si no solicitaste esto, ignora este email.
-        </p>
-      </body>
-      </html>
-    `,
+    html: baseEmailTemplate({
+      title: 'Restablecer contraseña',
+      description:
+        'Recibimos una solicitud para restablecer la contraseña de tu cuenta en PokeMarket Chile. Puedes crear una nueva contraseña usando el siguiente botón.',
+      buttonText: 'Restablecer contraseña',
+      buttonUrl: resetUrl,
+      footerNote:
+        'Este enlace expira en 1 hora. Si no solicitaste restablecer tu contraseña, ignora este correo y tu cuenta permanecerá sin cambios.',
+    }),
   });
 }

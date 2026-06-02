@@ -4,6 +4,8 @@ import {
   verifyEmail,
   loginUser,
   getMe,
+  requestPasswordReset,
+  performPasswordReset,
 } from '../services/auth.service';
 import { verifyRefreshToken, generateAccessToken } from '../utils/jwt';
 import { AuthRequest } from '../middleware/auth.middleware';
@@ -133,5 +135,57 @@ export async function me(req: AuthRequest, res: Response): Promise<void> {
     res.json(user);
   } catch {
     res.status(404).json({ error: 'Usuario no encontrado' });
+  }
+}
+
+
+export async function forgotPassword(req: Request, res: Response): Promise<void> {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      res.status(400).json({ error: 'Email requerido' });
+      return;
+    }
+
+    await requestPasswordReset(email);
+
+    res.json({
+      message:
+        'Si existe una cuenta asociada a ese correo, recibirás instrucciones para restablecer tu contraseña.',
+    });
+  } catch {
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+}
+
+export async function resetPassword(req: Request, res: Response): Promise<void> {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      res.status(400).json({ error: 'Token y contraseña requeridos' });
+      return;
+    }
+
+    if (password.length < 8) {
+      res.status(400).json({
+        error: 'La contraseña debe tener al menos 8 caracteres',
+      });
+      return;
+    }
+
+    await performPasswordReset(token, password);
+
+    res.json({
+      message: 'Contraseña actualizada correctamente',
+    });
+  } catch (error: any) {
+    if (error.message === 'TOKEN_INVALID') {
+      res.status(400).json({ error: 'Token inválido o expirado' });
+      return;
+    }
+
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 }

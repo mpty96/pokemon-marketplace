@@ -62,6 +62,7 @@ function MarketplaceContent() {
 
   const [data, setData] = useState<PaginatedListings | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
@@ -78,6 +79,8 @@ function MarketplaceContent() {
 
   const fetchListings = useCallback(async () => {
     setLoading(true);
+    setError(false);
+
     try {
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([k, v]) => {
@@ -85,6 +88,9 @@ function MarketplaceContent() {
       });
       const { data: result } = await api.get(`/api/listings?${params.toString()}`);
       setData(result);
+      } catch (err) {
+        console.error('MARKETPLACE LOAD ERROR', err);
+        setError(true);
     } finally {
       setLoading(false);
     }
@@ -327,6 +333,18 @@ function MarketplaceContent() {
             className="bg-[var(--surface)] rounded-xl h-72 animate-pulse border border-[var(--border)]"
           />
         ))}
+      </div>
+    ) : error ? (
+      <div className="text-center py-20 text-[var(--muted-2)]">
+        <p className="text-5xl mb-4">⚠️</p>
+        <p className="text-lg">No pudimos cargar las publicaciones.</p>
+
+        <button
+          onClick={fetchListings}
+          className="mt-4 text-[var(--primary)] hover:underline text-sm"
+        >
+          Reintentar
+        </button>
       </div>
     ) : !data || data.listings.length === 0 ? (
       <div className="text-center py-20 text-[var(--muted-2)]">

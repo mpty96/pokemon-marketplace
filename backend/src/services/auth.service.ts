@@ -2,7 +2,10 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import prisma from '../lib/prisma';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt';
-import { sendVerificationEmail } from '../utils/email';
+import {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+} from '../utils/email';
 
 export async function registerUser(
   email: string,
@@ -123,4 +126,61 @@ export async function getMe(userId: string) {
     profile: user.profile,
     role: user.role,
   };
+}
+
+
+export async function requestPasswordReset(email: string) {
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    return;
+  }
+
+  const token = crypto.randomBytes(32).toString('hex');
+
+  const expiry = new Date();
+  expiry.setHours(expiry.getHours() + 1);
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      resetToken: token,
+      resetTokenExpiry: expiry,
+    },
+  });
+
+  await sendPasswordResetEmail(email, token);
+}
+
+export async function performPasswordReset(
+  token: string,
+  password: string
+) {
+  const user = await prisma.user.findFirst({
+    where: {
+      resetToken: token,
+      resetTokenExpiry: {
+        gt: new Date(),
+      },
+    },
+  });
+
+  if (!user) {
+    throw new Error('TOKEN_INVALID');
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      passwordHash,
+      resetToken: null,
+      resetTokenExpiry: null,
+    },
+  });
 }
