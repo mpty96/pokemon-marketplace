@@ -6,8 +6,36 @@ import Footer from '@/components/Footer';
 import CardPriceAssistant from '@/components/CardPriceAssistant';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://tcgpokemarket.cl'),
   title: 'PokeMarket Chile',
-  description: 'Compra y vende cartas Pokémon en Chile',
+  description: 'Marketplace chileno para comprar y vender cartas Pokémon TCG de forma segura.',
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
+  openGraph: {
+    title: 'PokeMarket Chile',
+    description: 'Marketplace chileno para comprar y vender cartas Pokémon TCG de forma segura.',
+    url: 'https://tcgpokemarket.cl',
+    siteName: 'PokeMarket Chile',
+    images: [
+      {
+        url: '/logo-footer.png',
+        width: 1200,
+        height: 630,
+        alt: 'PokeMarket Chile',
+      },
+    ],
+    locale: 'es_CL',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PokeMarket Chile',
+    description: 'Marketplace chileno para comprar y vender cartas Pokémon TCG de forma segura.',
+    images: ['/logo-footer.png'],
+  },
 };
 
 export default function RootLayout({
