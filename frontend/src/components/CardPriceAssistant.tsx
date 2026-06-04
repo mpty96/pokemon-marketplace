@@ -72,7 +72,6 @@ export default function CardPriceAssistant() {
       {open && (
         <div
           className="fixed inset-0 z-[100] bg-black/60 flex items-end sm:items-center justify-center px-4 py-4"
-          onClick={() => setOpen(false)}
         >
           <div
             className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-xl"
@@ -123,9 +122,8 @@ export default function CardPriceAssistant() {
                       />
                     </Field>
 
-                    <Field label="Edición / colección">
+                    <Field label="Edición / colección opcional">
                       <input
-                        required
                         value={form.edition}
                         onChange={(e) => setForm({ ...form, edition: e.target.value })}
                         className={inputClass}

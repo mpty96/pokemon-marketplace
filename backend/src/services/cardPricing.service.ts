@@ -5,7 +5,7 @@ type CardLanguage = 'ESP' | 'ENG' | 'POR' | 'JPN' | 'KOR' | 'CHN' | 'OTHER';
 
 interface AnalyzeCardPricingInput {
   cardName: string;
-  edition: string;
+  edition?: string;
   setNumber?: string;
   language: CardLanguage;
   condition: CardCondition;
@@ -53,7 +53,9 @@ export async function analyzeCardPricing(input: AnalyzeCardPricingInput) {
       listing: {
         listingType: 'CARD',
         cardName: { equals: input.cardName, mode: 'insensitive' },
-        edition: { equals: input.edition, mode: 'insensitive' },
+        ...(input.edition
+          ? { edition: { equals: input.edition, mode: 'insensitive' } }
+          : {}),
         language: input.language,
         condition: input.condition,
         ...(input.setNumber

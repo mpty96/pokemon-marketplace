@@ -12,7 +12,7 @@ export async function analyzeCardPricingController(
   try {
     const { cardName, edition, setNumber, language, condition } = req.body;
 
-    if (!cardName || !edition || !language || !condition) {
+    if (!cardName || !language || !condition) {
       res.status(400).json({ error: 'Faltan campos requeridos' });
       return;
     }
@@ -29,7 +29,7 @@ export async function analyzeCardPricingController(
 
     const result = await analyzeCardPricing({
       cardName: String(cardName).trim(),
-      edition: String(edition).trim(),
+      edition: edition ? String(edition).trim() : '',
       setNumber: setNumber ? String(setNumber).trim() : undefined,
       language,
       condition,
