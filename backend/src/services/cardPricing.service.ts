@@ -8,17 +8,21 @@ interface AnalyzeCardPricingInput {
   edition?: string;
   setNumber?: string;
   language: CardLanguage;
-  condition: CardCondition;
+}
+
+  interface AnalyzeCardPricingInput {
+  cardName: string;
+  edition?: string;
+  setNumber?: string;
+  language: CardLanguage;
+  condition?: CardCondition;
 }
 
 function buildSearchQuery(input: AnalyzeCardPricingInput) {
   return [
     input.cardName,
-    input.edition,
+    input.edition || '',
     input.setNumber || '',
-    input.language,
-    input.condition,
-    'Pokemon TCG',
   ]
     .filter(Boolean)
     .join(' ');
@@ -46,8 +50,9 @@ function buildPokeMarketQuery(input: AnalyzeCardPricingInput) {
 
 export async function analyzeCardPricing(input: AnalyzeCardPricingInput) {
   const query = buildSearchQuery(input);
-
+  const assumedCondition: CardCondition = input.condition || 'NEAR_MINT';
   const completedSales = await prisma.sale.findMany({
+
     where: {
       status: 'COMPLETED',
       listing: {
@@ -57,7 +62,7 @@ export async function analyzeCardPricing(input: AnalyzeCardPricingInput) {
           ? { edition: { equals: input.edition, mode: 'insensitive' } }
           : {}),
         language: input.language,
-        condition: input.condition,
+        condition: assumedCondition,
         ...(input.setNumber
           ? { setNumber: { equals: input.setNumber, mode: 'insensitive' } }
           : {}),
@@ -84,9 +89,11 @@ export async function analyzeCardPricing(input: AnalyzeCardPricingInput) {
       deletedAt: null,
       listingType: 'CARD',
       cardName: { equals: input.cardName, mode: 'insensitive' },
-      edition: { equals: input.edition, mode: 'insensitive' },
+      ...(input.edition
+        ? { edition: { equals: input.edition, mode: 'insensitive' } }
+        : {}),
       language: input.language,
-      condition: input.condition,
+      condition: assumedCondition,
       ...(input.setNumber
         ? { setNumber: { equals: input.setNumber, mode: 'insensitive' } }
         : {}),
@@ -123,7 +130,7 @@ export async function analyzeCardPricing(input: AnalyzeCardPricingInput) {
     edition: input.edition,
     setNumber: input.setNumber || null,
     language: input.language,
-    condition: input.condition,
+    condition: assumedCondition,
     estimatedPriceCLP: {
       min,
       max,

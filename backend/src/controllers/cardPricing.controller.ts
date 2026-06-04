@@ -2,7 +2,6 @@ import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { analyzeCardPricing } from '../services/cardPricing.service';
 
-const VALID_CONDITIONS = ['MINT', 'NEAR_MINT', 'EXCELLENT', 'GOOD', 'PLAYED', 'POOR'];
 const VALID_LANGUAGES = ['ESP', 'ENG', 'POR', 'JPN', 'KOR', 'CHN', 'OTHER'];
 
 export async function analyzeCardPricingController(
@@ -10,9 +9,9 @@ export async function analyzeCardPricingController(
   res: Response
 ): Promise<void> {
   try {
-    const { cardName, edition, setNumber, language, condition } = req.body;
+    const { cardName, edition, setNumber, language } = req.body;
 
-    if (!cardName || !language || !condition) {
+    if (!cardName || !language) {
       res.status(400).json({ error: 'Faltan campos requeridos' });
       return;
     }
@@ -22,17 +21,12 @@ export async function analyzeCardPricingController(
       return;
     }
 
-    if (!VALID_CONDITIONS.includes(condition)) {
-      res.status(400).json({ error: 'Condición inválida' });
-      return;
-    }
-
     const result = await analyzeCardPricing({
       cardName: String(cardName).trim(),
       edition: edition ? String(edition).trim() : '',
       setNumber: setNumber ? String(setNumber).trim() : undefined,
       language,
-      condition,
+      condition: 'NEAR_MINT',
     });
 
     res.json(result);

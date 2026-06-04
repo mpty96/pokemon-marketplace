@@ -39,7 +39,6 @@ export default function CardPriceAssistant() {
     edition: '',
     setNumber: '',
     language: 'ESP' as CardLanguage,
-    condition: 'NEAR_MINT' as CardCondition,
   });
 
   async function handleSubmit(e: React.FormEvent) {
@@ -122,7 +121,7 @@ export default function CardPriceAssistant() {
                       />
                     </Field>
 
-                    <Field label="Edición / colección opcional">
+                    <Field label="Edición / colección (opcional)">
                       <input
                         value={form.edition}
                         onChange={(e) => setForm({ ...form, edition: e.target.value })}
@@ -140,7 +139,7 @@ export default function CardPriceAssistant() {
                       />
                     </Field>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3">
                       <Field label="Idioma">
                         <select
                           value={form.language}
@@ -152,22 +151,6 @@ export default function CardPriceAssistant() {
                           {LANGUAGES.map((l) => (
                             <option key={l.value} value={l.value}>
                               {l.label}
-                            </option>
-                          ))}
-                        </select>
-                      </Field>
-
-                      <Field label="Condición">
-                        <select
-                          value={form.condition}
-                          onChange={(e) =>
-                            setForm({ ...form, condition: e.target.value as CardCondition })
-                          }
-                          className={inputClass}
-                        >
-                          {CONDITIONS.map((c) => (
-                            <option key={c.value} value={c.value}>
-                              {c.label}
                             </option>
                           ))}
                         </select>
