@@ -12,7 +12,21 @@ export async function uploadImage(
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     cloudinary.uploader
-      .upload_stream({ folder }, (error, result) => {
+      .upload_stream(
+  {
+    folder,
+    resource_type: 'image',
+    transformation: [
+      {
+        width: 1200,
+        height: 1200,
+        crop: 'limit',
+        quality: 'auto:good',
+        fetch_format: 'auto',
+      },
+    ],
+  },
+  (error, result) => {
         if (error || !result) return reject(error);
         resolve(result.secure_url);
       })
