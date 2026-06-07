@@ -173,16 +173,70 @@ function HorizontalListingSection({
   href?: string;
 }) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const isDownRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const movedRef = useRef(false);
+
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
   const visibleListings = listings.slice(0, 10);
 
-  function scroll(direction: 'left' | 'right') {
-    if (!scrollRef.current) return;
+  function updateArrows() {
+    const el = scrollRef.current;
+    if (!el) return;
 
-    scrollRef.current.scrollBy({
+    setCanScrollLeft(el.scrollLeft > 5);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 5);
+  }
+
+  function scroll(direction: 'left' | 'right') {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    el.scrollBy({
       left: direction === 'left' ? -280 : 280,
       behavior: 'smooth',
     });
+
+    setTimeout(updateArrows, 350);
   }
+
+  function handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    isDownRef.current = true;
+    movedRef.current = false;
+    startXRef.current = e.pageX - el.offsetLeft;
+    scrollLeftRef.current = el.scrollLeft;
+  }
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const el = scrollRef.current;
+    if (!el || !isDownRef.current) return;
+
+    e.preventDefault();
+
+    const x = e.pageX - el.offsetLeft;
+    const walk = x - startXRef.current;
+
+    if (Math.abs(walk) > 6) {
+      movedRef.current = true;
+    }
+
+    el.scrollLeft = scrollLeftRef.current - walk;
+    updateArrows();
+  }
+
+  function stopDragging() {
+    isDownRef.current = false;
+  }
+
+  useEffect(() => {
+  updateArrows();
+}, [visibleListings.length]);
 
   return (
     <section className="min-w-0">
@@ -196,36 +250,12 @@ function HorizontalListingSection({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          {visibleListings.length > 2 && (
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => scroll('left')}
-                className="h-8 w-8 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--surface-2)] transition-colors"
-                aria-label="Desplazar a la izquierda"
-              >
-                ‹
-              </button>
-
-              <button
-                type="button"
-                onClick={() => scroll('right')}
-                className="h-8 w-8 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--surface-2)] transition-colors"
-                aria-label="Desplazar a la derecha"
-              >
-                ›
-              </button>
-            </div>
-          )}
-
-          <Link
-            href={href}
-            className="text-xs sm:text-sm text-[var(--primary)] hover:underline font-medium whitespace-nowrap"
-          >
-            Ver todas →
-          </Link>
-        </div>
+        <Link
+          href={href}
+          className="text-xs sm:text-sm text-[var(--primary)] hover:underline font-medium whitespace-nowrap"
+        >
+          Ver todas →
+        </Link>
       </div>
 
       {visibleListings.length === 0 ? (
@@ -233,13 +263,49 @@ function HorizontalListingSection({
           {emptyText}
         </div>
       ) : (
-        <div
-          ref={scrollRef}
-          className="flex gap-3 sm:gap-4 overflow-x-auto mobile-scrollbar pb-3 snap-x snap-mandatory -mx-3 px-3 sm:mx-0 sm:px-0 scroll-smooth cursor-grab active:cursor-grabbing"
-        >
-          {visibleListings.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
-          ))}
+        <div className="relative">
+          {canScrollLeft && (
+            <button
+              type="button"
+              onClick={() => scroll('left')}
+              className="absolute left-1 top-1/2 -translate-y-1/2 z-20 h-9 w-9 rounded-full bg-[var(--surface)]/95 border border-[var(--border)] shadow text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+              aria-label="Desplazar a la izquierda"
+            >
+              ‹
+            </button>
+          )}
+
+          {canScrollRight && (
+            <button
+              type="button"
+              onClick={() => scroll('right')}
+              className="absolute right-1 top-1/2 -translate-y-1/2 z-20 h-9 w-9 rounded-full bg-[var(--surface)]/95 border border-[var(--border)] shadow text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+              aria-label="Desplazar a la derecha"
+            >
+              ›
+            </button>
+          )}
+
+          <div
+            ref={scrollRef}
+            onScroll={updateArrows}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={stopDragging}
+            onMouseLeave={stopDragging}
+            onClickCapture={(e) => {
+              if (movedRef.current) {
+                e.preventDefault();
+                e.stopPropagation();
+                movedRef.current = false;
+              }
+            }}
+            className="flex gap-3 sm:gap-4 overflow-x-auto mobile-scrollbar pb-3 snap-x snap-mandatory -mx-3 px-3 sm:mx-0 sm:px-0 scroll-smooth cursor-grab active:cursor-grabbing select-none"
+          >
+            {visibleListings.map((listing) => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))}
+          </div>
         </div>
       )}
     </section>
@@ -254,7 +320,9 @@ function ListingCard({ listing }: { listing: Listing }) {
           <img
             src={listing.images[0]}
             alt={listing.title}
-            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
+            draggable={false}
+            onDragStart={(e) => e.preventDefault()}
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200 select-none pointer-events-none"
           />
         </div>
 
@@ -267,8 +335,8 @@ function ListingCard({ listing }: { listing: Listing }) {
             {listing.cardName}
           </h3>
 
-          <p className="text-xs text-[var(--muted-2)] truncate mt-0.5">
-            {listing.edition}
+          <p className="text-xs text-[var(--muted-2)] truncate mt-0.5 min-h-[16px]">
+            {listing.edition || '\u00A0'}
           </p>
 
           <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between gap-1 mt-2">
