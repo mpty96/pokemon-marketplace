@@ -21,7 +21,7 @@ router.get('/history', authenticate, listingsHistory);
 router.get('/home/recent', homeRecentListings);
 router.get('/home/popular', homePopularListings);
 router.get('/:id',     getOne);
-router.post('/',       authenticate, upload.array('images', 5), create);
+router.post('/',       authenticate, upload.array('images', 1), create);
 router.put('/:id',     authenticate, update);
 router.delete('/:id',  authenticate, remove);
 

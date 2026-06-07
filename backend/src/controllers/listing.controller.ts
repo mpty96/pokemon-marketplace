@@ -35,7 +35,7 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
       description,
     } = req.body;
 
-        if (!title || !cardName || !edition || !condition || !rarity || !language || !priceCLP) {
+    if (!title || !cardName || !condition || !language || !priceCLP) {
       res.status(400).json({ error: 'Faltan campos requeridos' });
       return;
     }
@@ -61,10 +61,10 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
       listingType,
       title,
       cardName,
-      edition,
+      edition: edition || '',
       setNumber,
       condition: condition as CardCondition,
-      rarity:    rarity    as CardRarity,
+      rarity:    (rarity || 'COMMON') as CardRarity,
       language:  language  as CardLanguage,
       priceCLP:  Number(priceCLP),
       stock: listingType === 'POKEMON_PRODUCT' ? Number(stock || 1) : undefined,

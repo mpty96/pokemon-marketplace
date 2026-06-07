@@ -14,7 +14,7 @@ interface CreateListingInput {
   listingType?: ListingType;
   title:        string;
   cardName:     string;
-  edition:      string;
+  edition?:     string;
   setNumber?:   string;
   condition:    CardCondition;
   rarity:       CardRarity;
@@ -40,7 +40,7 @@ interface ListingFilters {
 }
 
 export async function createListing(input: CreateListingInput) {
-  const { imageFiles, sellerId, ...data } = input;
+  const { imageFiles, sellerId, edition, ...data } = input;
 
   const imageUrls = await Promise.all(
     imageFiles.map((buffer) => uploadImage(buffer, 'listings'))
@@ -50,6 +50,7 @@ export async function createListing(input: CreateListingInput) {
     data: {
       listingType: data.listingType || 'CARD',
       ...data,
+      edition: edition || '',
       sellerId,
       images: imageUrls,
     },

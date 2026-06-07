@@ -174,10 +174,17 @@ if (success) {
   }
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files || []);
-    if (files.length > 5) { setError('Máximo 5 imágenes'); return; }
-    setImages(files);
-    setPreviews(files.map((f) => URL.createObjectURL(f)));
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      setImages([]);
+      setPreviews([]);
+      return;
+    }
+
+    setError('');
+    setImages([file]);
+    setPreviews([URL.createObjectURL(file)]);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -291,11 +298,11 @@ if (success) {
             </div>
             <div>
               {form.listingType === 'CARD'
-              ? 'Edición *'
+              ? 'Edición'
               : form.listingType === 'POKEMON_PRODUCT'
-              ? 'Colección / expansión *'
-              : 'Origen / colección del lote *'}
-              <input required className={inputClass} placeholder="Base Set"
+              ? 'Colección / expansión'
+              : 'Origen / colección del lote'}
+              <input className={inputClass} placeholder="Base Set"
                 value={form.edition} onChange={(e) => setForm({ ...form, edition: e.target.value })} />
             </div>
             {form.listingType === 'CARD' && (
@@ -340,11 +347,10 @@ if (success) {
             {form.listingType === 'CARD' && (
               <div>
                 <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                  Rareza *
+                  Rareza 
                 </label>
 
                 <select
-                  required
                   className={inputClass}
                   value={form.rarity}
                   onChange={(e) =>
@@ -422,9 +428,9 @@ if (success) {
 
           <div>
             <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-              Imágenes * (máximo 5)
+              Imagen * (máximo 1)
             </label>
-            <input type="file" accept="image/*" multiple onChange={handleImageChange}
+            <input type="file" accept="image/*" onChange={handleImageChange}
               className="w-full text-sm text-[var(--muted)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[var(--surface-2)] file:text-[var(--primary)] hover:file:bg-[var(--info-bg)]"/>
             {previews.length > 0 && (
               <div className="flex gap-2 mt-3 flex-wrap">
