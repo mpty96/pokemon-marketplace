@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import api from '@/lib/axios';
 import { Listing, CardCondition, FeaturedSeller } from '@/types';
@@ -172,26 +172,72 @@ function HorizontalListingSection({
   emptyText: string;
   href?: string;
 }) {
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const visibleListings = listings.slice(0, 10);
+
+  function scroll(direction: 'left' | 'right') {
+    if (!scrollRef.current) return;
+
+    scrollRef.current.scrollBy({
+      left: direction === 'left' ? -280 : 280,
+      behavior: 'smooth',
+    });
+  }
+
   return (
     <section className="min-w-0">
       <div className="flex items-start sm:items-end justify-between gap-3 mb-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-[var(--foreground)]">{title}</h2>
-          <p className="text-[var(--muted)] text-xs sm:text-sm leading-5">{description}</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-[var(--foreground)]">
+            {title}
+          </h2>
+          <p className="text-[var(--muted)] text-xs sm:text-sm leading-5">
+            {description}
+          </p>
         </div>
 
-        <Link href={href} className="text-xs sm:text-sm text-[var(--primary)] hover:underline font-medium whitespace-nowrap">
-          Ver todas →
-        </Link>
+        <div className="flex items-center gap-2">
+          {visibleListings.length > 2 && (
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => scroll('left')}
+                className="h-8 w-8 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--surface-2)] transition-colors"
+                aria-label="Desplazar a la izquierda"
+              >
+                ‹
+              </button>
+
+              <button
+                type="button"
+                onClick={() => scroll('right')}
+                className="h-8 w-8 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--surface-2)] transition-colors"
+                aria-label="Desplazar a la derecha"
+              >
+                ›
+              </button>
+            </div>
+          )}
+
+          <Link
+            href={href}
+            className="text-xs sm:text-sm text-[var(--primary)] hover:underline font-medium whitespace-nowrap"
+          >
+            Ver todas →
+          </Link>
+        </div>
       </div>
 
-      {listings.length === 0 ? (
+      {visibleListings.length === 0 ? (
         <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center text-[var(--muted-2)]">
           {emptyText}
         </div>
       ) : (
-        <div className="flex gap-3 sm:gap-4 overflow-x-auto mobile-scrollbar pb-3 snap-x snap-mandatory -mx-3 px-3 sm:mx-0 sm:px-0">
-          {listings.map((listing) => (
+        <div
+          ref={scrollRef}
+          className="flex gap-3 sm:gap-4 overflow-x-auto mobile-scrollbar pb-3 snap-x snap-mandatory -mx-3 px-3 sm:mx-0 sm:px-0 scroll-smooth cursor-grab active:cursor-grabbing"
+        >
+          {visibleListings.map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>
