@@ -6,6 +6,7 @@ import { useAuthStore } from '@/store/auth.store';
 
 export default function ContactFloatingButton() {
   const user = useAuthStore((s) => s.user);
+	const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   const [open, setOpen] = useState(false);
   const [type, setType] = useState('Mejora');
@@ -68,59 +69,76 @@ export default function ContactFloatingButton() {
               </button>
             </div>
 
-            <div className="p-5 space-y-4">
-              <p className="text-sm text-[var(--muted)] leading-6">
-                Cuéntanos ideas, mejoras o errores que hayas encontrado durante la beta de PokeMarket.
-              </p>
+						<div className="p-5 space-y-4">
+							{!isAuthenticated ? (
+								<div className="text-sm text-[var(--muted)] space-y-3">
+									<p>
+										Debes iniciar sesión para enviar ideas, mejoras o reportes de errores.
+									</p>
 
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm"
-              >
-                <option value="Idea">Idea</option>
-                <option value="Mejora">Mejora</option>
-                <option value="Error">Error</option>
-                <option value="Otro">Otro</option>
-              </select>
+									<a
+										href="/login"
+										className="inline-block text-[var(--primary)] hover:underline font-medium"
+									>
+										Iniciar sesión
+									</a>
+								</div>
+							) : (
+								<>
+									<p className="text-sm text-[var(--muted)] leading-6">
+										Cuéntanos ideas, mejoras o errores que hayas encontrado durante la beta de PokeMarket.
+									</p>
 
-              <textarea
-                rows={5}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Escribe tu comentario..."
-                className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm"
-              />
+									<select
+										value={type}
+										onChange={(e) => setType(e.target.value)}
+										className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm"
+									>
+										<option value="Idea">Idea</option>
+										<option value="Mejora">Mejora</option>
+										<option value="Error">Error</option>
+										<option value="Otro">Otro</option>
+									</select>
 
-              <p className="text-xs text-[var(--muted-2)] text-right">
-								{message.length}/2000
-							</p>
+									<textarea
+										rows={5}
+										value={message}
+										onChange={(e) => setMessage(e.target.value)}
+										placeholder="Escribe tu comentario..."
+										className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm"
+									/>
 
-              {error && (
-                <p className="text-sm text-[var(--danger-fg)] bg-[var(--danger-bg)] border border-[var(--border)] rounded-lg p-2">
-                  {error}
-                </p>
-              )}
+									<p className="text-xs text-[var(--muted-2)] text-right">
+										{message.length}/2000
+									</p>
 
-              {success && (
-                <p className="text-sm text-[var(--success-fg)] bg-[var(--success-bg)] border border-[var(--border)] rounded-lg p-2">
-                  {success}
-                </p>
-              )}
+									{error && (
+										<p className="text-sm text-[var(--danger-fg)] bg-[var(--danger-bg)] border border-[var(--border)] rounded-lg p-2">
+											{error}
+										</p>
+									)}
 
-              <button
-                type="button"
-                disabled={!message.trim() || loading}
-                onClick={handleSend}
-                className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] rounded-lg py-2 font-medium transition-colors"
-              >
-                {loading ? 'Enviando...' : 'Enviar comentario'}
-              </button>
+									{success && (
+										<p className="text-sm text-[var(--success-fg)] bg-[var(--success-bg)] border border-[var(--border)] rounded-lg p-2">
+											{success}
+										</p>
+									)}
 
-              <p className="text-xs text-[var(--muted-2)] text-center">
-                Tu comentario será enviado directamente al equipo de PokeMarket.
-              </p>
-            </div>
+									<button
+										type="button"
+										disabled={!message.trim() || loading}
+										onClick={handleSend}
+										className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] rounded-lg py-2 font-medium transition-colors"
+									>
+										{loading ? 'Enviando...' : 'Enviar comentario'}
+									</button>
+
+									<p className="text-xs text-[var(--muted-2)] text-center">
+										Tu comentario será enviado directamente al equipo de PokeMarket.
+									</p>
+								</>
+							)}
+						</div>
           </div>
         </div>
       )}
