@@ -288,7 +288,7 @@ function ConversationCard({
         {conv.listingImage ? (
           <img src={conv.listingImage} alt={conv.listingTitle} className="w-full h-full object-contain" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-2xl">🎴</div>
+          <div className="w-full h-full flex items-center justify-center text-2xl"> </div>
         )}
       </div>
 

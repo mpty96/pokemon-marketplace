@@ -4,6 +4,7 @@ import ThemeInitializer from '@/components/ThemeInitializer';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CardPriceAssistant from '@/components/CardPriceAssistant';
+import ContactFloatingButton from '@/components/ContactFloatingButton';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tcgpokemarket.cl'),
@@ -52,6 +53,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <ContactFloatingButton />
         <CardPriceAssistant />
       </body>
     </html>

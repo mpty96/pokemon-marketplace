@@ -239,7 +239,7 @@ if (success) {
     <div className="min-h-screen bg-[var(--background)] py-5 sm:py-8 px-3 sm:px-4">
       <div className="max-w-2xl mx-auto bg-[var(--surface)] rounded-xl shadow p-4 sm:p-8 border border-[var(--border)]">
         <h1 className="text-xl sm:text-2xl font-bold text-[var(--foreground)] mb-5 sm:mb-6">
-          🎴 Nueva publicación
+          Nueva publicación
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
