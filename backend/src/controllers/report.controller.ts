@@ -49,6 +49,13 @@ export async function createReportController(req: AuthRequest, res: Response): P
 export async function getAdminReportsController(req: AuthRequest, res: Response): Promise<void> {
   try {
     const status = req.query.status as string | undefined;
+    const validStatuses = ['PENDING', 'REVIEWED', 'DISMISSED', 'ACTION_TAKEN'];
+
+    if (status && !validStatuses.includes(status)) {
+      res.status(400).json({ error: 'Estado de reporte inválido' });
+      return;
+    }
+
     const reports = await getAdminReports(status);
     res.json(reports);
   } catch {
@@ -71,6 +78,14 @@ export async function getAdminReportByIdController(req: AuthRequest, res: Respon
 }
 
 export async function resolveAdminReportController(req: AuthRequest, res: Response): Promise<void> {
+
+  const validStatuses = ['REVIEWED', 'DISMISSED', 'ACTION_TAKEN'];
+
+  if (!validStatuses.includes(req.body.status)) {
+    res.status(400).json({ error: 'Estado inválido' });
+    return;
+  }
+
   try {
     const report = await resolveAdminReport(req.params.id, req.body);
     res.json(report);

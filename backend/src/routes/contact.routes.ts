@@ -1,9 +1,20 @@
 import { Router, Request, Response } from 'express';
 import { sendContactFeedbackEmail } from '../utils/email';
+import rateLimit from 'express-rate-limit';
 
 const router = Router();
 
-router.post('/', async (req: Request, res: Response): Promise<void> => {
+const contactLimiter = rateLimit({
+  windowMs: 30 * 60 * 1000, // 30 minutos
+  max: 1,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: 'Ya enviaste un comentario recientemente. Intenta nuevamente en 30 minutos.',
+  },
+});
+
+router.post('/', contactLimiter, async (req: Request, res: Response): Promise<void> => {
   try {
     const { type, message, user } = req.body;
 

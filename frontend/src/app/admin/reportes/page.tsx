@@ -45,6 +45,7 @@ export default function AdminReportsPage() {
   const [adminNote, setAdminNote] = useState('');
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
+  const [error, setError] = useState('');
 
 useEffect(() => {
   if (!hasHydrated) return;
@@ -64,6 +65,7 @@ useEffect(() => {
 
   async function fetchReports() {
     setLoading(true);
+    setError('');
 
     try {
       const url =
@@ -73,6 +75,8 @@ useEffect(() => {
 
       const { data } = await api.get(url);
       setReports(data);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Error al cargar reportes');
     } finally {
       setLoading(false);
     }
@@ -122,6 +126,7 @@ if (!hasHydrated || !user || loading) {
             setSelected(null);
             setAdminNote('');
         }}
+        
         className="border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)]"
         >
           <option value="PENDING">Pendientes</option>
@@ -131,6 +136,12 @@ if (!hasHydrated || !user || loading) {
           <option value="ALL">Todos</option>
         </select>
       </div>
+
+      {error && (
+        <div className="mb-4 rounded-lg border border-[var(--border)] bg-[var(--danger-bg)] text-[var(--danger-fg)] p-3 text-sm">
+          {error}
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 gap-4">
         <div className="space-y-3">
@@ -232,7 +243,10 @@ if (!hasHydrated || !user || loading) {
 
                 <button
                   disabled={actionLoading}
-                  onClick={() => resolveReport('ACTION_TAKEN', { applyStrike: true })}
+                  onClick={() => {
+                    if (!confirm('¿Aplicar un strike a este usuario?')) return;
+                    resolveReport('ACTION_TAKEN', { applyStrike: true });
+                  }}
                   className="bg-yellow-500 text-black rounded-lg py-2"
                 >
                   Aplicar strike
@@ -240,7 +254,10 @@ if (!hasHydrated || !user || loading) {
 
                 <button
                   disabled={actionLoading}
-                  onClick={() => resolveReport('ACTION_TAKEN', { banUser: true })}
+                  onClick={() => {
+                    if (!confirm('¿Banear este usuario? Esta acción bloqueará su cuenta.')) return;
+                    resolveReport('ACTION_TAKEN', { banUser: true });
+                  }}
                   className="bg-red-600 text-white rounded-lg py-2"
                 >
                   Banear usuario
