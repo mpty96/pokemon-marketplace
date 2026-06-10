@@ -1,16 +1,44 @@
 'use client';
 
 import { useState } from 'react';
+import api from '@/lib/axios';
+import { useAuthStore } from '@/store/auth.store';
 
 export default function ContactFloatingButton() {
+  const user = useAuthStore((s) => s.user);
+
   const [open, setOpen] = useState(false);
+  const [type, setType] = useState('Mejora');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
 
-  function handleSend() {
-    const subject = encodeURIComponent('Idea o sugerencia para PokeMarket');
-    const body = encodeURIComponent(message.trim());
+  async function handleSend() {
+    setError('');
+    setSuccess('');
+    setLoading(true);
 
-    window.location.href = `mailto:contacto@tcgpokemarket.cl?subject=${subject}&body=${body}`;
+    try {
+      await api.post('/api/contact', {
+        type,
+        message,
+        user: user
+          ? {
+              id: user.id,
+              username: user.username,
+              email: user.email,
+            }
+          : undefined,
+      });
+
+      setSuccess('Comentario enviado correctamente. Muchas gracias por ayudar a mejorar PokeMarket.');
+      setMessage('');
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'No se pudo enviar el comentario.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -45,6 +73,17 @@ export default function ContactFloatingButton() {
                 Cuéntanos ideas, mejoras o errores que hayas encontrado durante la beta de PokeMarket.
               </p>
 
+              <select
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm"
+              >
+                <option value="Idea">Idea</option>
+                <option value="Mejora">Mejora</option>
+                <option value="Error">Error</option>
+                <option value="Otro">Otro</option>
+              </select>
+
               <textarea
                 rows={5}
                 value={message}
@@ -53,17 +92,33 @@ export default function ContactFloatingButton() {
                 className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm"
               />
 
+              <p className="text-xs text-[var(--muted-2)] text-right">
+								{message.length}/2000
+							</p>
+
+              {error && (
+                <p className="text-sm text-[var(--danger-fg)] bg-[var(--danger-bg)] border border-[var(--border)] rounded-lg p-2">
+                  {error}
+                </p>
+              )}
+
+              {success && (
+                <p className="text-sm text-[var(--success-fg)] bg-[var(--success-bg)] border border-[var(--border)] rounded-lg p-2">
+                  {success}
+                </p>
+              )}
+
               <button
                 type="button"
-                disabled={!message.trim()}
+                disabled={!message.trim() || loading}
                 onClick={handleSend}
                 className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] rounded-lg py-2 font-medium transition-colors"
               >
-                Enviar comentario
+                {loading ? 'Enviando...' : 'Enviar comentario'}
               </button>
 
               <p className="text-xs text-[var(--muted-2)] text-center">
-                Se abrirá tu aplicación de correo para enviar el mensaje.
+                Tu comentario será enviado directamente al equipo de PokeMarket.
               </p>
             </div>
           </div>

@@ -140,3 +140,59 @@ export async function sendPasswordResetEmail(
     }),
   });
 }
+
+
+export async function sendContactFeedbackEmail({
+  type,
+  message,
+  user,
+}: {
+  type: string;
+  message: string;
+  user?: {
+    id?: string;
+    username?: string;
+    email?: string;
+  };
+}): Promise<void> {
+  const submittedAt = new Date().toLocaleString('es-CL');
+
+  await resend.emails.send({
+    from: `"${APP_NAME}" <${EMAIL_FROM}>`,
+    to: 'contacto@tcgpokemarket.cl',
+    subject: `Nuevo comentario PokeMarket — ${type}`,
+    html: `
+      <!DOCTYPE html>
+      <html lang="es">
+      <body style="font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;padding:24px;">
+        <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;">
+          <div style="padding:24px;background:#0f172a;color:#ffffff;">
+            <h1 style="margin:0;font-size:22px;">Nuevo comentario PokeMarket</h1>
+            <p style="margin:8px 0 0 0;color:#cbd5e1;font-size:14px;">
+              Recibido desde el formulario de contacto.
+            </p>
+          </div>
+
+          <div style="padding:24px;color:#111827;">
+            <p><strong>Tipo:</strong> ${type}</p>
+            <p><strong>Fecha:</strong> ${submittedAt}</p>
+
+            <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0;" />
+
+            <p><strong>Usuario:</strong> ${user?.username || 'No identificado'}</p>
+            <p><strong>Email:</strong> ${user?.email || 'No disponible'}</p>
+            <p><strong>ID:</strong> ${user?.id || 'No disponible'}</p>
+
+            <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0;" />
+
+            <p style="font-weight:bold;margin-bottom:8px;">Mensaje:</p>
+            <div style="white-space:pre-wrap;background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:16px;color:#334155;line-height:1.6;">
+${message}
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+  });
+}
