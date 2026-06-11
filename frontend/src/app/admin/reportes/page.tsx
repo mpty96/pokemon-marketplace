@@ -46,6 +46,11 @@ export default function AdminReportsPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState('');
+  const [tab, setTab] = useState<'REPORTS' | 'USERS'>('REPORTS');
+
+  const [users, setUsers] = useState<any[]>([]);
+  const [usersLoading, setUsersLoading] = useState(false);
+  const [userSearch, setUserSearch] = useState('');
 
 useEffect(() => {
   if (!hasHydrated) return;
@@ -63,6 +68,13 @@ useEffect(() => {
   fetchReports();
   }, [hasHydrated, isAuthenticated, user, statusFilter]);
 
+
+  useEffect(() => {
+    if (tab === 'USERS') {
+      fetchUsers();
+    }
+  }, [tab]);
+
   async function fetchReports() {
     setLoading(true);
     setError('');
@@ -79,6 +91,17 @@ useEffect(() => {
       setError(err.response?.data?.error || 'Error al cargar reportes');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function fetchUsers() {
+    setUsersLoading(true);
+
+    try {
+      const { data } = await api.get('/api/admin/users');
+      setUsers(data);
+    } finally {
+      setUsersLoading(false);
     }
   }
 
@@ -106,7 +129,7 @@ useEffect(() => {
     }
   }
 
-if (!hasHydrated || !user || loading) {
+if (!hasHydrated || !user) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-8">
         <p className="text-[var(--muted)]">Cargando reportes...</p>
@@ -116,26 +139,133 @@ if (!hasHydrated || !user || loading) {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 text-[var(--foreground)]">
-      <h1 className="text-2xl font-bold mb-6">Bandeja de reportes</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">
+          Panel de Administración
+        </h1>
 
-      <div className="mb-4">
-        <select
+        <div className="flex gap-2">
+          <button
+            onClick={() => setTab('REPORTS')}
+            className={`px-4 py-2 rounded-lg border ${
+              tab === 'REPORTS'
+                ? 'bg-[var(--primary)] text-white'
+                : 'border-[var(--border)]'
+            }`}
+          >
+            Reportes
+          </button>
+
+          <button
+            onClick={() => setTab('USERS')}
+            className={`px-4 py-2 rounded-lg border ${
+              tab === 'USERS'
+                ? 'bg-[var(--primary)] text-white'
+                : 'border-[var(--border)]'
+            }`}
+          >
+            Usuarios
+          </button>
+        </div>
+      </div>
+
+
+      {tab === 'USERS' && (
+        <div className="space-y-4">
+
+          <input
+            type="text"
+            placeholder="Buscar usuario o email..."
+            value={userSearch}
+            onChange={(e) => setUserSearch(e.target.value)}
+            className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)]"
+          />
+
+          {usersLoading ? (
+            <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
+              Cargando usuarios...
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full border border-[var(--border)] rounded-xl overflow-hidden">
+                <thead>
+                  <tr className="bg-[var(--surface)]">
+                    <th className="p-3 text-left">Usuario</th>
+                    <th className="p-3 text-left">Email</th>
+                    <th className="p-3 text-left">Rol</th>
+                    <th className="p-3 text-left">Verificado</th>
+                    <th className="p-3 text-left">Beta</th>
+                    <th className="p-3 text-left">Strikes</th>
+                    <th className="p-3 text-left">Estado</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {users
+                    .filter((u) => {
+                      const search = userSearch.toLowerCase();
+
+                      return (
+                        u.username.toLowerCase().includes(search) ||
+                        u.email.toLowerCase().includes(search)
+                      );
+                    })
+                    .map((u) => (
+                      <tr
+                        key={u.id}
+                        className="border-t border-[var(--border)]"
+                      >
+                        <td className="p-3">{u.username}</td>
+                        <td className="p-3">{u.email}</td>
+
+                        <td className="p-3">
+                          {u.role}
+                        </td>
+
+                        <td className="p-3">
+                          {u.emailVerified ? '✅' : '❌'}
+                        </td>
+
+                        <td className="p-3">
+                          {u.profile?.isBetaTester ? '🧪' : '-'}
+                        </td>
+
+                        <td className="p-3">
+                          {u.profile?.strikes || 0}
+                        </td>
+
+                        <td className="p-3">
+                          {u.profile?.isBanned ? '🚫 Baneado' : '✅ Activo'}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+
+{tab === 'REPORTS' && (
+  <>
+    <div className="mb-4">
+      <select
         value={statusFilter}
         onChange={(e) => {
-            setStatusFilter(e.target.value as ReportStatus | 'ALL');
-            setSelected(null);
-            setAdminNote('');
+          setStatusFilter(e.target.value as ReportStatus | 'ALL');
+          setSelected(null);
+          setAdminNote('');
         }}
-        
         className="border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)]"
-        >
-          <option value="PENDING">Pendientes</option>
-          <option value="REVIEWED">Revisados</option>
-          <option value="DISMISSED">Descartados</option>
-          <option value="ACTION_TAKEN">Con acción tomada</option>
-          <option value="ALL">Todos</option>
-        </select>
-      </div>
+      >
+        <option value="PENDING">Pendientes</option>
+        <option value="REVIEWED">Revisados</option>
+        <option value="DISMISSED">Descartados</option>
+        <option value="ACTION_TAKEN">Con acción tomada</option>
+        <option value="ALL">Todos</option>
+      </select>
+    </div>
 
       {error && (
         <div className="mb-4 rounded-lg border border-[var(--border)] bg-[var(--danger-bg)] text-[var(--danger-fg)] p-3 text-sm">
@@ -267,6 +397,9 @@ if (!hasHydrated || !user || loading) {
           )}
         </div>
       </div>
+    </>
+  )}
+
     </div>
   );
 }
