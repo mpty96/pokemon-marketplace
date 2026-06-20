@@ -9,6 +9,7 @@ import { CardCondition, CardRarity, CardLanguage, ListingType } from '@/types';
 const CONDITIONS: CardCondition[] = ['MINT','NEAR_MINT','EXCELLENT','GOOD','PLAYED','POOR'];
 const NON_CARD_CONDITIONS: CardCondition[] = ['EXCELLENT', 'GOOD', 'POOR'];
 const RARITIES:   CardRarity[]    = ['COMMON','UNCOMMON','RARE','HOLO_RARE','ULTRA_RARE','SECRET_RARE','PROMO'];
+const MAX_IMAGES = 5;
 
 const CONDITION_LABELS: Record<CardCondition, string> = {
   MINT:      'Mint (perfecta)',
@@ -183,17 +184,33 @@ if (success) {
   }
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+    const selected = Array.from(e.target.files ?? []);
+    e.target.value = ''; // permite volver a seleccionar el mismo archivo
+    if (selected.length === 0) return;
 
-    if (!file) {
-      setImages([]);
-      setPreviews([]);
+    setError('');
+    const remaining = MAX_IMAGES - images.length;
+    if (remaining <= 0) {
+      setError(`Máximo ${MAX_IMAGES} imágenes por publicación.`);
       return;
     }
 
-    setError('');
-    setImages([file]);
-    setPreviews([URL.createObjectURL(file)]);
+    const toAdd = selected.slice(0, remaining);
+    if (selected.length > remaining) {
+      setError(`Máximo ${MAX_IMAGES} imágenes. Se agregaron solo ${toAdd.length}.`);
+    }
+
+    setImages((prev) => [...prev, ...toAdd]);
+    setPreviews((prev) => [...prev, ...toAdd.map((f) => URL.createObjectURL(f))]);
+  }
+
+  function removeImage(index: number) {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+    setPreviews((prev) => {
+      const url = prev[index];
+      if (url) URL.revokeObjectURL(url);
+      return prev.filter((_, i) => i !== index);
+    });
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -416,15 +433,46 @@ if (success) {
                 Stock disponible *
               </label>
 
-              <input
-                required
-                type="number"
-                min="1"
-                className={inputClass}
-                placeholder="1"
-                value={form.stock}
-                onChange={(e) => setForm({ ...form, stock: e.target.value })}
-              />
+              <div>
+                <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                  Imágenes * (máximo {MAX_IMAGES})
+                </label>
+                
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                  disabled={images.length >= MAX_IMAGES}
+                  className="w-full text-sm text-[var(--muted)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[var(--surface-2)] file:text-[var(--primary)] hover:file:bg-[var(--info-bg)] disabled:opacity-60"
+                />
+                <p className="text-xs text-[var(--muted-2)] mt-1">
+                  {images.length}/{MAX_IMAGES} seleccionadas. La primera será la portada.
+                </p>
+                {previews.length > 0 && (
+                  <div className="flex gap-2 mt-3 flex-wrap">
+                    {previews.map((src, i) => (
+                      <div key={i} className="relative">
+                        <img src={src} alt={`preview-${i}`}
+                          className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-[var(--border)]" />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(i)}
+                          className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-[var(--danger-bg)] text-[var(--danger-fg)] border border-[var(--border)] text-xs leading-none flex items-center justify-center"
+                          aria-label="Quitar imagen"
+                        >
+                          ×
+                        </button>
+                        {i === 0 && (
+                          <span className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[9px] text-center rounded-b-lg">
+                            Portada
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
           </div>
