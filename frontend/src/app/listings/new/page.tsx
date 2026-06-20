@@ -39,6 +39,12 @@ const LANGUAGES: { value: CardLanguage; label: string }[] = [
   { value: 'OTHER', label: 'Otro' },
 ];
 
+const TYPE_SUCCESS: Record<ListingType, { title: string; subtitle: string; again: string }> = {
+  CARD:            { title: '¡Carta publicada!',    subtitle: 'Tu carta ya está visible en el marketplace.',    again: 'Publicar otra carta' },
+  POKEMON_PRODUCT: { title: '¡Producto publicado!', subtitle: 'Tu producto ya está visible en el marketplace.', again: 'Publicar otro producto' },
+  BULK_LOT:        { title: '¡Lote publicado!',     subtitle: 'Tu lote ya está visible en el marketplace.',     again: 'Publicar otro lote' },
+};
+
 export default function NewListingPage() {
   const router    = useRouter();
   const isAuth    = useAuthStore((s) => s.isAuthenticated);
@@ -130,15 +136,16 @@ if (profileComplete === false) {
 }
 
 if (success) {
+    const t = TYPE_SUCCESS[form.listingType];
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center px-4">
         <div className="bg-[var(--surface)] rounded-xl shadow p-8 text-center max-w-md w-full border border-[var(--border)]">
           <div className="text-5xl mb-4">🎉</div>
           <h2 className="text-2xl font-bold text-[var(--foreground)] mb-2">
-            ¡Carta publicada!
+            {t.title}
           </h2>
           <p className="text-[var(--muted)] mb-6">
-            Tu carta ya está visible en el marketplace.
+            {t.subtitle}
           </p>
           <div className="flex flex-col gap-3">
             <button
@@ -165,7 +172,7 @@ if (success) {
                 setPreviews([]);
               }}
               className="text-sm text-[var(--primary)] hover:underline">
-              Publicar otra carta
+              {t.again}
             </button>
           </div>
         </div>
