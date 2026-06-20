@@ -39,6 +39,8 @@ const LANGUAGES: { value: CardLanguage; label: string }[] = [
   { value: 'OTHER', label: 'Otro' },
 ];
 
+const LOT_EXTRA_LANGUAGE: { value: CardLanguage; label: string } = { value: 'VARIOUS', label: 'Varios' };
+
 const TYPE_SUCCESS: Record<ListingType, { title: string; subtitle: string; again: string }> = {
   CARD:            { title: '¡Carta publicada!',    subtitle: 'Tu carta ya está visible en el marketplace.',    again: 'Publicar otra carta' },
   POKEMON_PRODUCT: { title: '¡Producto publicado!', subtitle: 'Tu producto ya está visible en el marketplace.', again: 'Publicar otro producto' },
@@ -386,7 +388,7 @@ if (success) {
                 onChange={(e) => setForm({ ...form, language: e.target.value as CardLanguage })}
               >
                 <option value="">Seleccionar...</option>
-                {LANGUAGES.map((l) => (
+                {(form.listingType === 'BULK_LOT' ? [...LANGUAGES, LOT_EXTRA_LANGUAGE] : LANGUAGES).map((l) => (
                   <option key={l.value} value={l.value}>
                     {l.label}
                   </option>
