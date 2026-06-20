@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import FooterModal from './FooterModal';
+import Link from 'next/link';
 
 type ModalType = 'policy' | 'terms' | 'data' | 'info' | null;
 
@@ -35,6 +36,13 @@ export default function Footer() {
             <FooterLink onClick={() => setActiveModal('data')}>
               Datos y cumplimiento
             </FooterLink>
+
+             <Link
+              href="/cookies"
+              className="cursor-pointer text-[var(--muted)] hover:text-[var(--primary)] hover:underline transition-colors"
+            >
+              Cookies
+            </Link>
 
             <FooterLink onClick={() => setActiveModal('info')}>
               Información general
@@ -178,6 +186,21 @@ export default function Footer() {
           </p>
         </Section>
 
+        <Section title="Cookies y almacenamiento local">
+          <p>
+            PokeMarket utiliza cookies y almacenamiento local necesarios para mantener tu sesión
+            y recordar tus preferencias. Puedes revisar el detalle y gestionar tu consentimiento
+            en nuestra{' '}
+            <Link
+              href="/cookies"
+              onClick={() => setActiveModal(null)}
+              className="font-medium text-[var(--primary)] hover:underline"
+            >
+              Política de Cookies
+            </Link>.
+          </p>
+        </Section>
+
         <Section title="Derechos y solicitudes">
           <p>
             Los usuarios pueden solicitar revisión, corrección o eliminación de datos cuando corresponda.
@@ -185,6 +208,7 @@ export default function Footer() {
             de seguridad o registros necesarios para prevenir abuso.
           </p>
         </Section>
+
       </FooterModal>
 
       <FooterModal

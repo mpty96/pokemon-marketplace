@@ -11,7 +11,7 @@ const NEWS = {
   intro: 'Estuvimos trabajando para mejorar tu experiencia. Esto es lo nuevo:',
   sections: [
     {
-      label: '✨ Novedades',
+      label: 'Novedades',
       items: [
         'Ahora puedes subir hasta 5 fotos por publicación.',
         'Galería tipo carrusel en cada publicación: desliza o usa las flechas, y toca una imagen para ampliarla.',
@@ -19,7 +19,7 @@ const NEWS = {
       ],
     },
     {
-      label: '🛠️ Correcciones',
+      label: 'Correcciones',
       items: [
         'Arreglamos las secciones de la portada (recientes y populares) que mostraban menos publicaciones de las que correspondía.',
         'Al publicar, el mensaje de confirmación ahora indica correctamente si fue una Carta, Producto o Lote.',
