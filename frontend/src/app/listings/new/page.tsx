@@ -443,57 +443,23 @@ if (success) {
                 }}
               />
             </div>
-            {form.listingType === 'POKEMON_PRODUCT' && (
-            <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                Stock disponible *
-              </label>
 
+{form.listingType === 'POKEMON_PRODUCT' && (
               <div>
                 <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                  Imágenes * (máximo {MAX_IMAGES})
+                  Stock disponible *
                 </label>
-
                 <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleImageChange}
-                  disabled={images.length >= MAX_IMAGES}
-                  className="w-full text-sm text-[var(--muted)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[var(--surface-2)] file:text-[var(--primary)] hover:file:bg-[var(--info-bg)] disabled:opacity-60"
+                  required
+                  type="number"
+                  min="1"
+                  className={inputClass}
+                  placeholder="1"
+                  value={form.stock}
+                  onChange={(e) => setForm({ ...form, stock: e.target.value })}
                 />
-                <p className="text-xs text-[var(--muted-2)] mt-1">
-                  {images.length}/{MAX_IMAGES} seleccionadas. La <strong>primera imagen</strong> será la portada que se ve en el marketplace.
-                </p>
-                {previews.length > 0 && (
-                  <div className="flex gap-2 mt-3 flex-wrap">
-                    {previews.map((src, i) => (
-                      <div key={i} className={`relative rounded-lg ${i === 0 ? 'ring-2 ring-[var(--primary)]' : ''}`}>
-                        <img src={src} alt={`preview-${i}`}
-                          className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-[var(--border)]" />
-
-                        <button type="button" onClick={() => removeImage(i)}
-                          className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-[var(--danger-bg)] text-[var(--danger-fg)] border border-[var(--border)] text-xs leading-none flex items-center justify-center"
-                          aria-label="Quitar imagen">×</button>
-
-                        {i === 0 ? (
-                          <span className="absolute bottom-0 left-0 right-0 bg-[var(--primary)] text-[var(--primary-foreground)] text-[9px] font-semibold text-center rounded-b-lg py-0.5">
-                            Portada
-                          </span>
-                        ) : (
-                          <button type="button" onClick={() => makeCover(i)}
-                            className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[9px] text-center rounded-b-lg py-0.5 hover:bg-black/75"
-                            aria-label="Hacer portada">
-                            Hacer portada
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
-            </div>
-          )}
+            )}
           </div>
 
           <div>
@@ -504,15 +470,40 @@ if (success) {
 
           <div>
             <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-              Imagen * (máximo 1)
+              Imágenes * (máximo {MAX_IMAGES})
             </label>
-            <input type="file" accept="image/*" onChange={handleImageChange}
-              className="w-full text-sm text-[var(--muted)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[var(--surface-2)] file:text-[var(--primary)] hover:file:bg-[var(--info-bg)]"/>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageChange}
+              disabled={images.length >= MAX_IMAGES}
+              className="w-full text-sm text-[var(--muted)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[var(--surface-2)] file:text-[var(--primary)] hover:file:bg-[var(--info-bg)] disabled:opacity-60"
+            />
+            <p className="text-xs text-[var(--muted-2)] mt-1">
+              {images.length}/{MAX_IMAGES} seleccionadas. La <strong>primera imagen</strong> será la portada que se ve en el marketplace.
+            </p>
             {previews.length > 0 && (
               <div className="flex gap-2 mt-3 flex-wrap">
                 {previews.map((src, i) => (
-                  <img key={i} src={src} alt={`preview-${i}`}
-                    className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-[var(--border)]" />
+                  <div key={i} className={`relative rounded-lg ${i === 0 ? 'ring-2 ring-[var(--primary)]' : ''}`}>
+                    <img src={src} alt={`preview-${i}`}
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-[var(--border)]" />
+                    <button type="button" onClick={() => removeImage(i)}
+                      className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-[var(--danger-bg)] text-[var(--danger-fg)] border border-[var(--border)] text-xs leading-none flex items-center justify-center"
+                      aria-label="Quitar imagen">×</button>
+                    {i === 0 ? (
+                      <span className="absolute bottom-0 left-0 right-0 bg-[var(--primary)] text-[var(--primary-foreground)] text-[9px] font-semibold text-center rounded-b-lg py-0.5">
+                        Portada
+                      </span>
+                    ) : (
+                      <button type="button" onClick={() => makeCover(i)}
+                        className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[9px] text-center rounded-b-lg py-0.5 hover:bg-black/75"
+                        aria-label="Hacer portada">
+                        Hacer portada
+                      </button>
+                    )}
+                  </div>
                 ))}
               </div>
             )}
