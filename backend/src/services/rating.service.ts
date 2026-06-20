@@ -1,4 +1,5 @@
 import prisma from '../lib/prisma';
+import { emitToListing } from '../lib/socket';
 
 export async function createRating(
   saleId:             string,
@@ -56,6 +57,7 @@ const rating = await prisma.rating.create({
   // Recalcular reputación del usuario calificado
   await recalculateReputation(ratedId);
 
+  emitToListing(sale.listingId, 'rating_updated', { listingId: sale.listingId });
   return rating;
 }
 

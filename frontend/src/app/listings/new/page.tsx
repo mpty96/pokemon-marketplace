@@ -5,6 +5,15 @@ import { useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
 import { CardCondition, CardRarity, CardLanguage, ListingType } from '@/types';
+import imageCompression from 'browser-image-compression';
+
+const [processing, setProcessing] = useState(false);
+
+const COMPRESSION_OPTIONS = {
+  maxSizeMB: 1,
+  maxWidthOrHeight: 1600,
+  useWebWorker: true,
+};
 
 const CONDITIONS: CardCondition[] = ['MINT','NEAR_MINT','EXCELLENT','GOOD','PLAYED','POOR'];
 const NON_CARD_CONDITIONS: CardCondition[] = ['EXCELLENT', 'GOOD', 'POOR'];
@@ -183,9 +192,9 @@ if (success) {
     );
   }
 
-  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = Array.from(e.target.files ?? []);
-    e.target.value = ''; // permite volver a seleccionar el mismo archivo
+    e.target.value = '';
     if (selected.length === 0) return;
 
     setError('');
@@ -195,13 +204,23 @@ if (success) {
       return;
     }
 
-    const toAdd = selected.slice(0, remaining);
+    const toProcess = selected.slice(0, remaining);
     if (selected.length > remaining) {
-      setError(`Máximo ${MAX_IMAGES} imágenes. Se agregaron solo ${toAdd.length}.`);
+      setError(`Máximo ${MAX_IMAGES} imágenes. Se agregaron solo ${toProcess.length}.`);
     }
 
-    setImages((prev) => [...prev, ...toAdd]);
-    setPreviews((prev) => [...prev, ...toAdd.map((f) => URL.createObjectURL(f))]);
+    setProcessing(true);
+    try {
+      const compressed = await Promise.all(
+        toProcess.map((file) => imageCompression(file, COMPRESSION_OPTIONS))
+      );
+      setImages((prev) => [...prev, ...compressed]);
+      setPreviews((prev) => [...prev, ...compressed.map((f) => URL.createObjectURL(f))]);
+    } catch {
+      setError('No se pudo procesar una de las imágenes. Intenta con otra.');
+    } finally {
+      setProcessing(false);
+    }
   }
 
   function removeImage(index: number) {
@@ -477,12 +496,20 @@ if (success) {
               accept="image/*"
               multiple
               onChange={handleImageChange}
-              disabled={images.length >= MAX_IMAGES}
+              disabled={processing || images.length >= MAX_IMAGES}
               className="w-full text-sm text-[var(--muted)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[var(--surface-2)] file:text-[var(--primary)] hover:file:bg-[var(--info-bg)] disabled:opacity-60"
             />
             <p className="text-xs text-[var(--muted-2)] mt-1">
               {images.length}/{MAX_IMAGES} seleccionadas. La <strong>primera imagen</strong> será la portada que se ve en el marketplace.
             </p>
+
+            {processing && (
+              <p className="text-xs text-[var(--primary)] mt-1 flex items-center gap-2">
+                <span className="inline-block h-3 w-3 rounded-full border-2 border-[var(--primary)] border-t-transparent animate-spin" />
+                Procesando imágenes...
+              </p>
+            )}
+
             {previews.length > 0 && (
               <div className="flex gap-2 mt-3 flex-wrap">
                 {previews.map((src, i) => (
@@ -509,7 +536,7 @@ if (success) {
             )}
           </div>
 
-          <button type="submit" disabled={loading}
+          <button type="submit" disabled={loading || processing}
             className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors">
             {loading
             ? 'Publicando...'

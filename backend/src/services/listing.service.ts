@@ -42,9 +42,10 @@ interface ListingFilters {
 export async function createListing(input: CreateListingInput) {
   const { imageFiles, sellerId, edition, ...data } = input;
 
-  const imageUrls = await Promise.all(
-    imageFiles.map((buffer) => uploadImage(buffer, 'listings'))
-  );
+  const imageUrls: string[] = [];
+  for (const buffer of imageFiles) {
+    imageUrls.push(await uploadImage(buffer, 'listings'));
+  }
 
   const listing = await prisma.listing.create({
     data: {

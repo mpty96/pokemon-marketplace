@@ -82,23 +82,13 @@ export default function ChatPage() {
 
     socket.emit('join_conversation', id);
 
-    // Mensajes nuevos
     socket.on('new_message', (message: Message) => {
-      setMessages((prev) => {
-        
-        if (prev.some((item) => item.id === message.id)) {
-          return prev;
-        }
-
-        return [...prev, message];
-      });
-      if (message.senderId !== user?.id) {
-      }
+      setMessages((prev) =>
+        prev.some((item) => item.id === message.id) ? prev : [...prev, message]
+      );
     });
-    
 
-    // Polling para estado de venta y ratings (cada 5s)
-    const interval = setInterval(async () => {
+    const refreshSaleState = async () => {
       try {
         const listingRes = await api.get(`/api/listings/${id}`);
         setListing(listingRes.data);
@@ -115,12 +105,16 @@ export default function ChatPage() {
       } catch {
         // silencioso
       }
-    }, 15000);
+    };
+
+    socket.on('sale_updated', refreshSaleState);
+    socket.on('rating_updated', refreshSaleState);
 
     return () => {
       socket.emit('leave_conversation', id);
       socket.off('new_message');
-      clearInterval(interval);
+      socket.off('sale_updated', refreshSaleState);
+      socket.off('rating_updated', refreshSaleState);
     };
   }, [socket, id]);
 

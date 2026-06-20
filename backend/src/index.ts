@@ -5,6 +5,7 @@ import app from './app';
 import prisma from './lib/prisma';
 import { verifyAccessToken } from './utils/jwt';
 import { sendChatMessage } from './services/chat.service';
+import { setIO } from './lib/socket';
 
 const PORT = process.env.PORT || 4000;
 
@@ -23,6 +24,8 @@ async function main() {
     transports: ['websocket', 'polling'],
     allowEIO3: true,
   });
+
+  setIO(io);
 
   // Keep-alive para plan gratuito de Render
   if (process.env.NODE_ENV === 'production') {

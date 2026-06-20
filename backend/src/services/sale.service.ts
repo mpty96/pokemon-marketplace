@@ -1,4 +1,5 @@
 import prisma from '../lib/prisma';
+import { emitToListing } from '../lib/socket';
 
 export async function initiateSale(listingId: string, sellerId: string, quantity = 1) {
   const listing = await prisma.listing.findUnique({
@@ -90,6 +91,7 @@ export async function initiateSale(listingId: string, sellerId: string, quantity
     return nextSale;
   });
 
+  emitToListing(listingId, 'sale_updated', { listingId });
   return sale;
 }
 
@@ -186,6 +188,7 @@ export async function confirmSale(listingId: string, userId: string, role: 'buye
     ]);
   }
 
+    emitToListing(listingId, 'sale_updated', { listingId });
     return { ...sale, ...updateData, bothConfirmed: true };
   }
 
@@ -199,6 +202,7 @@ export async function confirmSale(listingId: string, userId: string, role: 'buye
     },
   });
 
+  emitToListing(listingId, 'sale_updated', { listingId });
   return { ...updated, bothConfirmed: false };
 }
 
@@ -222,6 +226,7 @@ export async function cancelSale(listingId: string, userId: string) {
     }),
   ]);
 
+  emitToListing(listingId, 'sale_updated', { listingId });
   return { message: 'Venta cancelada' };
 }
 
