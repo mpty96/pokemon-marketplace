@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import {
@@ -12,6 +12,7 @@ import {
 } from '@/types';
 import { useAuthStore } from '@/store/auth.store';
 import Link from 'next/link';
+
 
 const CONDITION_LABELS: Record<CardCondition, string> = {
   MINT: 'Mint', NEAR_MINT: 'Near Mint', EXCELLENT: 'Excelente',
@@ -30,6 +31,8 @@ export default function ListingDetailPage() {
   const { user, isAuthenticated }       = useAuthStore();
   const [listing, setListing]           = useState<Listing | null>(null);
   const [activeImg, setActiveImg]       = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const touchStartX                     = useRef<number | null>(null);
   const [loading, setLoading]           = useState(true);
   const [historyRange, setHistoryRange] = useState<SalesHistoryRange>('1m');
   const [salesHistory, setSalesHistory] = useState<ListingSalesHistoryItem[]>([]);
@@ -61,6 +64,22 @@ export default function ListingDetailPage() {
     }
   }, [listing, quantity]);
 
+  useEffect(() => {
+  if (!lightboxOpen || !listing) return;
+  const count = listing.images.length;
+  document.body.style.overflow = 'hidden';
+  function onKey(e: KeyboardEvent) {
+    if (e.key === 'Escape') setLightboxOpen(false);
+    else if (e.key === 'ArrowLeft')  setActiveImg((i) => (i - 1 + count) % count);
+    else if (e.key === 'ArrowRight') setActiveImg((i) => (i + 1) % count);
+  }
+  window.addEventListener('keydown', onKey);
+  return () => {
+    window.removeEventListener('keydown', onKey);
+    document.body.style.overflow = '';
+  };
+}, [lightboxOpen, listing]);
+
   async function handleDelete() {
     if (!confirm('¿Eliminar esta publicación?')) return;
     await api.delete(`/api/listings/${id}`);
@@ -76,6 +95,17 @@ export default function ListingDetailPage() {
   if (!listing) return null;
 
   const isOwner = user?.id === listing.sellerId;
+
+  function prevImg() { setActiveImg((i) => (i - 1 + listing!.images.length) % listing!.images.length); }
+  function nextImg() { setActiveImg((i) => (i + 1) % listing!.images.length); }
+  function handleTouchStart(e: React.TouchEvent) { touchStartX.current = e.changedTouches[0].clientX; }
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(dx) < 40) return;
+    dx > 0 ? prevImg() : nextImg();
+  }
 
   const prices = salesHistory.map((item) => item.priceCLP);
   const latestPrice = prices.length ? prices[prices.length - 1] : listing.priceCLP;
@@ -139,11 +169,31 @@ export default function ListingDetailPage() {
 
             {/* Imágenes */}
             <div className="p-4 sm:p-6">
-              <img
-                src={listing.images[activeImg]}
-                alt={listing.title}
-                className="w-full max-h-[420px] aspect-square object-contain rounded-lg bg-[var(--surface-2)]"
-              />
+              <div className="relative">
+                <img
+                  src={listing.images[activeImg]}
+                  alt={listing.title}
+                  onClick={() => setLightboxOpen(true)}
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
+                  className="w-full max-h-[420px] aspect-square object-contain rounded-lg bg-[var(--surface-2)] cursor-zoom-in select-none"
+                />
+
+                {listing.images.length > 1 && (
+                  <>
+                    <button type="button" onClick={(e) => { e.stopPropagation(); prevImg(); }}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-black/45 text-white flex items-center justify-center hover:bg-black/65 transition-colors"
+                      aria-label="Imagen anterior">‹</button>
+                    <button type="button" onClick={(e) => { e.stopPropagation(); nextImg(); }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-black/45 text-white flex items-center justify-center hover:bg-black/65 transition-colors"
+                      aria-label="Imagen siguiente">›</button>
+                    <span className="absolute bottom-2 right-2 bg-black/55 text-white text-xs px-2 py-0.5 rounded-full">
+                      {activeImg + 1} / {listing.images.length}
+                    </span>
+                  </>
+                )}
+              </div>
+
               {listing.images.length > 1 && (
                 <div className="flex gap-2 mt-3 flex-wrap">
                   {listing.images.map((src, i) => (
@@ -516,6 +566,38 @@ export default function ListingDetailPage() {
             </div>
           )}
         </div>
+
+        {lightboxOpen && (
+          <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+            onClick={() => setLightboxOpen(false)}>
+            <button type="button" onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
+              className="absolute top-4 right-4 h-10 w-10 rounded-full bg-white/15 text-white text-xl flex items-center justify-center hover:bg-white/25"
+              aria-label="Cerrar">×</button>
+
+            <img
+              src={listing.images[activeImg]}
+              alt={listing.title}
+              onClick={(e) => e.stopPropagation()}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              className="max-h-[90vh] max-w-[92vw] object-contain select-none"
+            />
+
+            {listing.images.length > 1 && (
+              <>
+                <button type="button" onClick={(e) => { e.stopPropagation(); prevImg(); }}
+                  className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-white/15 text-white text-2xl flex items-center justify-center hover:bg-white/25"
+                  aria-label="Imagen anterior">‹</button>
+                <button type="button" onClick={(e) => { e.stopPropagation(); nextImg(); }}
+                  className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-white/15 text-white text-2xl flex items-center justify-center hover:bg-white/25"
+                  aria-label="Imagen siguiente">›</button>
+                <span className="absolute bottom-5 left-1/2 -translate-x-1/2 bg-white/15 text-white text-sm px-3 py-1 rounded-full">
+                  {activeImg + 1} / {listing.images.length}
+                </span>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
