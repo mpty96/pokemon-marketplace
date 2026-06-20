@@ -12,7 +12,7 @@ export interface Seller {
   } | null;
 }
 
-export type CardLanguage = 'ESP' | 'ENG' | 'POR' | 'JPN' | 'KOR' | 'CHN' | 'OTHER';
+export type CardLanguage = 'ESP' | 'ENG' | 'POR' | 'JPN' | 'KOR' | 'CHN' | 'OTHER' | 'VARIOUS';
 export type ListingType = 'CARD' | 'POKEMON_PRODUCT' | 'BULK_LOT';
 export type SalesHistoryRange = '7d' | '1m' | '6m' | '1y';
 
