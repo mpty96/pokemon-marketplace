@@ -321,42 +321,42 @@ return {
 }
 
 
+const HOME_SELLER_INCLUDE = {
+  seller: {
+    select: {
+      id: true,
+      username: true,
+      profile: { select: { displayName: true, avatarUrl: true, reputationScore: true } },
+    },
+  },
+} as const;
+
+const HOME_TYPES: ListingType[] = ['CARD', 'POKEMON_PRODUCT', 'BULK_LOT'];
+
 export async function getRecentListingsForHome() {
-  return prisma.listing.findMany({
-    where: {
-      status: 'ACTIVE',
-      deletedAt: null,
-    },
-    orderBy: { createdAt: 'desc' },
-    take: 12,
-    include: {
-      seller: {
-        select: {
-          id: true,
-          username: true,
-          profile: { select: { displayName: true, avatarUrl: true, reputationScore: true } },
-        },
-      },
-    },
-  });
+  const groups = await Promise.all(
+    HOME_TYPES.map((listingType) =>
+      prisma.listing.findMany({
+        where: { status: 'ACTIVE', deletedAt: null, listingType },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+        include: HOME_SELLER_INCLUDE,
+      })
+    )
+  );
+  return groups.flat();
 }
 
 export async function getPopularListingsForHome() {
-  return prisma.listing.findMany({
-    where: {
-      status: 'ACTIVE',
-      deletedAt: null,
-    },
-    orderBy: { views: 'desc' },
-    take: 12,
-    include: {
-      seller: {
-        select: {
-          id: true,
-          username: true,
-          profile: { select: { displayName: true, avatarUrl: true, reputationScore: true } },
-        },
-      },
-    },
-  });
+  const groups = await Promise.all(
+    HOME_TYPES.map((listingType) =>
+      prisma.listing.findMany({
+        where: { status: 'ACTIVE', deletedAt: null, listingType },
+        orderBy: { views: 'desc' },
+        take: 10,
+        include: HOME_SELLER_INCLUDE,
+      })
+    )
+  );
+  return groups.flat();
 }
