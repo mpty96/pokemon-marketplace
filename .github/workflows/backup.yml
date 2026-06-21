@@ -1,0 +1,45 @@
+name: Backup diario Supabase
+
+on:
+  schedule:
+    - cron: '0 9 * * *'    # 09:00 UTC ≈ 05:00 en Chile
+  workflow_dispatch:        # permite ejecutarlo a mano
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar cliente PostgreSQL compatible con el servidor
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          set -e
+          sudo apt-get update
+          sudo apt-get install -y wget ca-certificates lsb-release postgresql-client
+          SERVER_VERSION=$(psql "$DATABASE_URL" -tAc "SHOW server_version_num;" | cut -c1-2)
+          echo "SERVER_VERSION=$SERVER_VERSION" >> $GITHUB_ENV
+          wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/pgdg.gpg
+          echo "deb [signed-by=/usr/share/keyrings/pgdg.gpg] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-$SERVER_VERSION
+
+      - name: Crear respaldo (solo public, UTF-8, comprimido)
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          set -o pipefail
+          mkdir -p backups
+          FILE="backups/pokemarket_$(date +%F).sql.gz"
+          /usr/lib/postgresql/${SERVER_VERSION}/bin/pg_dump "$DATABASE_URL" \
+            --schema=public \
+            --no-owner \
+            --no-privileges \
+            | gzip > "$FILE"
+          echo "Respaldo creado:"; ls -lh "$FILE"
+
+      - name: Subir respaldo como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pokemarket-backup-${{ github.run_id }}
+          path: backups/*.sql.gz
+          retention-days: 30
