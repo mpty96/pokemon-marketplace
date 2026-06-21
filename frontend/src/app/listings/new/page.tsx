@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
 import { CardCondition, CardRarity, CardLanguage, ListingType } from '@/types';
-import imageCompression from 'browser-image-compression';
 
 const [processing, setProcessing] = useState(false);
 
@@ -208,9 +207,11 @@ if (success) {
     if (selected.length > remaining) {
       setError(`Máximo ${MAX_IMAGES} imágenes. Se agregaron solo ${toProcess.length}.`);
     }
-
-    setProcessing(true);
+    
+  setProcessing(true);
     try {
+      const { default: imageCompression } = await import('browser-image-compression');
+
       const compressed = await Promise.all(
         toProcess.map((file) => imageCompression(file, COMPRESSION_OPTIONS))
       );
