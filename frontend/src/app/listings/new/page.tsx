@@ -6,7 +6,6 @@ import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
 import { CardCondition, CardRarity, CardLanguage, ListingType } from '@/types';
 
-const [processing, setProcessing] = useState(false);
 
 const COMPRESSION_OPTIONS = {
   maxSizeMB: 1,
@@ -72,6 +71,7 @@ export default function NewListingPage() {
   const [error,    setError]    = useState('');
   const [success,  setSuccess]  = useState(false);
   const [newId,    setNewId]    = useState('');
+  const [processing, setProcessing] = useState(false);
   const [profileComplete, setProfileComplete] = useState<boolean | null>(null);
   const [missingFields, setMissingFields] = useState<string[]>([]);
 
@@ -207,7 +207,7 @@ if (success) {
     if (selected.length > remaining) {
       setError(`Máximo ${MAX_IMAGES} imágenes. Se agregaron solo ${toProcess.length}.`);
     }
-    
+
   setProcessing(true);
     try {
       const { default: imageCompression } = await import('browser-image-compression');
