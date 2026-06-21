@@ -12,6 +12,7 @@ import {
   getPopularListingsForHome,
 } from '../services/listing.service';
 import { getProfileCompletionStatus } from '../services/profile.service';
+import { cached, invalidateByPrefix } from '../utils/cache';
 
 // Tipos locales — evita importar enums desde @prisma/client
 type CardCondition = 'MINT' | 'NEAR_MINT' | 'EXCELLENT' | 'GOOD' | 'PLAYED' | 'POOR';
@@ -72,13 +73,15 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
       imageFiles: files.map((f) => f.buffer),
     });
 
+    invalidateByPrefix('home:');
     res.status(201).json(listing);
-  } catch (error: any) {
-  console.error('CREATE LISTING ERROR:', error);
-  res.status(500).json({
-    error: error?.message || 'Error al crear la publicación',
-  });
-}
+  }
+   catch (error: any) {
+    console.error('CREATE LISTING ERROR:', error);
+    res.status(500).json({
+      error: error?.message || 'Error al crear la publicación',
+      });
+    }
 }
 
 export async function list(req: AuthRequest, res: Response): Promise<void> {
@@ -133,6 +136,7 @@ export async function remove(req: AuthRequest, res: Response): Promise<void> {
     const id       = req.params.id as string;
     const sellerId = req.user!.userId;
     const result   = await deleteListing(id, sellerId);
+    invalidateByPrefix('home:');
     res.json(result);
   } catch (error: any) {
     if (error.message === 'LISTING_NOT_FOUND') {
@@ -168,7 +172,8 @@ export async function listingsHistory(req: AuthRequest, res: Response): Promise<
 
 export async function homeRecentListings(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const listings = await getRecentListingsForHome();
+    const listings = await cached('home:recent', 60_000, getRecentListingsForHome);
+    res.set('Cache-Control', 'public, max-age=30');
     res.json(listings);
   } catch {
     res.status(500).json({ error: 'Error al obtener publicaciones recientes' });
@@ -177,7 +182,8 @@ export async function homeRecentListings(req: AuthRequest, res: Response): Promi
 
 export async function homePopularListings(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const listings = await getPopularListingsForHome();
+    const listings = await cached('home:popular', 60_000, getPopularListingsForHome);
+    res.set('Cache-Control', 'public, max-age=30');
     res.json(listings);
   } catch {
     res.status(500).json({ error: 'Error al obtener publicaciones populares' });

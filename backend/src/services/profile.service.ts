@@ -1,4 +1,5 @@
 import prisma from '../lib/prisma';
+import { cached } from '../utils/cache';
 
 interface UpdateProfileInput {
   displayName?: string;
@@ -362,7 +363,8 @@ export async function getProfileCompletionStatus(userId: string) {
 
 
 export async function getFeaturedSellers() {
-  const profiles = await prisma.profile.findMany({
+  return cached('home:featured-sellers', 60_000, async () => {
+    const profiles = await prisma.profile.findMany({
     where: {
       user: {
         listings: {
@@ -403,5 +405,6 @@ export async function getFeaturedSellers() {
     totalSales: profile.totalSales,
     totalPurchases: profile.totalPurchases,
     activeListingsCount: profile.user.listings.length,
-  }));
+    }));
+  });
 }
