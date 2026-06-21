@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import { Listing, CardCondition, CardRarity, CardLanguage, ListingType, PaginatedListings } from '@/types';
+import { getCache, setCache } from '@/lib/listCache';
 
 const CONDITIONS: { value: CardCondition; label: string }[] = [
   { value: 'MINT',      label: 'Mint' },
@@ -77,20 +78,32 @@ function MarketplaceContent() {
     page: Number(searchParams.get('page') || 1),
   });
 
-  const fetchListings = useCallback(async () => {
-    setLoading(true);
+const fetchListings = useCallback(async () => {
     setError(false);
 
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([k, v]) => {
+      if (v) params.set(k, String(v));
+    });
+    const key = params.toString();
+
+    // 1. Pintar caché al instante si ya lo vimos antes
+    const cachedData = getCache<PaginatedListings>(key);
+    if (cachedData) {
+      setData(cachedData);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+
+    // 2. Revalidar en segundo plano
     try {
-      const params = new URLSearchParams();
-      Object.entries(filters).forEach(([k, v]) => {
-        if (v) params.set(k, String(v));
-      });
-      const { data: result } = await api.get(`/api/listings?${params.toString()}`);
+      const { data: result } = await api.get(`/api/listings?${key}`);
       setData(result);
-      } catch (err) {
-        console.error('MARKETPLACE LOAD ERROR', err);
-        setError(true);
+      setCache(key, result);
+    } catch (err) {
+      console.error('MARKETPLACE LOAD ERROR', err);
+      if (!cachedData) setError(true); // solo error si no había nada que mostrar
     } finally {
       setLoading(false);
     }

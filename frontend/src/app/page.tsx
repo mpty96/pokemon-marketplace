@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import api from '@/lib/axios';
 import { Listing, CardCondition, FeaturedSeller } from '@/types';
+import { getCache, setCache } from '@/lib/listCache';
 
 const CONDITION_LABELS: Record<CardCondition, string> = {
   MINT: 'Mint',
@@ -31,7 +32,20 @@ export default function HomePage() {
   const popularProducts = popularListings.filter((l) => l.listingType === 'POKEMON_PRODUCT');
   const recentLots = recentListings.filter((l) => l.listingType === 'BULK_LOT');
 
-  useEffect(() => {
+ useEffect(() => {
+    // 1. Pintar caché al instante si existe
+    const cachedRecent  = getCache<Listing[]>('home:recent');
+    const cachedPopular = getCache<Listing[]>('home:popular');
+    const cachedSellers = getCache<FeaturedSeller[]>('home:featured');
+
+    if (cachedRecent && cachedPopular && cachedSellers) {
+      setRecentListings(cachedRecent);
+      setPopularListings(cachedPopular);
+      setFeaturedSellers(cachedSellers);
+      setLoading(false);
+    }
+
+    // 2. Revalidar en segundo plano
     Promise.all([
       api.get('/api/listings/home/recent'),
       api.get('/api/listings/home/popular'),
@@ -41,6 +55,9 @@ export default function HomePage() {
         setRecentListings(recentRes.data);
         setPopularListings(popularRes.data);
         setFeaturedSellers(sellersRes.data);
+        setCache('home:recent', recentRes.data);
+        setCache('home:popular', popularRes.data);
+        setCache('home:featured', sellersRes.data);
       })
       .finally(() => setLoading(false));
   }, []);
