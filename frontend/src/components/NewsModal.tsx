@@ -3,26 +3,33 @@
 import { useEffect, useState } from 'react';
 
 // Subir esta versión cada vez que publiques novedades nuevas → el modal reaparece
-const NEWS_VERSION = '2026-06-20';
 const STORAGE_KEY = 'pm_news_seen';
+const NEWS_VERSION = '2026-06-23-beta';
 
 const NEWS = {
-  date: '20 de junio de 2026',
-  intro: 'Estuvimos trabajando para mejorar tu experiencia. Esto es lo nuevo:',
+  date: 'Junio 2026',
+  intro: 'Hablemos con sinceridad y con cariño:',
   sections: [
     {
-      label: 'Novedades',
+      label: 'Intermitencias existentes',
       items: [
-        'Ahora puedes subir hasta 5 fotos por publicación.',
-        'Galería tipo carrusel en cada publicación: desliza o usa las flechas, y toca una imagen para ampliarla.',
-        'Nueva opción de idioma "Varios" para publicaciones de Lote.',
+        'PSomos conscientes que la página puede tardar en cargar o no mostrar publicaciones por unos minutos. Ya sabemos por qué pasa.',
+        'La buena noticia: ¡es porque están usando PokeMarket y nos quedó chica la casa',
+        'Si te pasa, dale unos minutos o tiempo para volver a entrar.',
       ],
     },
     {
-      label: 'Correcciones',
+      label: 'La verdad sin filtro',
       items: [
-        'Arreglamos las secciones de la portada (recientes y populares) que mostraban menos publicaciones de las que correspondía.',
-        'Al publicar, el mensaje de confirmación ahora indica correctamente si fue una Carta, Producto o Lote.',
+        'Para que aguante más, hay que subir de plan los servidores… pero eso tiene un tiempo de espera hasta fin de mes.',
+        'Te pedimos un poco de paciencia hasta entonces. Todo esto es para brindarte un mejor servicio.',
+      ],
+    },
+    {
+      label: 'Lo que se viene',
+      items: [
+        'Estamos preparando la inauguración oficial de PokeMarket con ¡registro totalmente abierto para todos!',
+        'Gracias por acompañarnos en esta etapa beta y por la paciencia mientras dejamos la plataforma más firme.',
       ],
     },
   ],
