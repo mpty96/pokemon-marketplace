@@ -13,15 +13,15 @@ const NEWS = {
     {
       label: 'Intermitencias existentes',
       items: [
-        'Somos conscientes que la página puede tardar en cargar o no mostrar publicaciones por unos minutos. Ya sabemos por qué pasa.',
-        'La buena noticia: ¡es porque están usando PokeMarket y nos quedó chica la casa',
+        'Somos conscientes de que la página puede tardar en cargar o no mostrar publicaciones por unos minutos. Ya sabemos por qué pasa.',
+        'La buena noticia: ¡es porque están usando PokeMarket y nos quedó chica la casa!',
         'Si te pasa, dale unos minutos o tiempo para volver a entrar.',
       ],
     },
     {
       label: 'La verdad sin filtro',
       items: [
-        'Para que aguante más, hay que subir de plan los servidores… pero eso tiene un tiempo de espera hasta fin de mes.',
+        'Para que aguante más, hay que subir de plan los servidores… pero lamentablemente eso tiene un tiempo de espera hasta fin de mes.',
         'Te pedimos un poco de paciencia hasta entonces. Todo esto es para brindarte un mejor servicio.',
       ],
     },
