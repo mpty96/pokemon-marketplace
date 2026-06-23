@@ -1,46 +1,65 @@
-import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useEffect, useState, useCallback } from 'react';
+import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
+import { useSocket } from '@/hooks/useSocket';
 
-let socketInstance: Socket | null = null;
+let globalCount = 0;
+let silenced    = false;
+let listeners:  ((n: number) => void)[] = [];
 
-export function useSocket() {
-  const accessToken = useAuthStore((s) => s.accessToken);
-  const [socket, setSocket] = useState<Socket | null>(socketInstance);
+function notifyListeners(n: number) {
+  globalCount = n;
+  listeners.forEach((fn) => fn(n));
+}
+
+export function clearUnread() {
+  silenced = true;
+  notifyListeners(0);
+}
+
+export function useUnreadCount() {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const socket = useSocket();
+  const [count, setCount] = useState(globalCount);
 
   useEffect(() => {
-    // Sin token → cerrar si existía
-    if (!accessToken) {
-      if (socketInstance) {
-        socketInstance.disconnect();
-        socketInstance = null;
-        setSocket(null);
+    const handler = (n: number) => setCount(n);
+    listeners.push(handler);
+    return () => { listeners = listeners.filter((l) => l !== handler); };
+  }, []);
+
+  const refresh = useCallback(async () => {
+    if (!isAuthenticated) return;
+    try {
+      const { data } = await api.get('/api/chat/unread');
+      const newCount = data.count;
+      if (silenced && newCount > globalCount) {
+        silenced = false; // nuevo mensaje real → reactivar
       }
-      return;
+      if (!silenced) notifyListeners(newCount);
+    } catch { /* silencioso */ }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    refresh();
+    const interval = setInterval(refresh, 30000);
+    return () => clearInterval(interval);
+  }, [refresh]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    function handleUnreadUpdate(payload: { count: number }) {
+      silenced = false;
+      notifyListeners(payload.count);
     }
 
-    // Crear UNA sola vez
-    if (!socketInstance) {
-      socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
-        auth: { token: accessToken },
-        transports: ['websocket', 'polling'],
-        reconnectionAttempts: 10,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
-      });
+    socket.on('unread_count_updated', handleUnreadUpdate);
 
-      socketInstance.on('connect_error', (err) => {
-        console.error('Socket error:', err.message);
-      });
+    return () => {
+      socket.off('unread_count_updated', handleUnreadUpdate);
+    };
+  }, [socket]);
 
-      setSocket(socketInstance);
-    } else {
-      // Ya existe: solo actualizar el token para futuras reconexiones,
-      // SIN desconectar la conexión actual
-      socketInstance.auth = { token: accessToken };
-      setSocket(socketInstance);
-    }
-  }, [accessToken]);
-
-  return socket;
+  return count;
 }
