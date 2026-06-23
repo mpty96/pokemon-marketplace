@@ -13,7 +13,7 @@ const NEWS = {
     {
       label: 'Intermitencias existentes',
       items: [
-        'PSomos conscientes que la página puede tardar en cargar o no mostrar publicaciones por unos minutos. Ya sabemos por qué pasa.',
+        'Somos conscientes que la página puede tardar en cargar o no mostrar publicaciones por unos minutos. Ya sabemos por qué pasa.',
         'La buena noticia: ¡es porque están usando PokeMarket y nos quedó chica la casa',
         'Si te pasa, dale unos minutos o tiempo para volver a entrar.',
       ],
