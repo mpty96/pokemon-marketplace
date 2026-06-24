@@ -4,32 +4,31 @@ import { useEffect, useState } from 'react';
 
 // Subir esta versión cada vez que publiques novedades nuevas → el modal reaparece
 const STORAGE_KEY = 'pm_news_seen';
-const NEWS_VERSION = '2026-06-23-beta';
+const NEWS_VERSION = '2026-06-24-beta-2';
 
 const NEWS = {
-  date: 'Junio 2026',
-  intro: 'Hablemos con sinceridad y con cariño:',
+  date: '23 de Junio 2026',
+  intro: 'Buenas noticias para contarte',
   sections: [
     {
-      label: 'Intermitencias existentes',
+      label: '¡Migración exitosa!',
       items: [
-        'Somos conscientes de que la página puede tardar en cargar o no mostrar publicaciones por unos minutos. Ya sabemos por qué pasa.',
-        'La buena noticia: ¡es porque están usando PokeMarket y nos quedó chica la casa!',
-        'Si te pasa, dale unos minutos o tiempo para volver a entrar.',
+        'Migramos nuestra base de datos a un servicio de pago mejor y más estable.',
+        'Hicimos todo el esfuerzo económico posible para brindarte el mejor servicio lo antes posible y detener las intermitencias.',
       ],
     },
     {
-      label: 'La verdad sin filtro',
+      label: 'Gracias por la paciencia',
       items: [
-        'Para que aguante más, hay que subir de plan los servidores… pero lamentablemente eso tiene un tiempo de espera hasta fin de mes.',
-        'Te pedimos un poco de paciencia hasta entonces. Todo esto es para brindarte un mejor servicio.',
+        'Sabemos que estos días hubo intermitencias y lo lamentamos de verdad.',
+        'Gracias por acompañarnos y aguantar mientras dejábamos la plataforma más firme.',
       ],
     },
     {
-      label: 'Lo que se viene',
+      label: 'Antes de la inauguración',
       items: [
-        'Estamos preparando la inauguración oficial de PokeMarket con ¡registro totalmente abierto para todos!',
-        'Gracias por acompañarnos en esta etapa beta y por la paciencia mientras dejamos la plataforma más firme.',
+        '¡Se viene la inauguración oficial de PokeMarket con registro abierto para todos!',
+        'Aprovecha de publicar todos tus artículos antes de la inauguración.',
       ],
     },
   ],
