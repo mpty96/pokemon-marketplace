@@ -1,4 +1,4 @@
-name: Backup diario Supabase
+name: Railway Backup diario
 
 on:
   schedule:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Instalar cliente PostgreSQL compatible con el servidor
         env:
-          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+          DATABASE_URL: ${{ secrets.RAILWAY_DB_URL }}
         run: |
           set -e
           sudo apt-get update
@@ -25,7 +25,7 @@ jobs:
 
       - name: Crear respaldo (solo public, UTF-8, comprimido)
         env:
-          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+          DATABASE_URL: ${{ secrets.RAILWAY_DB_URL }}
         run: |
           set -o pipefail
           mkdir -p backups
