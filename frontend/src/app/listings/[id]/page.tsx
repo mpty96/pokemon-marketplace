@@ -12,6 +12,7 @@ import {
 } from '@/types';
 import { useAuthStore } from '@/store/auth.store';
 import Link from 'next/link';
+import { cl } from '@/lib/cloudinary';
 
 
 const CONDITION_LABELS: Record<CardCondition, string> = {
@@ -171,7 +172,7 @@ export default function ListingDetailPage() {
             <div className="p-4 sm:p-6">
               <div className="relative">
                 <img
-                  src={listing.images[activeImg]}
+                  src={cl(listing.images[activeImg], 600)}
                   alt={listing.title}
                   onClick={() => setLightboxOpen(true)}
                   onTouchStart={handleTouchStart}
@@ -198,7 +199,7 @@ export default function ListingDetailPage() {
                 <div className="flex gap-2 mt-3 flex-wrap">
                   {listing.images.map((src, i) => (
                     <button key={i} onClick={() => setActiveImg(i)}>
-                      <img src={src} alt={`img-${i}`}
+                      <img src={cl(src, 150)} alt={`img-${i}`}
                         className={`w-16 h-16 object-cover rounded border-2 transition-colors
                           ${activeImg === i ? 'border-[var(--primary)]' : 'border-[var(--border)]'}`} />
                     </button>
@@ -575,7 +576,7 @@ export default function ListingDetailPage() {
               aria-label="Cerrar">×</button>
 
             <img
-              src={listing.images[activeImg]}
+              src={cl(listing.images[activeImg], 1200)}
               alt={listing.title}
               onClick={(e) => e.stopPropagation()}
               onTouchStart={handleTouchStart}

@@ -12,6 +12,7 @@ import { RatingCard } from '@/components/RatingCard';
 import { RatingSaleData, Rating } from '@/types';
 import Link from 'next/link';
 import { clearUnread } from '@/hooks/useUnreadCount';
+import { cl } from '@/lib/cloudinary';
 
 export default function ChatPage() {
   const { id }   = useParams<{ id: string }>();
@@ -276,7 +277,7 @@ return (
   {/* Header del chat */}
   <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] p-3 sm:p-4 flex items-center gap-3 sm:gap-4 min-w-0">
     <button onClick={() => router.back()} className="text-[var(--muted-2)] hover:text-[var(--foreground)]">←</button>
-      <img src={listing.images[0]} alt={listing.title}
+      <img src={cl(listing.images[0], 600)} alt={listing.title}
         className="w-10 h-10 sm:w-12 sm:h-12 object-contain rounded-lg bg-[var(--surface-2)] shrink-0" />
   <div className="flex-1 min-w-0">
     <h2 className="font-semibold text-[var(--foreground)] truncate text-sm sm:text-base">{listing.title}</h2>
@@ -408,7 +409,7 @@ return (
                             className="block overflow-hidden rounded-lg bg-black/10"
                           >
                             <img
-                              src={url}
+                              src={cl(url, 600)}
                               alt="Imagen enviada"
                               className={`w-full rounded-lg object-contain ${
                                 msg.imageUrls.length === 1 ? 'max-h-80' : 'max-h-52'
@@ -550,7 +551,7 @@ return (
           </button>
 
           <img
-            src={selectedImage}
+            src={cl(selectedImage, 1200)}
             alt="Imagen ampliada"
             className="max-w-full max-h-[85vh] object-contain rounded-lg"
             onClick={(e) => e.stopPropagation()}

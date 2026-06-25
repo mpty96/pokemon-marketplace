@@ -7,6 +7,7 @@ import api from '@/lib/axios';
 import { RatingCard } from '@/components/RatingCard';
 import { Rating, Listing, WantedCard } from '@/types';
 import { useAuthStore } from '@/store/auth.store';
+import { cl } from '@/lib/cloudinary';
 
 interface PublicProfile {
   username: string;
@@ -130,7 +131,7 @@ function UserLevelBadge({
             >
               {unlocked ? (
                 <img
-                  src={item.image}
+                  src={cl(item.image, 600)}
                   alt={item.label}
                   className="w-4.5 h-4.5 sm:w-6 sm:h-6 object-contain"
                 />
@@ -229,7 +230,7 @@ export default function PublicProfilePage() {
         <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 sm:gap-4 min-w-0">
           <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[var(--info-bg)] overflow-hidden flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
             {profile?.avatarUrl ? (
-              <img src={profile.avatarUrl} alt={data.username} className="w-full h-full object-cover" />
+              <img src={cl(profile.avatarUrl, 100)} alt={data.username} className="w-full h-full object-cover" />
             ) : (
               data.username[0].toUpperCase()
             )}
@@ -412,7 +413,7 @@ export default function PublicProfilePage() {
                 <div className="w-16 h-16 rounded-lg bg-[var(--surface)] border border-[var(--border)] overflow-hidden flex-shrink-0 flex items-center justify-center">
                   {card.imageUrl ? (
                     <img
-                      src={card.imageUrl}
+                      src={cl(card.imageUrl, 600)}
                       alt={card.name}
                       className="w-full h-full object-contain"
                     />
@@ -478,7 +479,7 @@ export default function PublicProfilePage() {
             >
               <div className="aspect-square bg-[var(--surface)] overflow-hidden">
                 <img
-                  src={listing.images[0]}
+                  src={cl(listing.images[0], 600)}
                   alt={listing.cardName}
                   className="w-full h-full object-contain hover:scale-105 transition-transform duration-200"
                 />

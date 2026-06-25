@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import api from '@/lib/axios';
+import { cl } from '@/lib/cloudinary';
 
 interface Transaction {
   id: string;
@@ -106,7 +107,7 @@ export default function TransaccionesPage() {
                 <Link href={`/listings/${tx.listingId}`} className="flex-shrink-0">
                   <div className="w-14 h-14 rounded-lg overflow-hidden bg-[var(--surface-2)]">
                     {tx.image ? (
-                      <img src={tx.image} alt={tx.title} className="w-full h-full object-contain" />
+                      <img src={cl(tx.image, 200)} alt={tx.title} className="w-full h-full object-contain" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-2xl"> </div>
                     )}
@@ -116,7 +117,7 @@ export default function TransaccionesPage() {
                 <div className="flex-shrink-0 opacity-60 cursor-not-allowed">
                   <div className="w-14 h-14 rounded-lg overflow-hidden bg-[var(--surface-2)]">
                     {tx.image ? (
-                      <img src={tx.image} alt={tx.title} className="w-full h-full object-contain" />
+                      <img src={cl(tx.image, 200)} alt={tx.title} className="w-full h-full object-contain" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-2xl"> </div>
                     )}

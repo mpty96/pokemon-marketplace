@@ -6,6 +6,7 @@ import Link from 'next/link';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
 import { Listing, WantedCard } from '@/types';
+import { cl } from '@/lib/cloudinary';
 
 type Tab = 'active' | 'history';
 
@@ -154,7 +155,7 @@ async function handleDeleteWantedCard(id: string) {
         <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 sm:gap-4">
           <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[var(--info-bg)] overflow-hidden flex items-center justify-center text-2xl font-bold text-[var(--info-fg)]">
             {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt={user.username} className="w-full h-full object-cover" />
+              <img src={cl(user.avatarUrl, 100)} alt={user.username} className="w-full h-full object-cover" />
             ) : (
               user?.username?.[0]?.toUpperCase()
             )}
@@ -341,7 +342,7 @@ async function handleDeleteWantedCard(id: string) {
                   <div className="w-16 h-16 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] overflow-hidden flex-shrink-0 flex items-center justify-center">
                     {card.imageUrl ? (
                       <img
-                        src={card.imageUrl}
+                        src={cl(card.imageUrl, 600)}
                         alt={card.name}
                         className="w-full h-full object-contain"
                       />
@@ -415,7 +416,7 @@ async function handleDeleteWantedCard(id: string) {
                   }`}
                 >
                 <img
-                  src={listing.images?.[0] || '/placeholder.png'}
+                  src={cl(listing.images?.[0], 600) || '/placeholder.png'}
                   alt={listing.title}
                   className="w-14 h-14 object-contain rounded-lg bg-[var(--surface-2)] flex-shrink-0"
                 />

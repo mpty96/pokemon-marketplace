@@ -6,6 +6,7 @@ import Link from 'next/link';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/store/auth.store';
 import { ConversationPreview } from '@/types';
+import { cl } from '@/lib/cloudinary';
 
 export default function MensajesPage() {
   const router = useRouter();
@@ -286,7 +287,7 @@ function ConversationCard({
     >
       <div className="w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden bg-[var(--surface-2)]">
         {conv.listingImage ? (
-          <img src={conv.listingImage} alt={conv.listingTitle} className="w-full h-full object-contain" />
+          <img src={cl(conv.listingImage, 200)} alt={conv.listingTitle} className="w-full h-full object-contain" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-2xl"> </div>
         )}
