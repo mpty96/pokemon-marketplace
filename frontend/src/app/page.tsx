@@ -5,6 +5,7 @@ import Link from 'next/link';
 import api from '@/lib/axios';
 import { Listing, CardCondition, FeaturedSeller } from '@/types';
 import { getCache, setCache } from '@/lib/listCache';
+import { cl } from '@/lib/cloudinary';
 
 const CONDITION_LABELS: Record<CardCondition, string> = {
   MINT: 'Mint',
@@ -335,7 +336,7 @@ function ListingCard({ listing }: { listing: Listing }) {
       <Link href={`/listings/${listing.id}`} className="block group">
         <div className="aspect-square overflow-hidden bg-[var(--surface-2)]">
           <img
-            src={listing.images[0]}
+            src={cl(listing.images[0], 600)}
             alt={listing.title}
             draggable={false}
             onDragStart={(e) => e.preventDefault()}
@@ -376,7 +377,7 @@ function ListingCard({ listing }: { listing: Listing }) {
       >
         <div className="w-6 h-6 rounded-full bg-[var(--info-bg)] flex items-center justify-center text-xs font-bold text-[var(--info-fg)] flex-shrink-0 overflow-hidden">
           {listing.seller.profile?.avatarUrl ? (
-            <img src={listing.seller.profile.avatarUrl} alt={listing.seller.username} className="w-full h-full object-cover" />
+            <img src={cl(listing.seller.profile.avatarUrl, 100)} alt={listing.seller.username} className="w-full h-full object-cover" />
           ) : (
             listing.seller.username[0].toUpperCase()
           )}
@@ -424,7 +425,7 @@ function FeaturedSellersSection({ sellers }: { sellers: FeaturedSeller[] }) {
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-[var(--info-bg)] flex items-center justify-center font-bold text-[var(--info-fg)] overflow-hidden">
                   {seller.avatarUrl ? (
-                    <img src={seller.avatarUrl} alt={seller.username} className="w-full h-full object-cover" />
+                    <img src={cl(seller.avatarUrl, 100)} alt={seller.username} className="w-full h-full object-cover" />
                   ) : (
                     seller.username[0].toUpperCase()
                   )}

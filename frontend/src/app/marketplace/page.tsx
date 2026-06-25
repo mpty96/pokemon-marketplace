@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import { Listing, CardCondition, CardRarity, CardLanguage, ListingType, PaginatedListings } from '@/types';
 import { getCache, setCache } from '@/lib/listCache';
+import { cl } from '@/lib/cloudinary';
 
 const CONDITIONS: { value: CardCondition; label: string }[] = [
   { value: 'MINT',      label: 'Mint' },
@@ -422,7 +423,7 @@ function MarketplaceCard({ listing }: { listing: Listing }) {
     >
       <div className="aspect-square overflow-hidden bg-[var(--surface-2)]">
         <img
-          src={listing.images[0]}
+          src={cl(listing.images[0], 600)}
           alt={listing.title}
           className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
         />
