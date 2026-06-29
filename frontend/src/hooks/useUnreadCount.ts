@@ -42,7 +42,7 @@ export function useUnreadCount() {
 
   useEffect(() => {
     refresh();
-    const interval = setInterval(refresh, 30000);
+    const interval = setInterval(refresh, 60000);
     return () => clearInterval(interval);
   }, [refresh]);
 
