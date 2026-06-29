@@ -4,22 +4,34 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/axios';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: '', username: '', password: '' });
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
+  // Coincidencia: solo marca error si el usuario ya escribió algo en el segundo campo
+  const passwordsMismatch = confirmPassword.length > 0 && form.password !== confirmPassword;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+
+    if (form.password !== confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await api.post('/api/auth/register', {...form, acceptedTerms,});
+      await api.post('/api/auth/register', { ...form, acceptedTerms });
       setSuccess('¡Cuenta creada! Revisa tu email para verificar tu cuenta.');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Error al registrarse');
@@ -82,15 +94,59 @@ export default function RegisterPage() {
               <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
                 Contraseña
               </label>
-              <input
-                type="password"
-                required
-                minLength={8}
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                placeholder="Mínimo 8 caracteres"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  minLength={8}
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  className="w-full border border-[var(--border)] rounded-lg px-3 py-2 pr-10 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                  placeholder="Mínimo 8 caracteres"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  className="absolute inset-y-0 right-0 px-3 flex items-center text-[var(--muted)] hover:text-[var(--foreground)]"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+                Confirmar contraseña
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  minLength={8}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={`w-full border rounded-lg px-3 py-2 pr-10 bg-[var(--surface)] text-[var(--foreground)] focus:outline-none focus:ring-2 ${
+                    passwordsMismatch
+                      ? 'border-[var(--danger-fg)] focus:ring-[var(--danger-fg)]'
+                      : 'border-[var(--border)] focus:ring-[var(--primary)]'
+                  }`}
+                  placeholder="Repite tu contraseña"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  className="absolute inset-y-0 right-0 px-3 flex items-center text-[var(--muted)] hover:text-[var(--foreground)]"
+                >
+                  {showPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
+              {passwordsMismatch && (
+                <p className="text-xs text-[var(--danger-fg)] mt-1">
+                  Las contraseñas no coinciden
+                </p>
+              )}
             </div>
 
             <div className="flex items-start gap-2 mt-3">
@@ -112,8 +168,9 @@ export default function RegisterPage() {
               </p>
             </div>
 
-            <button type="submit" 
-              disabled={!acceptedTerms}
+            <button
+              type="submit"
+              disabled={!acceptedTerms || loading || passwordsMismatch}
               className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-60 text-[var(--primary-foreground)] font-medium py-2 rounded-lg transition-colors"
             >
               {loading ? 'Creando cuenta...' : 'Crear cuenta'}
@@ -131,4 +188,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-
