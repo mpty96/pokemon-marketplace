@@ -46,7 +46,7 @@ export default function HomePage() {
       setLoading(false);
     }
 
-    // 2. Revalidar en segundo plano
+// 2. Revalidar en segundo plano
     Promise.all([
       api.get('/api/listings/home/recent'),
       api.get('/api/listings/home/popular'),
@@ -59,6 +59,28 @@ export default function HomePage() {
         setCache('home:recent', recentRes.data);
         setCache('home:popular', popularRes.data);
         setCache('home:featured', sellersRes.data);
+      })
+      .catch((err) => {
+        console.error('Error cargando el inicio:', err);
+        // Si no había caché para mostrar, reintenta una vez tras breve espera
+        if (!cachedRecent || !cachedPopular || !cachedSellers) {
+          setTimeout(() => {
+            Promise.all([
+              api.get('/api/listings/home/recent'),
+              api.get('/api/listings/home/popular'),
+              api.get('/api/profile/featured-sellers'),
+            ])
+              .then(([recentRes, popularRes, sellersRes]) => {
+                setRecentListings(recentRes.data);
+                setPopularListings(popularRes.data);
+                setFeaturedSellers(sellersRes.data);
+                setCache('home:recent', recentRes.data);
+                setCache('home:popular', popularRes.data);
+                setCache('home:featured', sellersRes.data);
+              })
+              .catch((e) => console.error('Reintento falló:', e));
+          }, 1500);
+        }
       })
       .finally(() => setLoading(false));
   }, []);
