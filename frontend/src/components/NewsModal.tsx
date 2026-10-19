@@ -4,31 +4,31 @@ import { useEffect, useState } from 'react';
 
 // Subir esta versión cada vez que publiques novedades nuevas → el modal reaparece
 const STORAGE_KEY = 'pm_news_seen';
-const NEWS_VERSION = '2026-06-24-beta-2';
+const NEWS_VERSION = '2026-mantencion-1';
 
 const NEWS = {
-  date: '23 de Junio 2026',
-  intro: 'Buenas noticias para contarte',
+  date: 'Aviso importante',
+  intro: 'Te contamos con transparencia lo que está pasando:',
   sections: [
     {
-      label: '¡Migración exitosa!',
+      label: 'Servicio en pausa',
       items: [
-        'Migramos nuestra base de datos a un servicio de pago mejor y más estable.',
-        'Hicimos todo el esfuerzo económico posible para brindarte el mejor servicio lo antes posible y detener las intermitencias.',
+        'PokeMarket está temporalmente en mantención: puede que no veas publicaciones ni puedas iniciar sesión o enviar mensajes.',
+        'Estamos reactivando el servicio de base de datos de la plataforma.',
       ],
     },
     {
-      label: 'Gracias por la paciencia',
+      label: 'Cuándo volvemos',
       items: [
-        'Sabemos que estos días hubo intermitencias y lo lamentamos de verdad.',
-        'Gracias por acompañarnos y aguantar mientras dejábamos la plataforma más firme.',
+        'Estimamos retomar el servicio a fin de mes.',
+        'Apenas esté listo, lo avisaremos por este mismo medio.',
       ],
     },
     {
-      label: 'Antes de la inauguración',
+      label: 'Gracias',
       items: [
-        '¡Se viene la inauguración oficial de PokeMarket con registro abierto para todos!',
-        'Aprovecha de publicar todos tus artículos antes de la inauguración.',
+        'Agradecemos tu paciencia y que sigas apoyando PokeMarket en su etapa beta.',
+        'Seguimos trabajando para la inauguración oficial con registro abierto.',
       ],
     },
   ],
