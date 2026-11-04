@@ -13,41 +13,68 @@ export default function ConsejosPage() {
             />
           </div>
 
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] mb-3">
-              Bienvenido a PokeMarket Chile
-            </h1>
+          <div className="space-y-6">
+            <section>
+              <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] mb-3">
+                Bienvenido a PokeMarket Chile
+              </h1>
+              <div className="text-sm sm:text-base text-[var(--muted)] leading-6 space-y-3">
+                <p>
+                  PokeMarket es un espacio chileno para comprar y vender cartas Pokémon de forma
+                  más segura y transparente. Está pensado para coleccionistas, vendedores y también
+                  para quienes recién comienzan.
+                </p>
+                <p>
+                  Estamos en <span className="font-semibold text-[var(--foreground)]">beta cerrada</span>:
+                  una etapa de prueba con un grupo reducido de personas, donde probamos la plataforma
+                  y la mejoramos con sus comentarios. Quienes participen activamente reciben el
+                  distintivo <span className="font-semibold text-[var(--foreground)]">Beta Tester</span>,
+                  que se mantiene en su perfil.
+                </p>
+              </div>
+            </section>
 
-          <div className="text-sm sm:text-base text-[var(--muted)] leading-6 mb-5 space-y-4">
-            <p>
-              PokeMarket nace como un proyecto enfocado exclusivamente en la comunidad de Pokémon TCG Chile.
-              La idea es construir un espacio moderno, seguro y transparente para coleccionistas,
-              vendedores y personas que recién comienzan en este mundo.
-            </p>
-
-            <p>
-              Actualmente nos encontramos en una fase de beta cerrada donde buscamos personas interesadas
-              en apoyar el crecimiento inicial de la plataforma, probar sistemas y contribuir a crear
-              una experiencia realmente confiable para toda la comunidad.
-            </p>
-
-            <p>
-              Todas las personas que participen activamente durante esta etapa serán reconocidas con
-              un distintivo especial de <span className="font-semibold text-[var(--foreground)]">Beta Tester</span>,
-              el cual permanecerá ligado a su perfil dentro de PokeMarket.
-            </p>
-          </div>
+            <section>
+              <h2 className="text-xl sm:text-2xl font-bold text-[var(--foreground)] mb-3">
+                ¿Quiénes somos?
+              </h2>
+              <div className="text-sm sm:text-base text-[var(--muted)] leading-6 space-y-3">
+                <p>
+                  PokeMarket es un proyecto independiente hecho en Chile, por y para la comunidad
+                  del Pokémon TCG.
+                </p>
+                <p>
+                  <span className="font-semibold text-[var(--foreground)]">¿Qué es el Pokémon TCG?</span>{' '}
+                  Son las siglas de Trading Card Game, es decir, juego de cartas coleccionables.
+                  Son las cartas de Pokémon: se coleccionan, se intercambian y también se usan para
+                  jugar. Algunas valen mucho más que otras según su rareza, su edición y su estado.
+                </p>
+                <p>
+                  <span className="font-semibold text-[var(--foreground)]">¿Qué hacemos?</span>{' '}
+                  Es un lugar donde las personas publican sus cartas y productos, y otras pueden
+                  contactarlas para comprarlos. Cada usuario tiene perfil, calificaciones e historial
+                  de ventas visible, para que sepas con quién estás tratando.
+                </p>
+              </div>
+            </section>
 
             <div className="space-y-4 text-sm text-[var(--muted)] leading-6">
               <section>
                 <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
                   Verifica la carta o producto
                 </h2>
+                <p className="mb-2">Antes de comprar, pide fotos claras (con flash si hace falta) de:</p>
+                <ul className="list-disc pl-5 space-y-1 mb-2">
+                  <li>el frente y el reverso de la carta,</li>
+                  <li>las cuatro esquinas, por ambos lados,</li>
+                  <li>los bordes y la superficie,</li>
+                  <li>el holograma (la parte brillante), si tiene,</li>
+                  <li>cualquier daño visible.</li>
+                </ul>
                 <p>
-                  Solicita fotos claras o directamente con flash del frente de la carta, 
-									su reverso, las cuatro esquinas de ambas caras, bordes, superficie, holograma y/o cualquier daño visible. 
-                  Compara que la carta que buscas corresponde con la de la publicación,
-                  identificando nombre, edición, número en el set, idioma y condición.
+                  Luego confirma que coincide con la publicación: nombre, edición (el set o
+                  colección a la que pertenece), número de la carta, idioma y condición (qué tan
+                  cuidada está).
                 </p>
               </section>
 
@@ -56,30 +83,33 @@ export default function ConsejosPage() {
                   Cuida tu información personal
                 </h2>
                 <p>
-                  No compartas contraseñas, códigos de verificación, claves bancarias ni
-                  información sensible. PokeMarket JAMÁS te pedirá este tipo de datos por chat.
+                  No compartas contraseñas, códigos de verificación ni claves bancarias.
+                  PokeMarket <span className="font-semibold text-[var(--foreground)]">nunca</span> te
+                  pedirá estos datos por chat.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
-                  Desconfía de señales sospechosas
+                  Desconfía de las señales sospechosas
                 </h2>
-                <p>
-                  Ten cuidado con precios demasiado bajos, presión para pagar rápido,
-                  usuarios que evitan enviar fotos adicionales o que no quieren juntarse en un lugar público.
-                </p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Precios demasiado bajos.</li>
+                  <li>Presión para pagar rápido.</li>
+                  <li>Usuarios que no quieren enviar más fotos.</li>
+                  <li>Quien no acepta juntarse en un lugar público.</li>
+                </ul>
               </section>
 
               <section>
                 <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
-                  Usa reputación y reportes
+                  Usa la reputación y los reportes
                 </h2>
                 <p>
-                  Revisa las calificaciones, strikes recibidos y nivel del usuario.
-									Utiliza la sección Transacciones para buscar las compras y ventas realizadas por un usuario.
-                  Si detectas actividad sospechosa o las cosas no resultaron seguras para ti,
-									inspira poca confianza, o dañaron tu integridad personal, utiliza el sistema de reportes.
+                  Revisa las calificaciones del usuario, sus strikes (advertencias) y su nivel. En
+                  la sección <span className="font-medium text-[var(--foreground)]">Transacciones</span>{' '}
+                  puedes ver las compras y ventas de cada persona. Si algo te parece sospechoso o no
+                  resultó seguro, usa el sistema de reportes.
                 </p>
               </section>
 
@@ -87,12 +117,11 @@ export default function ConsejosPage() {
                 <h2 className="text-[15px] sm:text-base font-bold text-[var(--foreground)] mb-2">
                   Transparencia de la plataforma
                 </h2>
-
                 <div className="space-y-3">
                   <p>
-                    La sección <span className="font-medium text-[var(--foreground)]">Transacciones</span>
-                    permite visualizar ventas completadas públicamente dentro de la plataforma,
-                    ayudando a generar transparencia y demostrar movimiento real dentro del marketplace.
+                    La sección <span className="font-medium text-[var(--foreground)]">Transacciones</span>{' '}
+                    muestra públicamente las ventas completadas, para que veas que hay movimiento
+                    real. Cada venta indica:
                   </p>
 
                   <div className="flex flex-wrap gap-2 text-xs">
@@ -113,8 +142,8 @@ export default function ConsejosPage() {
                   </div>
 
                   <p>
-                    Las interacciones entre usuarios siguen ocurriendo únicamente mediante publicaciones activas
-                    y el botón <span className="font-medium text-[var(--foreground)]">Contactar Vendedor</span>.
+                    Las conversaciones entre usuarios ocurren solo desde una publicación activa, con
+                    el botón <span className="font-medium text-[var(--foreground)]">Contactar Vendedor</span>.
                   </p>
                 </div>
               </section>
@@ -122,11 +151,10 @@ export default function ConsejosPage() {
 
             <Link
               href="/marketplace"
-              className="inline-block mt-6 bg-[var(--primary)] text-[var(--primary-foreground)] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[var(--primary-hover)]"
+              className="inline-block bg-[var(--primary)] text-[var(--primary-foreground)] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[var(--primary-hover)]"
             >
               Ir al marketplace
             </Link>
-            
           </div>
         </div>
       </div>
