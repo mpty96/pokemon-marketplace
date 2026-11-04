@@ -16,12 +16,16 @@ export default function ConsejosPage() {
           <div className="space-y-6">
             <section>
               <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] mb-3">
-                Bienvenido a PokeMarket Chile
+                Bienvenido a PokeMarket
               </h1>
+              <h2 className="text-xl sm:text-2xl font-bold text-[var(--foreground)] mb-3">
+                ¿Quiénes somos?
+              </h2>
               <div className="text-sm sm:text-base text-[var(--muted)] leading-6 space-y-3">
                 <p>
-                  PokeMarket es un espacio chileno para comprar y vender cartas Pokémon de forma
-                  más segura y transparente. Está pensado para coleccionistas, vendedores y también
+                  PokeMarket es un proyecto independiente hecho en Chile, por y para la comunidad
+                  del Pokémon TCG, pensado para la compra y venta de cartas Pokémon de forma más
+                  segura y transparente. Está pensado para coleccionistas, vendedores y también
                   para quienes recién comienzan.
                 </p>
                 <p>
@@ -31,29 +35,19 @@ export default function ConsejosPage() {
                   distintivo <span className="font-semibold text-[var(--foreground)]">Beta Tester</span>,
                   que se mantiene en su perfil.
                 </p>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-xl sm:text-2xl font-bold text-[var(--foreground)] mb-3">
-                ¿Quiénes somos?
-              </h2>
-              <div className="text-sm sm:text-base text-[var(--muted)] leading-6 space-y-3">
                 <p>
-                  PokeMarket es un proyecto independiente hecho en Chile, por y para la comunidad
-                  del Pokémon TCG.
-                </p>
-                <p>
-                  <span className="font-semibold text-[var(--foreground)]">¿Qué es el Pokémon TCG?</span>{' '}
+                  <span className="font-semibold text-[var(--foreground)]">¿Qué es TCG?</span>{' '}
                   Son las siglas de Trading Card Game, es decir, juego de cartas coleccionables.
-                  Son las cartas de Pokémon: se coleccionan, se intercambian y también se usan para
-                  jugar. Algunas valen mucho más que otras según su rareza, su edición y su estado.
+                  En este caso, son las cartas Pokémon: se coleccionan, se intercambian, se compran
+                  y venden, y también se usan para jugar. Algunas valen mucho más que otras según
+                  su rareza, su edición y su estado.
                 </p>
                 <p>
                   <span className="font-semibold text-[var(--foreground)]">¿Qué hacemos?</span>{' '}
-                  Es un lugar donde las personas publican sus cartas y productos, y otras pueden
-                  contactarlas para comprarlos. Cada usuario tiene perfil, calificaciones e historial
-                  de ventas visible, para que sepas con quién estás tratando.
+                  Creamos un lugar donde las personas pueden publicar sus cartas o productos y
+                  contactarse para acordar compras, ventas o intercambios. Cada usuario tiene
+                  perfil, calificaciones e historial de ventas visible, para que sepas con quién
+                  estás tratando.
                 </p>
               </div>
             </section>
