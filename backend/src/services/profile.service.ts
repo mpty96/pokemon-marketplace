@@ -1,5 +1,6 @@
 import prisma from '../lib/prisma';
 import { cached } from '../utils/cache';
+import sharp from 'sharp';
 
 interface UpdateProfileInput {
   displayName?: string;
@@ -11,10 +12,14 @@ interface UpdateProfileInput {
   avatarFile?: Express.Multer.File;
 }
 
-function fileToDataUrl(file?: Express.Multer.File): string | null {
+async function fileToDataUrl(file?: Express.Multer.File): Promise<string | null> {
   if (!file) return null;
-  const base64 = file.buffer.toString('base64');
-  return `data:${file.mimetype};base64,${base64}`;
+  const resized = await sharp(file.buffer)
+    .rotate()
+    .resize(192, 192, { fit: 'cover' })
+    .webp({ quality: 75 })
+    .toBuffer();
+  return `data:image/webp;base64,${resized.toString('base64')}`;
 }
 
 function normalizeRut(rut?: string): string | null {
@@ -151,7 +156,7 @@ export async function upsertMyProfile(userId: string, data: UpdateProfileInput) 
     if (phoneInUse) throw new Error('PHONE_IN_USE');
   }
 
-  const avatarFromFile = fileToDataUrl(data.avatarFile);
+  const avatarFromFile = await fileToDataUrl(data.avatarFile);
   const finalAvatarUrl =
     avatarFromFile ||
     data.avatarUrl?.trim() ||
