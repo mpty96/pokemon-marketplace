@@ -65,6 +65,11 @@ export async function updateMyProfileController(req: AuthRequest, res: Response)
       return;
     }
 
+    if (error.message === 'INVALID_IMAGE') {
+      res.status(400).json({ error: 'La imagen no es válida. Usa una foto JPG, PNG o WEBP.' });
+      return;
+    }
+
     res.status(500).json({ error: 'Error al actualizar perfil' });
   }
 }

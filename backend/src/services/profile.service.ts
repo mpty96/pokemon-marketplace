@@ -14,12 +14,16 @@ interface UpdateProfileInput {
 
 async function fileToDataUrl(file?: Express.Multer.File): Promise<string | null> {
   if (!file) return null;
-  const resized = await sharp(file.buffer)
-    .rotate()
-    .resize(192, 192, { fit: 'cover' })
-    .webp({ quality: 75 })
-    .toBuffer();
-  return `data:image/webp;base64,${resized.toString('base64')}`;
+  try {
+    const resized = await sharp(file.buffer, { limitInputPixels: 50_000_000 })
+      .rotate()
+      .resize(192, 192, { fit: 'cover' })
+      .webp({ quality: 75 })
+      .toBuffer();
+    return `data:image/webp;base64,${resized.toString('base64')}`;
+  } catch {
+    throw new Error('INVALID_IMAGE');
+  }
 }
 
 function normalizeRut(rut?: string): string | null {
@@ -157,11 +161,7 @@ export async function upsertMyProfile(userId: string, data: UpdateProfileInput) 
   }
 
   const avatarFromFile = await fileToDataUrl(data.avatarFile);
-  const finalAvatarUrl =
-    avatarFromFile ||
-    data.avatarUrl?.trim() ||
-    existingProfile?.avatarUrl ||
-    null;
+  const finalAvatarUrl = avatarFromFile || existingProfile?.avatarUrl || null;
 
   const displayName = data.displayName?.trim() || null;
   const bio = data.bio?.trim() || null;
