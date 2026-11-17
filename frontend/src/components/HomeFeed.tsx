@@ -129,14 +129,16 @@ export default function HomeFeed() {
 
   return (
     <section className="w-full">
-      <div className="mb-4">
-        <h2 className="text-xl font-bold text-[var(--foreground)] sm:text-2xl">
-          Publicaciones recientes
-        </h2>
-        <p className="text-xs leading-5 text-[var(--muted)] sm:text-sm">
-          Lo último que se publicó en PokeMarket, de la más nueva a la más antigua.
-        </p>
-      </div>
+        <div className="mb-4 lg:grid lg:grid-cols-[minmax(0,475px)_minmax(0,36rem)] lg:gap-4">
+            <div className="lg:col-start-2">
+            <h2 className="text-xl font-bold text-[var(--foreground)] sm:text-2xl">
+                Publicaciones recientes
+            </h2>
+            <p className="text-xs leading-5 text-[var(--muted)] sm:text-sm">
+                Lo último que se publicó en PokeMarket, de la más nueva a la más antigua.
+            </p>
+            </div>
+        </div>
 
       {pending.length > 0 && (
         <div className="sticky top-20 z-30 mb-4 flex justify-center">
