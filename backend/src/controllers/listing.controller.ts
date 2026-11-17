@@ -10,8 +10,9 @@ import {
   getListingsHistory,
   getRecentListingsForHome,
   getPopularListingsForHome,
+  getFeedListings,
 } from '../services/listing.service';
-import { getProfileCompletionStatus } from '../services/profile.service';
+import { getProfileCompletionStatus} from '../services/profile.service';
 import { cached, invalidateByPrefix } from '../utils/cache';
 
 // Tipos locales — evita importar enums desde @prisma/client
@@ -187,5 +188,26 @@ export async function homePopularListings(req: AuthRequest, res: Response): Prom
     res.json(listings);
   } catch {
     res.status(500).json({ error: 'Error al obtener publicaciones populares' });
+  }
+}
+
+
+
+export async function feedListings(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const parse = (v: unknown) => {
+      if (typeof v !== 'string') return undefined;
+      const d = new Date(v);
+      return isNaN(d.getTime()) ? undefined : d;
+    };
+    const data = await getFeedListings({
+      before: parse(req.query.before),
+      after: parse(req.query.after),
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json(data);
+  } catch (error) {
+    console.error('FEED ERROR:', error);
+    res.status(500).json({ error: 'Error al obtener el muro' });
   }
 }

@@ -11,6 +11,7 @@ import {
   listingsHistory,
   homeRecentListings,
   homePopularListings,
+  feedListings,
 } from '../controllers/listing.controller';
 
 const router = Router();
@@ -20,6 +21,7 @@ router.get('/my',      authenticate, myListings);
 router.get('/history', authenticate, listingsHistory);
 router.get('/home/recent', homeRecentListings);
 router.get('/home/popular', homePopularListings);
+router.get('/feed', feedListings);
 router.get('/:id',     getOne);
 router.post('/',       authenticate, upload.array('images', 5), create);
 router.put('/:id',     authenticate, update);

@@ -361,3 +361,104 @@ export async function getPopularListingsForHome() {
   );
   return groups.flat();
 }
+
+
+const FEED_PAGE_SIZE = 10;
+
+function levelFromTransactions(total: number): number {
+  if (total >= 500) return 5;
+  if (total >= 100) return 4;
+  if (total >= 50) return 3;
+  if (total >= 30) return 2;
+  if (total >= 10) return 1;
+  return 0;
+}
+
+export async function getFeedListings(opts: { before?: Date; after?: Date }) {
+  const where: Prisma.ListingWhereInput = { status: 'ACTIVE', deletedAt: null };
+  if (opts.before) where.createdAt = { lt: opts.before };
+  if (opts.after) where.createdAt = { gt: opts.after };
+
+  const rows = await prisma.listing.findMany({
+    where,
+    orderBy: { createdAt: 'desc' },
+    take: opts.after ? 20 : FEED_PAGE_SIZE + 1,
+    select: {
+      id: true,
+      listingType: true,
+      title: true,
+      cardName: true,
+      edition: true,
+      condition: true,
+      priceCLP: true,
+      images: true,
+      createdAt: true,
+      sellerId: true,
+      seller: {
+        select: {
+          id: true,
+          username: true,
+          createdAt: true,
+          profile: {
+            select: { displayName: true, avatarUrl: true, reputationAsSeller: true },
+          },
+        },
+      },
+    },
+  });
+
+  const hasMore = !opts.after && rows.length > FEED_PAGE_SIZE;
+  const page = hasMore ? rows.slice(0, FEED_PAGE_SIZE) : rows;
+  const sellerIds = [...new Set(page.map((l) => l.sellerId))];
+
+  const [totals, soldCounts, boughtCounts] = await Promise.all([
+    prisma.listing.groupBy({
+      by: ['sellerId'],
+      where: { sellerId: { in: sellerIds }, status: 'ACTIVE', deletedAt: null },
+      _sum: { priceCLP: true },
+      _count: { _all: true },
+    }),
+    prisma.sale.groupBy({
+      by: ['sellerId'],
+      where: { sellerId: { in: sellerIds }, status: 'COMPLETED' },
+      _count: { _all: true },
+    }),
+    prisma.sale.groupBy({
+      by: ['buyerId'],
+      where: { buyerId: { in: sellerIds }, status: 'COMPLETED' },
+      _count: { _all: true },
+    }),
+  ]);
+
+  const totalsMap = new Map(
+    totals.map((t) => [t.sellerId, { money: t._sum.priceCLP ?? 0, count: t._count._all }])
+  );
+  const soldMap = new Map(soldCounts.map((s) => [s.sellerId, s._count._all]));
+  const boughtMap = new Map(boughtCounts.map((s) => [s.buyerId, s._count._all]));
+
+  const items = page.map(({ seller, sellerId, ...listing }) => {
+    const t = totalsMap.get(sellerId);
+    const transactions = (soldMap.get(sellerId) ?? 0) + (boughtMap.get(sellerId) ?? 0);
+    return {
+      ...listing,
+      seller: {
+        id: seller.id,
+        username: seller.username,
+        displayName: seller.profile?.displayName ?? null,
+        avatarUrl: seller.profile?.avatarUrl ?? null,
+        sellerRating: seller.profile?.reputationAsSeller ?? 0,
+        memberSince: seller.createdAt,
+        totalValueCLP: t?.money ?? 0,
+        listingsCount: t?.count ?? 0,
+        level: levelFromTransactions(transactions),
+      },
+    };
+  });
+
+  const last = page[page.length - 1];
+  return {
+    items,
+    hasMore,
+    nextCursor: hasMore && last ? last.createdAt.toISOString() : null,
+  };
+}
