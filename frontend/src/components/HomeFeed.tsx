@@ -220,40 +220,42 @@ export default function HomeFeed() {
 
 function FeedPost({ listing, now }: { listing: FeedListing; now: number }) {
   return (
-    <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,475px)_minmax(0,36rem)] lg:items-start lg:gap-4">
+    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] items-start gap-2 sm:gap-3 lg:grid-cols-[minmax(0,475px)_minmax(0,36rem)] lg:gap-4">
       <TrainerCard seller={listing.seller} />
 
-      <article className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
-        <div className="flex items-center justify-between gap-2 px-3 pt-3">
-          <span className="inline-flex rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-[10px] font-semibold text-[var(--muted)]">
+      <article className="min-w-0 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-2 pt-2 sm:px-3 sm:pt-3">
+          <span className="inline-flex rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-[9px] font-semibold text-[var(--muted)] sm:text-[10px]">
             {typeLabel(listing.listingType)}
           </span>
-          <span className="inline-flex items-center gap-1 text-xs text-[var(--muted)]">
-            <Clock size={12} />
+          <span className="inline-flex items-center gap-1 text-[10px] text-[var(--muted)] sm:text-xs">
+            <Clock size={11} />
             {timeAgo(listing.createdAt, now)}
           </span>
         </div>
 
-        <Link href={`/listings/${listing.id}`} className="group mt-3 block">
+        <Link href={`/listings/${listing.id}`} className="group mt-2 block sm:mt-3">
           <div className="flex justify-center bg-[var(--surface-2)]">
             <img
               src={cl(listing.images[0], 800)}
               alt={listing.title}
               loading="lazy"
-              className="max-h-[420px] w-full object-contain"
+              className="max-h-56 w-full object-contain sm:max-h-80 lg:max-h-[420px]"
             />
           </div>
 
-          <div className="p-3">
-            <h3 className="truncate font-semibold text-[var(--foreground)]">{listing.cardName}</h3>
-            <p className="min-h-[16px] truncate text-xs text-[var(--muted-2)]">
+          <div className="p-2 sm:p-3">
+            <h3 className="line-clamp-2 break-words text-sm font-semibold text-[var(--foreground)] sm:text-base">
+              {listing.cardName}
+            </h3>
+            <p className="min-h-[16px] truncate text-[11px] text-[var(--muted-2)] sm:text-xs">
               {listing.edition || '\u00A0'}
             </p>
-            <div className="mt-2 flex items-center justify-between gap-2">
-              <span className="font-bold text-[var(--primary)]">
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-1">
+              <span className="text-sm font-bold text-[var(--primary)] sm:text-base">
                 ${listing.priceCLP.toLocaleString('es-CL')}
               </span>
-              <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-xs text-[var(--muted)]">
+              <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-[10px] text-[var(--muted)] sm:text-xs">
                 {CONDITION_LABELS[listing.condition]}
               </span>
             </div>
