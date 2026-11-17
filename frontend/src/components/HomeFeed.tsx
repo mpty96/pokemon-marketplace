@@ -128,7 +128,7 @@ export default function HomeFeed() {
   }
 
   return (
-    <section className="mx-auto max-w-2xl">
+    <section className="mx-auto max-w-4xl">
       <div className="mb-4">
         <h2 className="text-xl font-bold text-[var(--foreground)] sm:text-2xl">
           Publicaciones recientes
@@ -218,46 +218,46 @@ export default function HomeFeed() {
 
 function FeedPost({ listing, now }: { listing: FeedListing; now: number }) {
   return (
-    <article className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
-      <div className="flex items-center justify-between gap-2 px-3 pt-3">
-        <span className="inline-flex rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-[10px] font-semibold text-[var(--muted)]">
-          {typeLabel(listing.listingType)}
-        </span>
-        <span className="inline-flex items-center gap-1 text-xs text-[var(--muted)]">
-          <Clock size={12} />
-          {timeAgo(listing.createdAt, now)}
-        </span>
-      </div>
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-[300px_1fr] lg:items-start lg:gap-4">
+      <TrainerCard seller={listing.seller} />
 
-      <div className="px-3 pt-2">
-        <TrainerCard seller={listing.seller} />
-      </div>
-
-      <Link href={`/listings/${listing.id}`} className="group mt-3 block">
-        <div className="flex justify-center bg-[var(--surface-2)]">
-          <img
-            src={cl(listing.images[0], 800)}
-            alt={listing.title}
-            loading="lazy"
-            className="max-h-[420px] w-full object-contain"
-          />
+      <article className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
+        <div className="flex items-center justify-between gap-2 px-3 pt-3">
+          <span className="inline-flex rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-[10px] font-semibold text-[var(--muted)]">
+            {typeLabel(listing.listingType)}
+          </span>
+          <span className="inline-flex items-center gap-1 text-xs text-[var(--muted)]">
+            <Clock size={12} />
+            {timeAgo(listing.createdAt, now)}
+          </span>
         </div>
 
-        <div className="p-3">
-          <h3 className="truncate font-semibold text-[var(--foreground)]">{listing.cardName}</h3>
-          <p className="min-h-[16px] truncate text-xs text-[var(--muted-2)]">
-            {listing.edition || '\u00A0'}
-          </p>
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <span className="font-bold text-[var(--primary)]">
-              ${listing.priceCLP.toLocaleString('es-CL')}
-            </span>
-            <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-xs text-[var(--muted)]">
-              {CONDITION_LABELS[listing.condition]}
-            </span>
+        <Link href={`/listings/${listing.id}`} className="group mt-3 block">
+          <div className="flex justify-center bg-[var(--surface-2)]">
+            <img
+              src={cl(listing.images[0], 800)}
+              alt={listing.title}
+              loading="lazy"
+              className="max-h-[420px] w-full object-contain"
+            />
           </div>
-        </div>
-      </Link>
-    </article>
+
+          <div className="p-3">
+            <h3 className="truncate font-semibold text-[var(--foreground)]">{listing.cardName}</h3>
+            <p className="min-h-[16px] truncate text-xs text-[var(--muted-2)]">
+              {listing.edition || '\u00A0'}
+            </p>
+            <div className="mt-2 flex items-center justify-between gap-2">
+              <span className="font-bold text-[var(--primary)]">
+                ${listing.priceCLP.toLocaleString('es-CL')}
+              </span>
+              <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-xs text-[var(--muted)]">
+                {CONDITION_LABELS[listing.condition]}
+              </span>
+            </div>
+          </div>
+        </Link>
+      </article>
+    </div>
   );
 }
