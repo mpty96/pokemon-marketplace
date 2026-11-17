@@ -12,9 +12,21 @@ const LEVEL_BALLS = [
   '/levels/master-ball.png',
 ];
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Row({
+  label,
+  children,
+  desktopOnly = false,
+}: {
+  label: string;
+  children: React.ReactNode;
+  desktopOnly?: boolean;
+}) {
   return (
-    <div className="flex flex-col items-start rounded-md bg-white/15 px-2 py-1 lg:flex-row lg:items-center lg:justify-between lg:gap-3 lg:px-3 lg:py-1.5">
+    <div
+      className={`${
+        desktopOnly ? 'hidden lg:flex' : 'flex'
+      } flex-col items-start rounded-md bg-white/15 px-2 py-1 lg:flex-row lg:items-center lg:justify-between lg:gap-3 lg:px-3 lg:py-1.5`}
+    >
       <span className="shrink-0 text-[9px] leading-3 opacity-75 sm:text-[10px] lg:text-sm lg:leading-5 lg:opacity-100">
         {label}
       </span>
@@ -31,10 +43,10 @@ export default function TrainerCard({ seller }: { seller: FeedSeller }) {
   return (
     <Link
       href={`/usuario/${seller.username}`}
-      className="block rounded-xl bg-[#d9d5c3] p-[2px] shadow-md transition hover:brightness-105 lg:p-[3px]"
+      className="flex rounded-xl bg-[#d9d5c3] p-[2px] shadow-md transition hover:brightness-105 lg:p-[3px]"
     >
-      <div className="rounded-[10px] border-2 border-[#8f8c7e] bg-[#575757] p-2 font-mono uppercase tracking-wide text-[#f6e65a] sm:p-3 lg:p-4">
-        <div className="grid grid-cols-1 gap-y-2 lg:grid-cols-[1fr_auto] lg:gap-x-4">
+      <div className="flex flex-1 flex-col rounded-[10px] border-2 border-[#8f8c7e] bg-[#575757] p-2 font-mono uppercase tracking-wide text-[#f6e65a] sm:p-3 lg:p-4">
+        <div className="flex flex-1 flex-col justify-between gap-y-2 lg:grid lg:flex-none lg:grid-cols-[1fr_auto] lg:justify-normal lg:gap-x-4">
           <div className="flex min-w-0 items-center justify-center gap-1.5 lg:col-start-1 lg:row-start-1 lg:justify-start lg:gap-2">
             <img src="/levels/poke-ball.png" alt="" className="h-3.5 w-3.5 shrink-0 lg:h-5 lg:w-5" />
             <span className="min-w-0 text-center text-[9px] font-bold leading-3 sm:text-[11px] lg:truncate lg:text-left lg:text-sm lg:leading-5">
@@ -57,7 +69,7 @@ export default function TrainerCard({ seller }: { seller: FeedSeller }) {
             ))}
           </div>
 
-          <div className="order-3 mx-auto flex aspect-square w-20 items-center justify-center overflow-hidden rounded-lg border border-[#7a7a7a] bg-[#6b6b6b] sm:w-24 lg:order-none lg:col-start-2 lg:row-start-2 lg:mx-0 lg:aspect-auto lg:w-36 lg:self-stretch">
+          <div className="order-3 mx-auto flex aspect-square w-full max-w-[8rem] items-center justify-center overflow-hidden rounded-lg border border-[#7a7a7a] bg-[#6b6b6b] sm:max-w-[9rem] lg:order-none lg:col-start-2 lg:row-start-2 lg:mx-0 lg:aspect-auto lg:w-36 lg:max-w-none lg:self-stretch">
             {seller.avatarUrl ? (
               <img
                 src={cl(seller.avatarUrl, 200)}
@@ -69,10 +81,14 @@ export default function TrainerCard({ seller }: { seller: FeedSeller }) {
             )}
           </div>
 
-          <div className="order-4 min-w-0 space-y-1 lg:order-none lg:col-start-1 lg:row-start-2 lg:space-y-1.5">
-            <Row label="ID Usuario">{seller.id.slice(0, 6).toUpperCase()}</Row>
+          <div className="order-4 flex min-w-0 flex-col gap-1 lg:order-none lg:col-start-1 lg:row-start-2 lg:gap-1.5">
+            <Row label="ID Usuario" desktopOnly>
+              {seller.id.slice(0, 6).toUpperCase()}
+            </Row>
             <Row label="Nombre">{seller.displayName || seller.username}</Row>
-            <Row label="Dinero">{formatMoney(seller.totalValueCLP)} ₱</Row>
+            <Row label="Dinero" desktopOnly>
+              {formatMoney(seller.totalValueCLP)} ₱
+            </Row>
             <Row label="Publicaciones">{seller.listingsCount}</Row>
             <Row label="Nivel">
               {seller.level > 0 ? (
@@ -91,7 +107,7 @@ export default function TrainerCard({ seller }: { seller: FeedSeller }) {
           </div>
         </div>
 
-        <div className="mt-1 lg:mt-2">
+        <div className="mt-1 hidden lg:mt-2 lg:block">
           <Row label="Comienzo aventura">{formatAdventureDate(seller.memberSince)}</Row>
         </div>
       </div>

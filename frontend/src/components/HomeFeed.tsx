@@ -220,7 +220,7 @@ export default function HomeFeed() {
 
 function FeedPost({ listing, now }: { listing: FeedListing; now: number }) {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] items-start gap-2 sm:gap-3 lg:grid-cols-[minmax(0,475px)_minmax(0,36rem)] lg:gap-4">
+    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)] items-stretch gap-2 sm:gap-3 lg:grid-cols-[minmax(0,475px)_minmax(0,36rem)] lg:items-start lg:gap-4">
       <TrainerCard seller={listing.seller} />
 
       <article className="min-w-0 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
