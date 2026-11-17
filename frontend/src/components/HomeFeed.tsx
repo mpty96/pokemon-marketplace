@@ -128,7 +128,7 @@ export default function HomeFeed() {
   }
 
   return (
-    <section className="mx-auto max-w-4xl">
+    <section className="w-full">
       <div className="mb-4">
         <h2 className="text-xl font-bold text-[var(--foreground)] sm:text-2xl">
           Publicaciones recientes
@@ -156,7 +156,7 @@ export default function HomeFeed() {
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="h-96 animate-pulse rounded-xl border border-[var(--border)] bg-[var(--surface)]"
+              className="h-96 animate-pulse rounded-xl border border-[var(--border)] bg-[var(--surface)] lg:max-w-[1067px]"
             />
           ))}
         </div>
@@ -218,7 +218,7 @@ export default function HomeFeed() {
 
 function FeedPost({ listing, now }: { listing: FeedListing; now: number }) {
   return (
-    <div className="grid grid-cols-1 gap-3 lg:grid-cols-[300px_1fr] lg:items-start lg:gap-4">
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,475px)_minmax(0,36rem)] lg:items-start lg:gap-4">
       <TrainerCard seller={listing.seller} />
 
       <article className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
