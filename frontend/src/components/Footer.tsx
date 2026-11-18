@@ -20,7 +20,7 @@ export default function Footer() {
           />
 
           <p className="text-sm text-[var(--muted)] mt-2 leading-6">
-            Marketplace dedicado a los coleccionistas de Pokémon en Chile. 
+            PokeMarket está dedicado a los coleccionistas de Pokémon en Chile. 
             Compra, vende e interactúa de manera segura y honesta.
           </p>
 
@@ -64,7 +64,7 @@ export default function Footer() {
           <p>
             PokeMarket recopila y utiliza ciertos datos para permitir el funcionamiento de la plataforma,
             proteger cuentas, prevenir fraudes, moderar reportes, mantener historial de transacciones
-            y mejorar la seguridad general del marketplace.
+            y mejorar la seguridad general de PokeMarket.
           </p>
           <p>
             Ninguna medida de seguridad garantiza protección absoluta. Por eso, cada usuario sigue siendo
@@ -218,7 +218,7 @@ export default function Footer() {
       >
         <Section title="Sobre PokeMarket">
           <p>
-            PokeMarket Chile es un marketplace creado para la comunidad coleccionista de Pokémon TCG en Chile.
+            PokeMarket Chile es una plataforma creada para la comunidad coleccionista de Pokémon TCG en Chile.
             La plataforma permite publicar cartas individuales, productos Pokémon, productos sellados o relacionados,
             y lotes coleccionables.
           </p>

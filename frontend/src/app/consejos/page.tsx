@@ -147,7 +147,7 @@ export default function ConsejosPage() {
               href="/marketplace"
               className="inline-block bg-[var(--primary)] text-[var(--primary-foreground)] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[var(--primary-hover)]"
             >
-              Ir al marketplace
+              Ir a PokeMarket
             </Link>
           </div>
         </div>

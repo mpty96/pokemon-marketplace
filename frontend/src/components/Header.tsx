@@ -45,7 +45,7 @@ export default function Header() {
           </Link>
 
           <Link href="/marketplace" className={linkClass('/marketplace')}>
-            Marketplace
+            PokeMarket
           </Link>
 
           {isAuthenticated && (
@@ -114,7 +114,7 @@ export default function Header() {
           </Link>
 
           <Link href="/marketplace" className="text-[13px] font-extrabold leading-none text-[var(--muted)] hover:text-[var(--primary)]">
-            Marketplace
+            PokeMarket
           </Link>
 
           {isAuthenticated && (

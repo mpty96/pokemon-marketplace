@@ -87,7 +87,7 @@ export default function TransaccionesPage() {
           <p className="text-4xl mb-3">📦</p>
           <p>No hay transacciones completadas aún</p>
           <Link href="/marketplace" className="inline-block mt-4 text-[var(--primary)] hover:underline text-sm">
-            Ir al marketplace
+            Ir a PokeMarket
           </Link>
         </div>
       ) : (

@@ -35,7 +35,7 @@ export default function HomePage() {
               href="/marketplace"
               className="bg-[var(--primary)] text-[var(--primary-foreground)] font-bold px-5 py-2.5 rounded-xl hover:bg-[var(--primary-hover)] transition-colors shadow-lg"
             >
-              Ver marketplace
+              Ver PokeMarket
             </Link>
 
             <Link

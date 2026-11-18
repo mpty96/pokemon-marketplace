@@ -50,9 +50,9 @@ const LANGUAGES: { value: CardLanguage; label: string }[] = [
 const LOT_EXTRA_LANGUAGE: { value: CardLanguage; label: string } = { value: 'VARIOUS', label: 'Varios' };
 
 const TYPE_SUCCESS: Record<ListingType, { title: string; subtitle: string; again: string }> = {
-  CARD:            { title: '¡Carta publicada!',    subtitle: 'Tu carta ya está visible en el marketplace.',    again: 'Publicar otra carta' },
-  POKEMON_PRODUCT: { title: '¡Producto publicado!', subtitle: 'Tu producto ya está visible en el marketplace.', again: 'Publicar otro producto' },
-  BULK_LOT:        { title: '¡Lote publicado!',     subtitle: 'Tu lote ya está visible en el marketplace.',     again: 'Publicar otro lote' },
+  CARD:            { title: '¡Carta publicada!',    subtitle: 'Tu carta ya está visible en PokeMarket.',    again: 'Publicar otra carta' },
+  POKEMON_PRODUCT: { title: '¡Producto publicado!', subtitle: 'Tu producto ya está visible en PokeMarket.', again: 'Publicar otro producto' },
+  BULK_LOT:        { title: '¡Lote publicado!',     subtitle: 'Tu lote ya está visible en PokeMarket.',     again: 'Publicar otro lote' },
 };
 
 export default function NewListingPage() {
@@ -167,7 +167,7 @@ if (success) {
             <button
               onClick={() => router.push('/marketplace')}
               className="w-full border border-[var(--border)] text-[var(--foreground)] font-medium py-2 rounded-lg hover:bg-[var(--surface-2)] transition-colors">
-              Ir al marketplace
+              Ir a PokeMarket
             </button>
             <button
               onClick={() => {
@@ -501,7 +501,7 @@ if (success) {
               className="w-full text-sm text-[var(--muted)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[var(--surface-2)] file:text-[var(--primary)] hover:file:bg-[var(--info-bg)] disabled:opacity-60"
             />
             <p className="text-xs text-[var(--muted-2)] mt-1">
-              {images.length}/{MAX_IMAGES} seleccionadas. La <strong>primera imagen</strong> será la portada que se ve en el marketplace.
+              {images.length}/{MAX_IMAGES} seleccionadas. La <strong>primera imagen</strong> será la portada que se ve en PokeMarket.
             </p>
 
             {processing && (

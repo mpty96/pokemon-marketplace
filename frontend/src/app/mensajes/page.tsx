@@ -169,7 +169,7 @@ const filteredConversations = conversations.filter((conv) => {
           <p className="text-4xl mb-3">💬</p>
           <p>No tienes conversaciones aún</p>
           <Link href="/marketplace" className="inline-block mt-4 text-[var(--primary)] hover:underline text-sm">
-            Explorar marketplace
+            Explorar PokeMarket
           </Link>
         </div>
       ) : filteredConversations.length === 0 ? (

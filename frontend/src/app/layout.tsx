@@ -11,7 +11,7 @@ import NewsModal from '@/components/NewsModal';
 export const metadata: Metadata = {
   metadataBase: new URL('https://tcgpokemarket.cl'),
   title: 'PokeMarket Chile',
-  description: 'Marketplace chileno para comprar y vender cartas Pokémon TCG de forma segura.',
+  description: 'PokeMarket: espacio chileno para comprar y vender cartas Pokémon TCG de forma segura.',
   icons: {
     icon: '/icon.png',
     shortcut: '/icon.png',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'PokeMarket Chile',
-    description: 'Marketplace chileno para comprar y vender cartas Pokémon TCG de forma segura.',
+    description: 'PokeMarket: espacio chileno para comprar y vender cartas Pokémon TCG de forma segura.',
     url: 'https://tcgpokemarket.cl',
     siteName: 'PokeMarket Chile',
     images: [
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'PokeMarket Chile',
-    description: 'Marketplace chileno para comprar y vender cartas Pokémon TCG de forma segura.',
+    description: 'PokeMarket: espacio chileno para comprar y vender cartas Pokémon TCG de forma segura.',
     images: ['/logo-footer.png'],
   },
 };
