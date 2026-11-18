@@ -3,6 +3,7 @@ import { Star } from 'lucide-react';
 import type { FeedSeller } from '@/types/feed';
 import { formatAdventureDate, formatMoney } from '@/lib/format';
 import { cl } from '@/lib/cloudinary';
+import { trainerSpriteFor } from '@/lib/trainerSprite';
 
 const LEVEL_BALLS = [
   '/levels/poke-ball.png',
@@ -77,7 +78,12 @@ export default function TrainerCard({ seller }: { seller: FeedSeller }) {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="text-3xl font-bold lg:text-4xl">{seller.username[0].toUpperCase()}</span>
+              <img
+                src={trainerSpriteFor(seller.id)}
+                alt={seller.username}
+                loading="lazy"
+                className="h-full w-full object-contain object-bottom p-1"
+              />
             )}
           </div>
 
