@@ -450,6 +450,7 @@ export async function getFeedListings(opts: { before?: Date; after?: Date }) {
         memberSince: seller.createdAt,
         totalValueCLP: t?.money ?? 0,
         listingsCount: t?.count ?? 0,
+        transactions,
         level: levelFromTransactions(transactions),
       },
     };

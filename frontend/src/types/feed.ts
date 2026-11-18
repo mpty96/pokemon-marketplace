@@ -9,6 +9,7 @@ export interface FeedSeller {
   memberSince: string;
   totalValueCLP: number;
   listingsCount: number;
+  transactions: number;
   level: number;
 }
 

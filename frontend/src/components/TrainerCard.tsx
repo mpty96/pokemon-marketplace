@@ -56,13 +56,13 @@ export default function TrainerCard({ seller }: { seller: FeedSeller }) {
           </div>
 
           <div
-            className="flex shrink-0 items-center justify-center lg:col-start-2 lg:row-start-1 lg:justify-end"
+            className="mx-auto flex w-full max-w-[8rem] items-center justify-between sm:max-w-[9rem] lg:col-start-2 lg:row-start-1 lg:mx-0 lg:w-36 lg:max-w-none"
             aria-label={`Calificación como vendedor: ${stars} de 5`}
           >
             {[1, 2, 3, 4, 5].map((n) => (
               <Star
                 key={n}
-                className={`h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 ${
+                className={`aspect-square h-auto w-[19%] ${
                   n <= stars ? 'fill-[#f6e65a] text-[#f6e65a]' : 'text-[#9a9a8a]'
                 }`}
               />
@@ -82,14 +82,11 @@ export default function TrainerCard({ seller }: { seller: FeedSeller }) {
           </div>
 
           <div className="order-4 flex min-w-0 flex-col gap-1 lg:order-none lg:col-start-1 lg:row-start-2 lg:gap-1.5">
-            <Row label="ID Usuario" desktopOnly>
-              {seller.id.slice(0, 6).toUpperCase()}
-            </Row>
             <Row label="Nombre">{seller.displayName || seller.username}</Row>
             <Row label="Dinero" desktopOnly>
               {formatMoney(seller.totalValueCLP)} ₱
             </Row>
-            <Row label="Publicaciones">{seller.listingsCount}</Row>
+            <Row label="Transacciones">{seller.transactions}</Row>
             <Row label="Nivel">
               {seller.level > 0 ? (
                 <span className="inline-flex items-center gap-1.5">
