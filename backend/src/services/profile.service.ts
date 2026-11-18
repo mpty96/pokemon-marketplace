@@ -221,6 +221,7 @@ export async function getPublicProfileByUsername(username: string) {
   const user = await prisma.user.findUnique({
     where: { username },
       select: {
+        id: true,
         username: true,
         profile: {
         select: {
@@ -332,6 +333,7 @@ export async function getPublicProfileByUsername(username: string) {
   }
 
   return {
+    id: user.id,
     username: user.username,
     profile: user.profile,
     ratingsReceived: user.ratingsReceived,

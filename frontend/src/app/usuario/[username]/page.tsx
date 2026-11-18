@@ -8,8 +8,10 @@ import { RatingCard } from '@/components/RatingCard';
 import { Rating, Listing, WantedCard } from '@/types';
 import { useAuthStore } from '@/store/auth.store';
 import { cl } from '@/lib/cloudinary';
+import { trainerSpriteFor } from '@/lib/trainerSprite';
 
 interface PublicProfile {
+  id: string;
   username: string;
   profile: {
     displayName:        string | null;
@@ -232,7 +234,12 @@ export default function PublicProfilePage() {
             {profile?.avatarUrl ? (
               <img src={cl(profile.avatarUrl, 100)} alt={data.username} className="w-full h-full object-cover" />
             ) : (
-              data.username[0].toUpperCase()
+              <img
+                src={trainerSpriteFor(data.id)}
+                alt={data.username}
+                className="w-full h-full object-cover object-top scale-[1.6] origin-top"
+              />
+
             )}
           </div>
 
