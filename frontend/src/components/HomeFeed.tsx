@@ -235,12 +235,12 @@ function FeedPost({ listing, now }: { listing: FeedListing; now: number }) {
         </div>
 
         <Link href={`/listings/${listing.id}`} className="group mt-2 block sm:mt-3">
-          <div className="flex justify-center bg-[var(--surface-2)]">
+          <div className="flex h-56 items-center justify-center bg-[var(--surface-2)] sm:h-80 lg:h-auto">
             <img
               src={cl(listing.images[0], 800)}
               alt={listing.title}
               loading="lazy"
-              className="max-h-56 w-full object-contain sm:max-h-80 lg:max-h-[420px]"
+              className="h-full w-full object-contain lg:h-auto lg:max-h-[420px]"
             />
           </div>
 
