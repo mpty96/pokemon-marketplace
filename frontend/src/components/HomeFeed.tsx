@@ -234,8 +234,17 @@ function FeedPost({ listing, now }: { listing: FeedListing; now: number }) {
           </span>
         </div>
 
-        <Link href={`/listings/${listing.id}`} className="group mt-2 block sm:mt-3">
-          <div className="flex h-56 items-center justify-center bg-[var(--surface-2)] sm:h-80 lg:h-auto">
+        <Link href={`/listings/${listing.id}`} className="group block">
+          <div className="px-2 pt-2 sm:px-3 sm:pt-3">
+            <h3 className="line-clamp-2 break-words text-sm font-semibold text-[var(--foreground)] sm:text-base">
+              {listing.cardName}
+            </h3>
+            <p className="min-h-[16px] truncate text-[11px] text-[var(--muted-2)] sm:text-xs">
+              {listing.edition || '\u00A0'}
+            </p>
+          </div>
+
+          <div className="mt-2 flex h-56 items-center justify-center bg-[var(--surface-2)] sm:h-80 lg:h-auto">
             <img
               src={cl(listing.images[0], 800)}
               alt={listing.title}
@@ -244,21 +253,13 @@ function FeedPost({ listing, now }: { listing: FeedListing; now: number }) {
             />
           </div>
 
-          <div className="p-2 sm:p-3">
-            <h3 className="line-clamp-2 break-words text-sm font-semibold text-[var(--foreground)] sm:text-base">
-              {listing.cardName}
-            </h3>
-            <p className="min-h-[16px] truncate text-[11px] text-[var(--muted-2)] sm:text-xs">
-              {listing.edition || '\u00A0'}
-            </p>
-            <div className="mt-2 flex flex-wrap items-center justify-between gap-1">
-              <span className="text-sm font-bold text-[var(--primary)] sm:text-base">
-                ${listing.priceCLP.toLocaleString('es-CL')}
-              </span>
-              <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-[10px] text-[var(--muted)] sm:text-xs">
-                {CONDITION_LABELS[listing.condition]}
-              </span>
-            </div>
+          <div className="flex flex-wrap items-center justify-between gap-1 p-2 sm:p-3">
+            <span className="text-sm font-bold text-[var(--primary)] sm:text-base">
+              ${listing.priceCLP.toLocaleString('es-CL')}
+            </span>
+            <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-[10px] text-[var(--muted)] sm:text-xs">
+              {CONDITION_LABELS[listing.condition]}
+            </span>
           </div>
         </Link>
       </article>
