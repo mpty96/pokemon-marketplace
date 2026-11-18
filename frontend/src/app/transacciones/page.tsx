@@ -48,9 +48,6 @@ export default function TransaccionesPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 text-[var(--foreground)]">
-      <h1 className="text-2xl font-bold text-[var(--foreground)] mb-6">
-        Transacciones
-      </h1>
 
       <div className="mb-5 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
         <label className="block text-sm font-medium text-[var(--foreground)] mb-2">

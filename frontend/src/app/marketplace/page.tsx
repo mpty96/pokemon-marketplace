@@ -145,7 +145,6 @@ const fetchListings = useCallback(async () => {
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-4 py-5 sm:py-8 text-[var(--foreground)]">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-[var(--foreground)]">PokeMarket</h1>
         <Link
           href="/listings/new"
           className="w-full sm:w-auto text-center bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] text-sm font-medium px-4 py-2 rounded-lg transition-colors"
